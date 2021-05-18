@@ -46,19 +46,15 @@
 <div class="dropzone"></div>
 </div>
 
+<div class="el" data-type="[text]" data-no-attributes draggable="true" ondragstart="dragstart_handler(event)">
+<textarea onchange="renderCode(); render();"></textarea>
+</div>
+
 <div class="el green-set" data-type="h1" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="dropzone"></div>
 <div class="el green-set" data-type="[text]" data-no-attributes draggable="true" ondragstart="dragstart_handler(event)">
 <textarea onchange="renderCode(); render();"></textarea>
 </div>
-<div class="dropzone"></div>
-</div>
-
-<div class="el green-set" data-type="nav" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="dropzone"></div>
-</div>
-
-<div class="el green-set" data-type="p" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="dropzone"></div>
 </div>
 
@@ -73,19 +69,23 @@
 <div class="el green-set" data-type="img" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
 </div>
 
-<div class="el green-set" data-type="[text]" data-no-attributes draggable="true" ondragstart="dragstart_handler(event)">
-<textarea onchange="renderCode(); render();"></textarea>
+<div class="el green-set" data-type="p" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el green-set" data-type="nav" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
 </div>
 
 </details>
 
-<div class="el green-set text-content" data-type="[custom]" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="builder-custom-el">Type: <input></div>
+<div class="el red-set text-content" data-type="[custom]" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="builder-custom-el">Type: <input class="builder-custom-type"></div>
 <div class="dropzone"></div>
 </div>
 
-<div class="el green-set" data-type="[custom]" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
-<div class="builder-custom-el">Type: <input></div>
+<div class="el red-set" data-type="[custom]" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
+<div class="builder-custom-el">Type: <input class="builder-custom-type"></div>
 </div>
 
 </div>

@@ -16,9 +16,15 @@ function dragstart_handler(ev)
  // TODO: in this handler, set the value attribute explicitly so that it's copied
 function dragstart_move_handler(ev)
 {
-	// Add the target element's id to the data transfer object
+	// add any text area values to their elements as attributes
 	const tas = ev.target.querySelectorAll("textarea");
 	tas.forEach(ta => ta.innerHTML = ta.value);
+	
+	// for custom elements, copy input too
+	const inp = ev.target.querySelector("input.builder-custom-type");
+	if (inp)
+		inp.setAttribute('value', inp.value);
+	
 	console.log('start', ev.target, tas);
 	//ev.target.firstElementChild.innerHTML = ev.target.firstElementChild.value;
 	ev.dataTransfer.setData("text/plain", ev.target.outerHTML);

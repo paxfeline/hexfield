@@ -3,6 +3,11 @@ body
 	font-family: monospace;
 }
 
+html
+{
+	--set-color: gray;
+}
+
 .blue-set
 {
 	--set-color: lightblue;
@@ -16,6 +21,11 @@ body
 .green-set
 {
 	--set-color: lightgreen;
+}
+
+.red-set
+{
+	--set-color: lightcoral;
 }
 
 .el 
