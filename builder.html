@@ -1,0 +1,107 @@
+<html>
+<head>
+<title>HTML Builder</title>
+<link rel="stylesheet" href="builder.css">
+<script src="builder.js"></script>
+</head>
+<body>
+
+<div id="bank" ondragenter="onTrashDragEnter(event)" ondragleave="onTrashDragLeave(event)" ondrop="drop_trash_handler(event)" ondragover="dragover_trash_handler(event)">
+
+<div class="el blue-set" data-type="!DOCTYPE html" data-self-closing data-no-attributes draggable="true" ondragstart="dragstart_handler(event)"></div><br>
+<div class="el blue-set" data-type="html" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+
+<details open class="builder-element-group">
+<summary>Document metadata</summary>
+
+<div class="el purple-set" data-type="head" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el purple-set" data-type="title" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="el hidden" data-type="[text]">
+<textarea></textarea>
+</div>
+</div>
+
+<div class="el purple-set" data-type="link" draggable="true" ondragstart="dragstart_handler(event)">
+</div>
+
+
+<div class="el purple-set" data-type="style" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="el hidden" data-type="[text]">
+<textarea></textarea>
+</div>
+</div>
+
+</details>
+
+<details open class="builder-element-group">
+<summary>Document content</summary>
+
+<div class="el green-set" data-type="body" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el green-set" data-type="h1" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+<div class="el green-set" data-type="[text]" data-no-attributes draggable="true" ondragstart="dragstart_handler(event)">
+<textarea></textarea>
+</div>
+<div class="dropzone"></div>
+</div>
+
+<div class="el green-set" data-type="nav" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el green-set" data-type="p" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el green-set" data-type="div" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el green-set" data-type="span" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el green-set" data-type="img" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
+</div>
+
+<div class="el green-set" data-type="[text]" data-no-attributes draggable="true" ondragstart="dragstart_handler(event)">
+<textarea></textarea>
+</div>
+
+</details>
+
+<div class="el green-set" data-type="[custom]" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="builder-custom-el">Type: <input></div>
+<div class="dropzone"></div>
+</div>
+
+</div>
+
+<div id="code">
+<div class="dropzone" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></div>
+</div>
+
+<button id="builder-render-btn" onclick="renderCode(); render();">render!</button>
+
+<button id="builder-save-btn" onclick="save_code();">save</button>
+
+
+<pre id="render-code">
+</pre>
+
+<div id="render">
+<div id="render-title"></div>
+<iframe id="render-body"></iframe>
+</div>
+
+</body>
+</html>

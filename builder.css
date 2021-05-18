@@ -1,0 +1,173 @@
+.blue-set
+{
+	--set-color: lightblue;
+}
+
+.purple-set
+{
+	--set-color: mediumpurple;
+}
+
+.green-set
+{
+	--set-color: lightgreen;
+}
+
+.el 
+{
+	border: 1em solid var(--set-color);
+	border-width: 1em 0em 1em 1em;
+	overflow: hidden;
+	margin: 1em 0.25em;
+	border-radius: 1em;
+	
+	display: inline-block;
+	min-width: 5em;
+}
+
+.el:before
+{
+	content: attr(data-type);
+	background-color: var(--set-color);
+    padding-right: 1em;
+	display: block;
+	position: relative;
+	white-space: nowrap;
+    /*top: -0.1em;
+    left: -0.1em;*/
+}
+
+.el .el
+{
+    margin: 0 0.25em;
+}
+
+.el > details
+{
+	background-color: var(--set-color);
+	padding: 0.25em;
+}
+
+/*
+.el[data-type='title'] .el[data-type='[text]'], .el[data-type=style] .el[data-type='[text]']
+{
+	border-width: 0;
+	border-radius: initial;
+}
+
+.el[data-type='title'] .el[data-type='[text]']:before, .el[data-type=style] .el[data-type='[text]']:before
+{
+	content: none;
+}
+*/
+
+#code .el
+{
+	margin: 0 0.25em;
+}
+
+.hidden
+{
+	border-width: 0;
+	border-radius: initial;
+	margin: 0 !important;
+}
+
+.builder-custom-el
+{
+	background-color: var(--set-color);
+}
+
+.hidden:before
+{
+	content: none;
+}
+
+#builder-trash
+{
+	float: right;
+	width: 3em;
+	height: 3em;
+	margin: 1em;
+	border: 1em solid red;
+}
+
+#bank, #code
+{
+	/*width: calc(45% - 2em);*/
+	width: calc(30% - 2em);
+	display: inline-block;
+	border: 1px solid black;
+	padding: 1em;
+	vertical-align: top;
+}
+
+#code
+{
+	width: calc(60% - 2em);
+	padding: 0 1em;
+}
+
+#render, #render-code
+{
+	border: 1px solid black;
+	min-height: 2em;
+	margin: 2em;
+	border-radius: 1em;
+}
+
+#render-title
+{
+	background-color: black;
+	color: white;
+}
+
+#render-title
+{
+	padding: 1em;
+	border-radius: 1em 1em 0 0;
+}
+
+#render-code
+{
+	padding: 1em;
+	border-radius: 1em;
+}
+
+#render-body
+{
+	display: block;
+	border-radius: 0 0 1em 1em;
+    width: 100%;
+    height: 20em;
+    border-width: 0;
+}
+
+#render-title:before
+{
+	content: 'title: ';
+}
+
+.btn {
+	width: 1em;
+	height: 1em;
+	padding: 0.1em;
+	margin: 0.1em;
+}
+
+.btn:hover {
+	background-color: red;
+}
+
+.dropzone
+{
+	height: 2em;
+}
+
+.builder-element-group
+{
+	border: 0.5em solid blue;
+	border-radius: 1em;
+	padding: 0.5em;
+	margin-bottom: 1em;
+}
