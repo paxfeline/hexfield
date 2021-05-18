@@ -85,7 +85,12 @@ body
 
 .text-content:before
 {
-	border-radius: initial !important;;
+	border-radius: initial !important;
+}
+
+#code .text-content > details
+{
+    border-radius: initial !important;
 }
 
 .el[data-type='[text]']:before
