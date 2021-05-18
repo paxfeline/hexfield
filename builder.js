@@ -251,13 +251,27 @@ function check_in_tree(el, check)
 	return false;
 }
 
-function renderCode(retReal=false)
+function restoreAutosave()
+{
+	const autosave = localStorage.getItem( 'HEXFIELD-AUTOSAVE' );
+	
+	if (autosave)
+	{
+		const source = document.querySelector("#code");
+		source.innerHTML = autosave;
+	}
+}
+
+function renderCode(realHTML=false)
 {
 	const source = document.querySelector("#code");
 	const destCode = document.querySelector("#render-code");
 	
+	localStorage.setItem( 'HEXFIELD-AUTOSAVE', source.innerHTML );
+	
 	var code = '';
 	
+	// this data is annoying repeated here and renderElementCode
 	if (source.children)
 	{
 		for (el of source.children)
@@ -267,14 +281,38 @@ function renderCode(retReal=false)
 				const dtype = el.getAttribute("data-type");
 				if (dtype)
 				{
-					if (dtype != '[text]' )
-						code += renderElementCode(el, retReal) + "\n";
+					code += "\n";
+					if (dtype == '[text]' )
+					{
+						const el_con = el.querySelector('textarea');
+						// copy value into HTML element (for autosave)
+						el_con.innerHTML = el_con.value;
+						code += el_con.value;
+					}
+					else if (dtype == '[custom]')
+					{
+						const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
+						type_inp.setAttribute('value', type_inp.value);
+						code += renderElementCode(el, realHTML, 4, type_inp.value);
+					}
+					else
+						code += renderElementCode(el, realHTML, 4);
 				}
+				
+				/*
+				if (dtype)
+				{
+					if (dtype == '[custom]')
+						code += renderElementCode(el, realHTML, level + 4, el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type').value);
+					else if (dtype != '[text]' )
+						code += renderElementCode(el, realHTML) + "\n";
+				
+				*/
 			}
 		}
 	}
 	
-	if (retReal)
+	if (realHTML)
 		return code;
 	else
 		destCode.innerHTML = code;
@@ -285,9 +323,9 @@ function renderElementCode(source, realHTML=false, level=4, type_override)
 	var code = '';
 	
 	if (realHTML)
-		code += `<${type_override ?? source.getAttribute('data-type')}${renderAttributesCode(source)}>`;
+		code += `<${type_override ? type_override : source.getAttribute('data-type')}${renderAttributesCode(source)}>`;
 	else
-		code += `&lt;${type_override ?? source.getAttribute('data-type')}${renderAttributesCode(source)}&gt;`;
+		code += `&lt;${type_override ? type_override : source.getAttribute('data-type')}${renderAttributesCode(source)}&gt;`;
 		
 	if (source.children)
 	{
@@ -301,9 +339,18 @@ function renderElementCode(source, realHTML=false, level=4, type_override)
 					code += "\n";
 					code += ' '.repeat(level);
 					if (dtype == '[text]' )
-						code += el.querySelector('textarea').value;
+					{
+						const el_con = el.querySelector('textarea');
+						// copy value into HTML element (for autosave)
+						el_con.innerHTML = el_con.value;
+						code += el_con.value;
+					}
 					else if (dtype == '[custom]')
-						code += renderElementCode(el, realHTML, level + 4, el.firstElementChild.nextElementSibling.querySelector('input').value);
+					{
+						const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
+						type_inp.setAttribute('value', type_inp.value);
+						code += renderElementCode(el, realHTML, level + 4, type_inp.value);
+					}
 					else
 						code += renderElementCode(el, realHTML, level + 4);
 				}
@@ -316,9 +363,9 @@ function renderElementCode(source, realHTML=false, level=4, type_override)
 		code += "\n";
 		code += ' '.repeat(level - 4);
 		if (realHTML)
-			code += `</${type_override ?? source.getAttribute('data-type')}>`
+			code += `</${type_override ? type_override : source.getAttribute('data-type')}>`
 		else
-			code += `&lt;/${type_override ?? source.getAttribute('data-type')}&gt;`
+			code += `&lt;/${type_override ? type_override : source.getAttribute('data-type')}&gt;`
 	}
 	return code;
 }
@@ -368,17 +415,12 @@ function render()
 					destTitle.innerHTML = inp.value;
 			}
 		}
-	
-		const body = source.querySelector("[data-type='body']");
-		if (body)
-		{
-			destBody.contentWindow.document.open();
-			destBody.contentWindow.document.write(renderElementCode(html, true));
-			destBody.contentWindow.document.close();
-
-		}
-			//destBody.innerHTML = renderElementCode(body, true);
 	}
+	
+	// no longer checks for html, body, etc.
+	destBody.contentWindow.document.open();
+	destBody.contentWindow.document.write(renderCode(true));
+	destBody.contentWindow.document.close();
 }
 
 function save_code()
@@ -389,10 +431,13 @@ function save_code()
 	//window.location = url;
 	
 	//newWindow = window.open(url, 'neuesDokument');
+	
+	const filename = prompt('Please enter a file name');
+	if (!filename) return;
 
 	const link = document.createElement('a');
 	link.href = url;
-	link.download = 'webpage';
+	link.download = filename + '.html';
 	link.click(); // Save
 }
 
