@@ -105,7 +105,8 @@ function drop_handler(ev) {
 	 const dz = document.createElement('div');
 	 dz.setAttribute('class', 'dropzone');
  
-	 ev.target.parentElement.style.borderColor = '';
+	 //ev.target.parentElement.style.borderColor = '';
+	 ev.target.parentElement.style.removeProperty('--set-color');
 	 ev.target.replaceWith( dz.cloneNode(), temp.firstElementChild, dz.cloneNode() );
 	 
 	 dropify(rent);
@@ -114,6 +115,9 @@ function drop_handler(ev) {
 		builder_globals.dragged.remove();
  
 	 trim_dropzones(document.querySelector("#code").firstElementChild);
+	 
+	 renderCode();
+	 render();
 }
 
 function drop_trash_handler(ev) {
@@ -124,6 +128,9 @@ function drop_trash_handler(ev) {
  	builder_globals.dragged.remove();
  
  	trim_dropzones(document.querySelector("#code").firstElementChild);
+	
+	renderCode();
+	render();
  }
  
  
@@ -170,7 +177,8 @@ function trim_dropzones(el)
 function onDragLeave(event)
 {
 	event.target.style.background = '';
-	event.target.parentElement.style.borderColor = '';
+	//event.target.parentElement.style.borderColor = '';
+	event.target.parentElement.style.removeProperty('--set-color');
 }
 
 function onDragEnter(event)
@@ -180,8 +188,9 @@ function onDragEnter(event)
 	//event.dataTransfer.dropEffect = 'linkMove';
 	if (drop_ok(event))
 	{
-		event.target.parentElement.style.borderColor = '#1f904e';
-		event.target.style.background = '#1f904e';
+		event.target.parentElement.style.setProperty('--set-color', '#1f904e');
+		//event.target.parentElement.style.borderColor = '#1f904e';
+		event.target.style.background = 'mediumseagreen'; //'#1f904e';
 	}
 }
 
@@ -227,7 +236,7 @@ function check_in_tree(el, check)
 	return false;
 }
 
-function renderCode(ret=false)
+function renderCode(retReal=false)
 {
 	const source = document.querySelector("#code");
 	const destCode = document.querySelector("#render-code");
@@ -244,13 +253,13 @@ function renderCode(ret=false)
 				if (dtype)
 				{
 					if (dtype != '[text]' )
-						code += renderElementCode(el) + "\n";
+						code += renderElementCode(el, retReal) + "\n";
 				}
 			}
 		}
 	}
 	
-	if (ret)
+	if (retReal)
 		return code;
 	else
 		destCode.innerHTML = code;
@@ -360,7 +369,7 @@ function render()
 function save_code()
 {
 	const source = document.querySelector("#code");
-	const blob = new Blob( [renderCode()], {type: 'text/html'});
+	const blob = new Blob( [renderCode(true)], {type: 'text/html'});
 	const url = URL.createObjectURL(blob);
 	//window.location = url;
 	

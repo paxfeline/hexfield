@@ -23,7 +23,7 @@
 
 <div class="el purple-set" data-type="title" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="el hidden" data-type="[text]">
-<textarea></textarea>
+<textarea onchange="renderCode(); render();"></textarea>
 </div>
 </div>
 
@@ -33,7 +33,7 @@
 
 <div class="el purple-set" data-type="style" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="el hidden" data-type="[text]">
-<textarea></textarea>
+<textarea onchange="renderCode(); render();"></textarea>
 </div>
 </div>
 
@@ -49,7 +49,7 @@
 <div class="el green-set" data-type="h1" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="dropzone"></div>
 <div class="el green-set" data-type="[text]" data-no-attributes draggable="true" ondragstart="dragstart_handler(event)">
-<textarea></textarea>
+<textarea onchange="renderCode(); render();"></textarea>
 </div>
 <div class="dropzone"></div>
 </div>
@@ -74,7 +74,7 @@
 </div>
 
 <div class="el green-set" data-type="[text]" data-no-attributes draggable="true" ondragstart="dragstart_handler(event)">
-<textarea></textarea>
+<textarea onchange="renderCode(); render();"></textarea>
 </div>
 
 </details>

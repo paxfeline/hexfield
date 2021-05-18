@@ -22,7 +22,7 @@
 	border-radius: 1em;
 	
 	display: inline-block;
-	min-width: 5em;
+	min-width: 12em;
 }
 
 .el:before
@@ -39,7 +39,7 @@
 
 .el:not([data-self-closing]):before
 {
-    border-radius: 0 0 0.5em;
+    border-radius: 0 0 1em;
 }
 
 #code .el:not([data-self-closing]):before
@@ -49,7 +49,7 @@
 
 #code .el:not([data-self-closing]) > details
 {
-    border-radius: 0 0 0.5em;
+    border-radius: 0 0 1em;
 }
 
 .el .el
