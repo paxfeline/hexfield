@@ -13,6 +13,9 @@
 <div class="dropzone"></div>
 </div>
 
+<div class="el" data-type="[text]" data-no-attributes draggable="true" ondragstart="dragstart_handler(event)">
+<textarea onchange="renderCode(); render();"></textarea>
+</div>
 
 <details open class="builder-element-group">
 <summary>Document metadata</summary>
@@ -30,8 +33,13 @@
 <div class="el purple-set" data-type="link" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
 </div>
 
-
 <div class="el purple-set text-content" data-type="style" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="el hidden" data-type="[text]">
+<textarea onchange="renderCode(); render();"></textarea>
+</div>
+</div>
+
+<div class="el purple-set text-content" data-type="script" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="el hidden" data-type="[text]">
 <textarea onchange="renderCode(); render();"></textarea>
 </div>
@@ -44,10 +52,6 @@
 
 <div class="el green-set" data-type="body" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="dropzone"></div>
-</div>
-
-<div class="el" data-type="[text]" data-no-attributes draggable="true" ondragstart="dragstart_handler(event)">
-<textarea onchange="renderCode(); render();"></textarea>
 </div>
 
 <div class="el green-set" data-type="h1" draggable="true" ondragstart="dragstart_handler(event)">

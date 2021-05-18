@@ -42,12 +42,6 @@ function dragover_handler(ev) {
 	 ev.dataTransfer.dropEffect = "copy";
 }
 
-function dragover_trash_handler(ev) {
- ev.preventDefault();
- //if (builder_globals.dragged)
-	 ev.dataTransfer.dropEffect = "move";
-}
-
 function rem_attr(ev)
 {
 	ev.target.parentElement.remove();
@@ -207,6 +201,12 @@ function onDragEnter(event)
 		//--//event.target.parentElement.style.borderColor = '#1f904e';
 		event.target.style.background = 'mediumseagreen'; //'#1f904e';
 	}
+}
+
+function dragover_trash_handler(ev) {
+ ev.preventDefault();
+ //if (builder_globals.dragged)
+	 ev.dataTransfer.dropEffect = "move";
 }
 
 function onTrashDragLeave(event)
