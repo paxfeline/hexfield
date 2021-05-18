@@ -37,6 +37,21 @@
     left: -0.1em;*/
 }
 
+.el:not([data-self-closing]):before
+{
+    border-radius: 0 0 0.5em;
+}
+
+#code .el:not([data-self-closing]):before
+{
+    border-radius: initial;
+}
+
+#code .el:not([data-self-closing]) > details
+{
+    border-radius: 0 0 0.5em;
+}
+
 .el .el
 {
     margin: 0 0.25em;
