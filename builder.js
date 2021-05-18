@@ -110,8 +110,9 @@ function drop_handler(ev) {
 	 const dz = document.createElement('div');
 	 dz.setAttribute('class', 'dropzone');
  
-	 //ev.target.parentElement.style.borderColor = '';
-	 ev.target.parentElement.style.removeProperty('--set-color');
+	 //--//ev.target.parentElement.style.borderColor = '';
+	 //ev.target.parentElement.style.removeProperty('--set-color');
+	ev.target.parentElement.style.filter = '';
 	 ev.target.replaceWith( dz.cloneNode(), temp.firstElementChild, dz.cloneNode() );
 	 
 	 dropify(rent);
@@ -182,8 +183,10 @@ function trim_dropzones(el)
 function onDragLeave(event)
 {
 	event.target.style.background = '';
-	//event.target.parentElement.style.borderColor = '';
-	event.target.parentElement.style.removeProperty('--set-color');
+	//--//event.target.parentElement.style.borderColor = '';
+	
+	event.target.parentElement.style.filter = '';
+	//event.target.parentElement.style.removeProperty('--set-color');
 }
 
 function onDragEnter(event)
@@ -193,8 +196,9 @@ function onDragEnter(event)
 	//event.dataTransfer.dropEffect = 'linkMove';
 	if (drop_ok(event))
 	{
-		event.target.parentElement.style.setProperty('--set-color', '#1f904e');
-		//event.target.parentElement.style.borderColor = '#1f904e';
+		event.target.parentElement.style.filter = 'brightness(75%)';
+		//event.target.parentElement.style.setProperty('--set-color', '#1f904e');
+		//--//event.target.parentElement.style.borderColor = '#1f904e';
 		event.target.style.background = 'mediumseagreen'; //'#1f904e';
 	}
 }
