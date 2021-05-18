@@ -45,6 +45,8 @@ function dragover_trash_handler(ev) {
 function rem_attr(ev)
 {
 	ev.target.parentElement.remove();
+	renderCode();
+	render()
 }
 
 function add_attr(ev)
@@ -55,13 +57,16 @@ function add_attr(ev)
 	const attr_cont = ev.target.parentElement.querySelector('.builder-attributes-container');
 	newAttr.innerHTML = `<span class="builder-attr-pair">${newName.value}="${newValue.value}"</span>`;
 	attr_cont.appendChild(newAttr);
-	const remAttr = document.createElement('span');
+	const remAttr = document.createElement('button');
 	remAttr.setAttribute("class", "btn")
-	remAttr.innerHTML = " -&nbsp";
+	remAttr.innerHTML = "&nbsp;-&nbsp";
 	remAttr.setAttribute('onclick', 'rem_attr(event)')
 	newAttr.appendChild(remAttr);
 	newName.value = '';
 	newValue.value = '';
+	
+	renderCode();
+	render()
 }
 
 function drop_handler(ev) {
@@ -96,10 +101,10 @@ function drop_handler(ev) {
 		newName.setAttribute('class', 'builder-attr-name');
 		newValue.setAttribute('class', 'builder-attr-value');
 	
-		const addBtn = wrapper.appendChild(document.createElement("span"));
+		const addBtn = wrapper.appendChild(document.createElement("button"));
 		addBtn.setAttribute("class", "btn")
 		addBtn.setAttribute('onclick', 'add_attr(event)')
-		addBtn.innerHTML = "+";
+		addBtn.innerHTML = "&nbsp;+&nbsp;";
 	}
  
 	 const dz = document.createElement('div');
