@@ -21,9 +21,10 @@ The empty elements in HTML are as follows:
 
 const builder_globals =
 	{
+		
 		text_elements: ['title', 'style', 'script', ],
 		known_elements: ['!DOCTYPE html', 'html', 'head', 'body', 'link', 'body', 'h1', 'div', 'span', 'img', 'p', 'nav', ],
-		empty_elements: ['!DOCTYPE', 'link', 'img', '[custom-empty]'],
+		empty_elements: ['!DOCTYPE', 'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr', ],
 		dragged: null,
 		file_data:
 		{

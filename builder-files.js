@@ -158,9 +158,6 @@ function load_element(el)
 	
 	if (type == "!DOCTYPE") type = "!DOCTYPE html"; // I am sorry for this if statement :/
 	
-	if (type == 'h1')
-		console.log();
-	
 	// TODO change document to the bank div
 	const templ = document.querySelector(`[data-type='${type}']`);
 	var ne;
@@ -215,7 +212,35 @@ function load_element(el)
 			}
 		}
 	}
-	// TODO else use custom...
+	else if (el.nodeType == 1)
+	{
+		// TODO change document to the bank div
+		var check_empty = builder_globals.empty_elements.includes(type);
+		
+		const custom_templ = document.querySelector(`[data-type="${check_empty ? '[custom-empty]' : '[custom]'}"]`);
+		ne = custom_templ.cloneNode(true);
+		addAttributes(el, ne);
+		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
+		
+		ne.querySelector('.builder-custom-type').setAttribute('value', type);
+		
+		if (!check_empty)
+		{
+			for (const chel of el.childNodes)
+			{
+				const loaded = load_element(chel);
+		
+				if (loaded)
+				{
+					ne.append(loaded);
+			
+					const botdz = document.createElement('div');
+					botdz.setAttribute('class', 'dropzone');
+					ne.append(botdz);
+				}
+			}
+		}
+	}
 
 	
 	return ne;
@@ -223,6 +248,7 @@ function load_element(el)
 
 function addAttributes(source, dest)
 {
+	console.log("aa", source);
 	if (!dest.hasAttribute("data-no-attributes"))
 	{
 		const wrapper = document.createElement('details');
@@ -293,13 +319,13 @@ function upload_file(event)
 			builder_globals.cur_set.push({name: file.name, content: evt.target.result});
 		
 			create_file_div(file.name, sel_ind);
-			//change_select(sel_ind);
+			
+			if (i == fileList.length - 1)
+				change_select(sel_ind);
 		};
 		reader.readAsText(file);
 
 	}
-	
-	change_select(builder_globals.cur_set.length);
 }
 
 
