@@ -184,7 +184,10 @@ function load_element(el)
 		
 		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
 		const ta = ne.querySelector('textarea');
+		el.innerHTML = el.innerHTML.trim();
 		ta.innerHTML = el.innerHTML;
+		// this line might be necessary, even though it shouldn't be
+		ta.value = ta.innerHTML;
 	}
 	else if (builder_globals.known_elements.includes(type))
 	{
@@ -193,11 +196,16 @@ function load_element(el)
 	
 		for (const chel of el.childNodes)
 		{
-			ne.append(load_element(chel));
+			const loaded = load_element(chel);
+		
+			if (loaded)
+			{
+				ne.append(loaded);
 			
-			const botdz = document.createElement('div');
-			botdz.setAttribute('class', 'dropzone');
-			ne.append(botdz);
+				const botdz = document.createElement('div');
+				botdz.setAttribute('class', 'dropzone');
+				ne.append(botdz);
+			}
 		}
 	}
 	// TODO else use custom...
@@ -256,7 +264,24 @@ function create_new_file()
 	}
 }
 
+function select_file(event)
+{
+	change_select( event.target.parentElement.getAttribute('data-file-index') );
+}
+
+
+
+
+
+
+
 load_local_filesets();
+
+
+
+
+
+
 
 /*
 
