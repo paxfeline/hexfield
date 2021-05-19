@@ -122,22 +122,16 @@ function load_code(code_str)
 	
 	for (const el of div.childNodes)
 	{
-		if (el.nodeType == 1) // element
-			code.append(load_element(el));
-		else if (el.nodeType == 3) // text node
+		const loaded = load_element(el);
+		
+		if (loaded)
 		{
-			// TODO change document to the bank div
-			const templ = document.querySelector(`[data-type='[text]']`);
-			const ne = templ.cloneNode(true);
+			code.append(loaded);
 		
-			ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
-			const ta = ne.querySelector('textarea');
-			ta.innerHTML = el.textContent;
+			const botdz = document.createElement('div');
+			botdz.setAttribute('class', 'dropzone');
+			code.append(botdz);
 		}
-		
-		const botdz = document.createElement('div');
-		botdz.setAttribute('class', 'dropzone');
-		code.append(botdz);
 	}
 	
 	dropify(code);
@@ -167,13 +161,20 @@ function load_element(el)
 	
 	if (el.nodeType == 3) // text node
 	{
+		// if empty text node, return null to skip
+		const txt = el.textContent.trim();
+		
+		if ( !txt ) return null;
+		
 		// TODO change document to the bank div
 		const txt_templ = document.querySelector(`[data-type='[text]']`);
 		ne = txt_templ.cloneNode(true);
 	
 		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
 		const ta = ne.querySelector('textarea');
-		ta.innerHTML = el.textContent;
+		ta.innerHTML = el.textContent.trim();
+		// this line is apparently necessary, even though it shouldn't be
+		ta.value = ta.innerHTML;
 		console.log("grr", el.textContent, el);
 	}
 	else if (builder_globals.text_elements.includes(type))
@@ -254,6 +255,8 @@ function create_new_file()
 		change_select(sel_ind);
 	}
 }
+
+load_local_filesets();
 
 /*
 
