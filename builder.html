@@ -120,6 +120,25 @@ Upload: <input type="file" accept=".html,.htm" multiple id="upload-file-btn" onc
 
 </details>
 
+<details open class="builder-element-group">
+<summary>Other elements</summary>
+
+<div class="el gold-set" data-type="form" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el gold-set" data-type="input" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el gold-set text-content" data-type="option" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="el hidden" data-type="[text]">
+<textarea onchange="renderCode(); render();"></textarea>
+</div>
+</div>
+
+</details>
+
 <div class="el red-set text-content" data-type="[custom]" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="builder-custom-el">Type: <input class="builder-custom-type" onchange="renderCode(); render();"></div>
 <div class="dropzone"></div>

@@ -23,6 +23,11 @@ html
 	--set-color: lightgreen;
 }
 
+.gold-set
+{
+	--set-color: gold;
+}
+
 .red-set
 {
 	--set-color: lightcoral;

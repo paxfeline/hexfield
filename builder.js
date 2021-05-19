@@ -354,6 +354,12 @@ function renderElementCode(source, realHTML=false, level=4, type_override)
 						type_inp.setAttribute('value', type_inp.value);
 						code += renderElementCode(el, realHTML, level + 4, type_inp.value);
 					}
+					else if (dtype == '[custom-empty]')
+					{
+						const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
+						type_inp.setAttribute('value', type_inp.value);
+						code += renderElementCode(el, realHTML, level + 4, type_inp.value);
+					}
 					else
 						code += renderElementCode(el, realHTML, level + 4);
 				}

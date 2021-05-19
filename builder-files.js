@@ -70,6 +70,8 @@ function change_select(new_ind)
 	new_file.style.backgroundColor = "lightblue";
 	
 	load_selected_code();
+	
+	render();
 }
 
 function load_selected_code()
@@ -178,7 +180,6 @@ function load_element(el)
 		ta.innerHTML = txt;
 		// this line is apparently necessary, even though it shouldn't be
 		ta.value = ta.innerHTML;
-		console.log("grr", el.textContent, el);
 	}
 	else if (builder_globals.text_elements.includes(type))
 	{
@@ -264,6 +265,9 @@ function addAttributes(source, dest)
 		for (var i = 0; i < source.attributes.length; i++)
 		{
 			const attr = source.attributes[i];
+			
+			if (attr.name == 'data-converting-type') continue;
+			
 			const newAttr = listContainer.appendChild(document.createElement('div'));
 			
 			newAttr.innerHTML += `<span class="builder-attr-pair">${attr.name}="${attr.value}"</span>`;
