@@ -1,8 +1,3 @@
-const builder_globals =
-	{
-		dragged: null,
-		drag_stash: null,
-	};
 
 function dragstart_handler(ev)
 {
@@ -271,7 +266,8 @@ function renderCode(realHTML=false)
 	
 	var code = '';
 	
-	// this data is annoying repeated here and renderElementCode
+	// this data is annoying repeated here and renderElementCode (below)
+	// IF YOU CHANGE THIS, CHANGE THAT
 	if (source.children)
 	{
 		for (el of source.children)
@@ -327,6 +323,8 @@ function renderElementCode(source, realHTML=false, level=4, type_override)
 	else
 		code += `&lt;${type_override ? type_override : source.getAttribute('data-type')}${renderAttributesCode(source)}&gt;`;
 		
+	// this data is annoying repeated here and renderCode (above)
+	// IF YOU CHANGE THIS, CHANGE THAT
 	if (source.children)
 	{
 		for (el of source.children)

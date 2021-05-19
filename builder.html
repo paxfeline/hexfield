@@ -2,9 +2,30 @@
 <head>
 <title>HTML Builder</title>
 <link rel="stylesheet" href="builder.css">
+<script src="builder-globals.js"></script>
 <script src="builder.js"></script>
+<script src="builder-files.js"></script>
 </head>
 <body>
+
+<div id="templates" hidden>
+
+<div class="file-entry">
+<span class="file-name" data-file-index="0">index</span>
+</div>
+<button class="file-remove-btn">X</button>
+</div>
+
+</div>
+
+<div id="file-bank">
+<div id="file-list">
+
+<div id="file-controls">
+<button id="new-file-btn">new file</button>
+<button id="upload-file-btn">upload</button>
+</div>
+</div>
 
 <div id="bank" ondragenter="onTrashDragEnter(event)" ondragleave="onTrashDragLeave(event)" ondrop="drop_trash_handler(event)" ondragover="dragover_trash_handler(event)">
 
@@ -98,9 +119,9 @@
 <div class="dropzone" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></div>
 </div>
 
-<button id="builder-render-btn" onclick="renderCode(); render();">render!</button>
+<button id="builder-render-btn" class="builder-btn" onclick="renderCode(); render();">render!</button>
 
-<button id="builder-save-btn" onclick="save_code();">save</button>
+<button id="builder-save-btn" class="builder-btn" onclick="save_code();">save</button>
 
 
 <pre id="render-code">
