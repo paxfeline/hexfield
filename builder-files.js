@@ -58,7 +58,7 @@ function change_select(new_ind)
 	const cur_ind = builder_globals.file_data.selectedFileIndex;
 	
 	const cur_file = file_list.querySelector(`[data-file-index='${cur_ind}']`);
-	cur_file.style.backgroundColor = undefined;
+	cur_file.style.backgroundColor = null;
 	
 	builder_globals.file_data.selectedFileIndex = new_ind;
 	
@@ -82,10 +82,31 @@ function replace_all(text, search, replace)
 
 function load_code(code_str)
 {
+	const re = /<(\/?)(!?\w+)(.*?)>/g;
+	code_str = code_str.replaceAll(re,
+		(match, p1, p2, p3) =>
+		{
+			if  (p1 == '/')
+				return `</div>`;
+			else
+			{
+				var tn;
+				if (builder_globals.empty_elements.includes(p2))
+					tn = 'br';
+				else
+					tn = 'div';
+				return `<${tn} data-converting-type='${p2}'${p3}>`;
+			}
+		}); // "<$1div data-converting-type='$2'$3>");
+		
 	const div = document.createElement('div');
+	
+	/*
+	code_str = replace_all(code_str, '!DOCTYPE html', 'doctype');
 	code_str = replace_all(code_str, 'html', 'html-tag');
 	code_str = replace_all(code_str, 'head', 'head-tag');
 	code_str = replace_all(code_str, 'body', 'body-tag');
+	*/
 	
 	div.innerHTML = code_str;
 	
@@ -113,22 +134,34 @@ function load_code(code_str)
 
 function load_element(el)
 {
-	var type = el.tagName.toLowerCase();
-	var ne;
+	var type = el.getAttribute('data-converting-type'); //.tagName.toLowerCase();
+	el.removeAttribute('data-converting-type');
 	
+	/*
+	if (type == 'doctype') type = '!DOCTYPE html';
 	if (type == 'html-tag') type = 'html';
 	if (type == 'head-tag') type = 'head';
 	if (type == 'body-tag') type = 'body';
+	*/
+	
+	if (type == "!DOCTYPE") type = "!DOCTYPE html"; // I am sorry for this if statement :/
+	
+	const templ = document.querySelector(`[data-type='${type}']`);
+	var ne;
 	
 	if (builder_globals.text_elements.includes(type))
 	{
-		ne = document.querySelector(`[data-type='${type}']`).cloneNode(true);
+		ne = templ.cloneNode(true);
+		addAttributes(el, ne);
+		
+		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
 		const ta = ne.querySelector('textarea');
 		ta.innerHTML = el.innerHTML;
 	}
 	else if (builder_globals.known_elements.includes(type))
 	{
-		ne = document.querySelector(`[data-type='${type}']`).cloneNode(true);
+		ne = templ.cloneNode(true);
+		addAttributes(el, ne);
 	
 		for (const chel of el.children)
 		{
@@ -142,6 +175,43 @@ function load_element(el)
 	// TODO else use custom...
 	
 	return ne;
+}
+
+function addAttributes(source, dest)
+{
+	if (!dest.hasAttribute("data-no-attributes"))
+	{
+		const wrapper = document.createElement('details');
+		dest.prepend(wrapper);
+		//wrapper.setAttribute('class', 'wrapper');
+	
+		const summary = wrapper.appendChild(document.createElement("summary"))
+		summary.innerHTML = "attributes";
+	
+		const listContainer = wrapper.appendChild(document.createElement('div'));
+		listContainer.setAttribute('class', 'builder-attributes-container');
+		
+		for (var i = 0; i < source.attributes.length; i++)
+		{
+			const attr = source.attributes[i];
+			const newAttr = listContainer.appendChild(document.createElement('div'));
+			
+			newAttr.innerHTML += `<span class="builder-attr-pair">${attr.name}="${attr.value}"</span>`;
+			newAttr.innerHTML += '<button onclick="rem_attr(event)">&nbsp;-&nbsp</button>';
+			// TODO simply code from builder.js that this came from
+		}
+	
+		const newName = wrapper.appendChild(document.createElement('input'));
+		const newValue = wrapper.appendChild(document.createElement('input'));
+		
+		newName.setAttribute('class', 'builder-attr-name');
+		newValue.setAttribute('class', 'builder-attr-value');
+	
+		const addBtn = wrapper.appendChild(document.createElement("button"));
+		addBtn.setAttribute("class", "btn")
+		addBtn.setAttribute('onclick', 'add_attr(event)')
+		addBtn.innerHTML = "&nbsp;+&nbsp;";
+	}
 }
 
 function create_new_file()

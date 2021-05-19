@@ -1,7 +1,8 @@
 const builder_globals =
 	{
 		text_elements: ['title', 'style', 'script', ],
-		known_elements: ['html', 'head', 'body', 'link', 'body', 'h1', 'div', 'span', 'img', 'p', 'nav', ],
+		known_elements: ['!DOCTYPE html', 'html', 'head', 'body', 'link', 'body', 'h1', 'div', 'span', 'img', 'p', 'nav', ],
+		empty_elements: ['!DOCTYPE', 'link', 'img', '[custom-empty]'],
 		dragged: null,
 		file_data:
 		{
