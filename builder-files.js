@@ -13,23 +13,27 @@ const builder_globals =
 function load_local_filesets()
 {
 	const file_data_str = localStorage.getItem('HEXFIELD-FILE-DATA');
-	const file_data = JSON.parse(file_data_str);
 	
-	builder_globals.file_data = file_data;
-	
-	const file_set = builder_globals.cur_set;
-	
-	const file_list = document.querySelector('#file-list');
-	file_list.innerHTML = '';
-	
-	for (var i = 0; i < file_set.length; i++)
+	if (file_data_str)
 	{
-		create_file_div( file_set[i].name, i );
-	}
+		const file_data = JSON.parse(file_data_str);
 	
-	const sel_file = file_list.querySelector(`[data-file-index='${builder_globals.file_data.selectedFileIndex}']`);
-	sel_file.style.backgroundColor = "lightblue";
-	load_selected_code();
+		builder_globals.file_data = file_data;
+	
+		const file_set = builder_globals.cur_set;
+	
+		const file_list = document.querySelector('#file-list');
+		file_list.innerHTML = '';
+	
+		for (var i = 0; i < file_set.length; i++)
+		{
+			create_file_div( file_set[i].name, i );
+		}
+	
+		const sel_file = file_list.querySelector(`[data-file-index='${builder_globals.file_data.selectedFileIndex}']`);
+		sel_file.style.backgroundColor = "lightblue";
+		load_selected_code();
+	}
 }
 
 function create_file_div(name, index)
@@ -143,7 +147,6 @@ function load_element(el)
 	if (el.getAttribute)
 	{
 		type = el.getAttribute('data-converting-type'); //.tagName.toLowerCase();
-		el.removeAttribute('data-converting-type');
 	}
 	
 	/*
@@ -154,6 +157,9 @@ function load_element(el)
 	*/
 	
 	if (type == "!DOCTYPE") type = "!DOCTYPE html"; // I am sorry for this if statement :/
+	
+	if (type == 'h1')
+		console.log();
 	
 	// TODO change document to the bank div
 	const templ = document.querySelector(`[data-type='${type}']`);
@@ -172,7 +178,7 @@ function load_element(el)
 	
 		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
 		const ta = ne.querySelector('textarea');
-		ta.innerHTML = el.textContent.trim();
+		ta.innerHTML = txt;
 		// this line is apparently necessary, even though it shouldn't be
 		ta.value = ta.innerHTML;
 		console.log("grr", el.textContent, el);
@@ -210,6 +216,7 @@ function load_element(el)
 		}
 	}
 	// TODO else use custom...
+
 	
 	return ne;
 }
