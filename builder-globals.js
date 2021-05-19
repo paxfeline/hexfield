@@ -1,3 +1,24 @@
+/*
+The empty elements in HTML are as follows:
+
+    <area>
+    <base>
+    <br>
+    <col>
+    <embed>
+    <hr>
+    <img>
+    <input>
+    <keygen>(HTML 5.2 Draft removed)
+    <link>
+    <meta>
+    <param>
+    <source>
+    <track>
+    <wbr>
+*/
+
+
 const builder_globals =
 	{
 		text_elements: ['title', 'style', 'script', ],

@@ -82,7 +82,7 @@ function replace_all(text, search, replace)
 
 function load_code(code_str)
 {
-	const re = /<(\/?)(!?\w+)(.*?)>/g;
+	const re = /<(\/?)(!?[-_\w]+)(.*?)>/g;
 	code_str = code_str.replaceAll(re,
 		(match, p1, p2, p3) =>
 		{
