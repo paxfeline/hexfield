@@ -120,9 +120,20 @@ function load_code(code_str)
 	
 	// TODO get/add doctype
 	
-	for (const el of div.children)
+	for (const el of div.childNodes)
 	{
-		code.append(load_element(el));
+		if (el.nodeType == 1) // element
+			code.append(load_element(el));
+		else if (el.nodeType == 3) // text node
+		{
+			// TODO change document to the bank div
+			const templ = document.querySelector(`[data-type='[text]']`);
+			const ne = templ.cloneNode(true);
+		
+			ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
+			const ta = ne.querySelector('textarea');
+			ta.innerHTML = el.textContent;
+		}
 		
 		const botdz = document.createElement('div');
 		botdz.setAttribute('class', 'dropzone');
@@ -134,8 +145,12 @@ function load_code(code_str)
 
 function load_element(el)
 {
-	var type = el.getAttribute('data-converting-type'); //.tagName.toLowerCase();
-	el.removeAttribute('data-converting-type');
+	var type;
+	if (el.getAttribute)
+	{
+		type = el.getAttribute('data-converting-type'); //.tagName.toLowerCase();
+		el.removeAttribute('data-converting-type');
+	}
 	
 	/*
 	if (type == 'doctype') type = '!DOCTYPE html';
@@ -146,10 +161,22 @@ function load_element(el)
 	
 	if (type == "!DOCTYPE") type = "!DOCTYPE html"; // I am sorry for this if statement :/
 	
+	// TODO change document to the bank div
 	const templ = document.querySelector(`[data-type='${type}']`);
 	var ne;
 	
-	if (builder_globals.text_elements.includes(type))
+	if (el.nodeType == 3) // text node
+	{
+		// TODO change document to the bank div
+		const txt_templ = document.querySelector(`[data-type='[text]']`);
+		ne = txt_templ.cloneNode(true);
+	
+		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
+		const ta = ne.querySelector('textarea');
+		ta.innerHTML = el.textContent;
+		console.log("grr", el.textContent, el);
+	}
+	else if (builder_globals.text_elements.includes(type))
 	{
 		ne = templ.cloneNode(true);
 		addAttributes(el, ne);
@@ -163,7 +190,7 @@ function load_element(el)
 		ne = templ.cloneNode(true);
 		addAttributes(el, ne);
 	
-		for (const chel of el.children)
+		for (const chel of el.childNodes)
 		{
 			ne.append(load_element(chel));
 			
