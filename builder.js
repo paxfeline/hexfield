@@ -146,6 +146,7 @@ function dropify(wut)
 		zones.forEach(
 			el =>
 			{
+				// maybe change to setattribute
 				el.addEventListener("drop", drop_handler);
 				el.addEventListener("dragover", dragover_handler);
 				el.addEventListener("dragenter", onDragEnter);
@@ -307,6 +308,9 @@ function renderCode(realHTML=false)
 			}
 		}
 	}
+	
+	builder_globals.cur_file.content = code;
+	save_local_filesets();
 	
 	if (realHTML)
 		return code;

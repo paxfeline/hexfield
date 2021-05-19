@@ -17,84 +17,19 @@ function load_local_filesets()
 	
 	builder_globals.file_data = file_data;
 	
-	const file_set = builder_globals.file_data.file_sets[ builder_globals.file_data.selected ];
+	const file_set = builder_globals.cur_set;
 	
 	const file_list = document.querySelector('#file-list');
 	file_list.innerHTML = '';
 	
 	for (var i = 0; i < file_set.length; i++)
 	{
-		const div = create_file_div( file_set[i].name, i );
-		file_list.append(div);
+		create_file_div( file_set[i].name, i );
 	}
 	
 	const sel_file = file_list.querySelector(`[data-file-index='${builder_globals.file_data.selectedFileIndex}']`);
-}
-
-function save_local_filesets()
-{
-	const file_data_str = JSON.stringify(builder_globals.file_data);
-	localStorage.setItem('HEXFIELD-FILE-DATA', file_data_str);
-}
-
-function change_select(new_ind)
-{
-	const file_list = document.querySelector('#file-list');
-}
-
-function load_selected_code()
-{
-	const file_set = builder_globals.file_data.file_sets[ builder_globals.file_data.selected ];
-	const file = file_set[ builder_globals.file_data.selectedFileIndex ];
-	
-	load_code( file.content );
-}
-
-function load_code(code)
-{
-	const parser = new DOMParser();
-	const doc = parser.parseFromString(code, "text/html");
-	
-	
-}
-
-function load_element(el)
-{
-	const type = el.tagName.toLowerCase();
-	const ne = document.querySelector(`[data-type='${type}']`).cloneNode(true);
-	
-	if (builder_globals.text_elements.includes(type))
-	{
-		const ta = ne.querySelector('textarea');
-		ta.innerHTML = el.innerHTML;
-	}
-	else if (builder_globals.known_elements.includes(type))
-	{
-		for (const chel in el.children)
-			ne.append(load_el(chel));
-		
-		if (el.children.length)
-		{
-			const botdz = document.createElement('div');
-			botdz.setAttribute('class', 'dropzone');
-			ne.append(botdz);
-		}
-	}
-}
-
-function create_new_file()
-{
-	const file_name = prompt('Enter a file name');
-	
-	if (file_name)
-	{
-		const sel_set = builder_globals.selected;
-		const sel_ind = builder_globals.file_sets[ sel_set ].length;
-		builder_globals.file_sets[ sel_set ].append(file_name);
-		builder_globals.selectedFileIndex = sel_ind;
-	
-		
-	}
+	sel_file.style.backgroundColor = "lightblue";
+	load_selected_code();
 }
 
 function create_file_div(name, index)
@@ -106,7 +41,121 @@ function create_file_div(name, index)
 	
 	file_entry.querySelector('.file-name').innerHTML = name;
 	
-	return file_entry;
+	const file_list = document.querySelector('#file-list');
+	file_list.append(file_entry);
+}
+
+function save_local_filesets()
+{
+	const file_data_str = JSON.stringify(builder_globals.file_data);
+	localStorage.setItem('HEXFIELD-FILE-DATA', file_data_str);
+}
+
+function change_select(new_ind)
+{
+	const file_list = document.querySelector('#file-list');
+	
+	const cur_ind = builder_globals.file_data.selectedFileIndex;
+	
+	const cur_file = file_list.querySelector(`[data-file-index='${cur_ind}']`);
+	cur_file.style.backgroundColor = undefined;
+	
+	builder_globals.file_data.selectedFileIndex = new_ind;
+	
+	const new_file = file_list.querySelector(`[data-file-index='${new_ind}']`);
+	new_file.style.backgroundColor = "lightblue";
+	
+	load_selected_code();
+}
+
+function load_selected_code()
+{
+	const file = builder_globals.cur_file;
+	
+	load_code( file.content );
+}
+
+function replace_all(text, search, replace)
+{
+	return text.split(search).join(replace);
+}
+
+function load_code(code_str)
+{
+	const div = document.createElement('div');
+	code_str = replace_all(code_str, 'html', 'html-tag');
+	code_str = replace_all(code_str, 'head', 'head-tag');
+	code_str = replace_all(code_str, 'body', 'body-tag');
+	
+	div.innerHTML = code_str;
+	
+	const code = document.querySelector('#code');
+	code.innerHTML = '';
+	
+	// better to use a template with a dropzone?
+	const botdz = document.createElement('div');
+	botdz.setAttribute('class', 'dropzone');
+	code.append(botdz);
+	
+	// TODO get/add doctype
+	
+	for (const el of div.children)
+	{
+		code.append(load_element(el));
+		
+		const botdz = document.createElement('div');
+		botdz.setAttribute('class', 'dropzone');
+		code.append(botdz);
+	}
+	
+	dropify(code);
+}
+
+function load_element(el)
+{
+	var type = el.tagName.toLowerCase();
+	var ne;
+	
+	if (type == 'html-tag') type = 'html';
+	if (type == 'head-tag') type = 'head';
+	if (type == 'body-tag') type = 'body';
+	
+	if (builder_globals.text_elements.includes(type))
+	{
+		ne = document.querySelector(`[data-type='${type}']`).cloneNode(true);
+		const ta = ne.querySelector('textarea');
+		ta.innerHTML = el.innerHTML;
+	}
+	else if (builder_globals.known_elements.includes(type))
+	{
+		ne = document.querySelector(`[data-type='${type}']`).cloneNode(true);
+	
+		for (const chel of el.children)
+		{
+			ne.append(load_element(chel));
+			
+			const botdz = document.createElement('div');
+			botdz.setAttribute('class', 'dropzone');
+			ne.append(botdz);
+		}
+	}
+	// TODO else use custom...
+	
+	return ne;
+}
+
+function create_new_file()
+{
+	const name = prompt('Enter a file name');
+	
+	if (name)
+	{
+		const sel_ind = builder_globals.cur_set.length;
+		builder_globals.cur_set.push({name, content: ''});
+		
+		create_file_div(name, sel_ind);
+		change_select(sel_ind);
+	}
 }
 
 /*
