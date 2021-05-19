@@ -193,6 +193,7 @@ function load_element(el)
 	{
 		ne = templ.cloneNode(true);
 		addAttributes(el, ne);
+		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
 	
 		for (const chel of el.childNodes)
 		{

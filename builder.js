@@ -215,6 +215,7 @@ function onTrashDragLeave(event)
 
 function onTrashDragEnter(event)
 {
+	console.log('trash enter');
 	event.preventDefault();
 	if (builder_globals.dragged)
 	{
