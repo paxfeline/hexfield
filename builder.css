@@ -219,13 +219,30 @@ html
     display: inline-block;
     padding: 0.5em;
     border: 0.25em solid black;
-    width: 25em;
-    min-height: calc(20vh - 4em);
+    width: 40vw;
+    height: calc(20vh - 4em);
     margin-bottom: 1em;
+}
+
+#file-list
+{
+	height: calc(100% - 2em);
+    overflow: auto;
+}
+
+#file-controls
+{
+	margin-top: 0.5em;
 }
 
 .file-entry
 {
 	margin: 0.25em;
 	padding: 0.25em;
+}
+
+#upload-file-btn
+{
+    width: 10em;
+    color: transparent;
 }

@@ -277,6 +277,31 @@ function select_file(event)
 	change_select( event.target.parentElement.getAttribute('data-file-index') );
 }
 
+function upload_file(event)
+{
+	const fileList = event.target.files;
+	
+	for (let i = 0; i < fileList.length; i++)
+	{
+		const file = fileList[i];
+		const reader = new FileReader();
+		reader.onload = function(evt)
+		{
+			//console.log(evt.target.result);
+			
+			const sel_ind = builder_globals.cur_set.length;
+			builder_globals.cur_set.push({name: file.name, content: evt.target.result});
+		
+			create_file_div(file.name, sel_ind);
+			//change_select(sel_ind);
+		};
+		reader.readAsText(file);
+
+	}
+	
+	change_select(builder_globals.cur_set.length);
+}
+
 
 
 

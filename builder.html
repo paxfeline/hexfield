@@ -30,7 +30,7 @@
 </div>
 <div id="file-controls">
 <button id="new-file-btn" onclick="create_new_file()">new file</button>
-<button id="upload-file-btn">upload</button>
+Upload: <input type="file" accept=".html,.htm" multiple id="upload-file-btn" onchange="upload_file(event)">
 </div>
 </div>
 
@@ -84,6 +84,8 @@
 <div class="el green-set" data-type="body" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="dropzone"></div>
 </div>
+
+<!-- this is here (h1 below) because the clone function needs it empty -->
 
 <div class="el green-set" data-type="h1" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="dropzone"></div>
