@@ -318,8 +318,6 @@ function renderCode(realHTML=false)
 		// create uri for local linking
 		builder_globals.cur_file.uri = URL.createObjectURL(new Blob([code], {type: 'text/html'}));
 		debugger;
-		
-		document.querySelector("iframe").contentDocument.location = builder_globals.cur_file.uri;
 	
 		return code;
 	}
@@ -407,8 +405,6 @@ function renderAttributesCode(source)
 
 function render()
 {
-	var code = '';
-	
 	const source = document.querySelector("#code");
 	const destOuter = document.querySelector("#render");
 	const destTitle = destOuter.querySelector("#render-title");
@@ -434,15 +430,60 @@ function render()
 		}
 	}
 	
+	renderCode(true);
+	
+	const iframe = document.querySelector("iframe");
+	
+	/*
+	iframe.addEventListener( 'load',
+		() =>
+		{
+			debugger;
+			iframe.contentDocument.querySelectorAll('a[href]').forEach(
+				el =>
+				{
+					el.href = `javascript: window.parent.forward_link("${el.href}")`;
+				});
+		} );
+		*/
+		
+	iframe.contentDocument.location = builder_globals.cur_file.uri;
+	
+	
 	// no longer checks for html, body, etc.
 	/*
 	destBody.contentDocument.open();
 	destBody.contentDocument.write(renderCode(true));
 	destBody.contentDocument.close();
 	*/
+}
+
+function fix_links(events)
+{
+	debugger;
+	const iframe = document.querySelector("iframe");
+	iframe.contentDocument.querySelectorAll('a[href]').forEach(
+		el =>
+		{
+			el.href = `javascript: window.parent.forward_link("${el.href}")`;
+		});
+}
+
+function forward_link(url)
+{
+	const filesets = Object.values(builder_globals.file_data.file_sets);
+	const iframe = document.querySelector("iframe");
 	
-	// inject base element
-	
+	for (const fileset of filesets)
+	{
+		for (const file of fileset)
+		{
+			if (file.name == url)
+			{
+				iframe.contentDocument.location = file.uri;
+			}
+		}
+	}
 }
 
 function save_code()

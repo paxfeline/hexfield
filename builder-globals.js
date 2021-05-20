@@ -19,7 +19,7 @@ The empty elements in HTML are as follows:
 */
 
 
-const builder_globals =
+window.builder_globals =
 	{
 		
 		text_elements: ['title', 'style', 'script', 'option', ],
