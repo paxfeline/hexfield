@@ -48,7 +48,11 @@ Upload: <input type="file" accept="image/*" multiple id="upload-media-btn" oncha
 </div>
 </div>
 
-<button onclick="toggle_draggable(event)">fix</button>
+<div style="display: inline-block">
+<button onclick="toggle_draggable(event)">fix blocks</button><br>
+<button id="builder-render-btn" class="builder-btn" onclick="renderCode(); render();">render!</button><br>
+<button id="builder-save-btn" class="builder-btn" onclick="save_code();">export</button>
+</div>
 
 </div>
 
@@ -139,6 +143,10 @@ Upload: <input type="file" accept="image/*" multiple id="upload-media-btn" oncha
 <details open class="builder-element-group">
 <summary>Other elements</summary>
 
+<div class="el gold-set" data-type="a" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
 <div class="el gold-set" data-type="form" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="dropzone"></div>
 </div>
@@ -172,17 +180,13 @@ Upload: <input type="file" accept="image/*" multiple id="upload-media-btn" oncha
 <div class="dropzone" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></div>
 </div>
 
-<button id="builder-render-btn" class="builder-btn" onclick="renderCode(); render();">render!</button>
-
-<button id="builder-save-btn" class="builder-btn" onclick="save_code();">export</button>
-
 
 <pre id="render-code">
 </pre>
 
 <div id="render">
 <div id="render-title"></div>
-<iframe id="render-body" onload="fix_links(event)"></iframe>
+<iframe id="render-body" onload="fix_urls(event)"></iframe>
 </div>
 
 </body>

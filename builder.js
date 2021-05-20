@@ -2,7 +2,7 @@
 function dragstart_handler(ev)
 {
 	// Add the target element's id to the data transfer object
-	ev.dataTransfer.setData("text/plain", ev.target.outerHTML);
+	ev.dataTransfer.setData("application/hexfield", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "copy";
 	builder_globals.dragged = null;
 }
@@ -22,7 +22,7 @@ function dragstart_move_handler(ev)
 	
 	console.log('start', ev.target, tas);
 	//ev.target.firstElementChild.innerHTML = ev.target.firstElementChild.value;
-	ev.dataTransfer.setData("text/plain", ev.target.outerHTML);
+	ev.dataTransfer.setData("application/hexfield", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "move";
 	builder_globals.dragged = ev.target;
 }
@@ -68,7 +68,7 @@ function drop_handler(ev) {
  if (!drop_ok(ev)) return;
  ev.preventDefault();
  // Get the id of the target and add the moved element to the target's DOM
- const data = ev.dataTransfer.getData("text/plain");
+ const data = ev.dataTransfer.getData("application/hexfield");
  const rent = ev.target.parentElement;
  //ev.target.style.backgroundColor = '';
  const temp = document.createElement("div");
@@ -316,8 +316,7 @@ function renderCode(realHTML=false)
 		save_local_filesets();
 	
 		// create uri for local linking
-		builder_globals.cur_file.uri = URL.createObjectURL(new Blob([code], {type: 'text/html'}));
-		debugger;
+		builder_globals.cur_file.url = URL.createObjectURL(new Blob([code], {type: 'text/html'}));
 	
 		return code;
 	}
@@ -419,7 +418,6 @@ function render()
 		const head = source.querySelector("[data-type='head']");
 		if (head)
 		{
-			debugger;
 			const title = head.querySelector("[data-type='title']");
 			if (title)
 			{
@@ -438,7 +436,6 @@ function render()
 	iframe.addEventListener( 'load',
 		() =>
 		{
-			debugger;
 			iframe.contentDocument.querySelectorAll('a[href]').forEach(
 				el =>
 				{
@@ -447,7 +444,7 @@ function render()
 		} );
 		*/
 		
-	iframe.contentDocument.location = builder_globals.cur_file.uri;
+	iframe.contentDocument.location = builder_globals.cur_file.url;
 	
 	
 	// no longer checks for html, body, etc.
@@ -458,13 +455,74 @@ function render()
 	*/
 }
 
+function fix_urls(events)
+{
+	const iframe = document.querySelector("iframe");
+	
+	urlSelectors.forEach(
+		urlSelector =>
+		{
+			iframe.contentDocument.querySelectorAll(`${urlSelector.type}[${urlSelector.attr}]`).forEach(
+				el =>
+				{
+					fix_url(el, urlSelector.attr);
+				});
+		});
+}
+
+function fix_url(el, attr)
+{
+	const urlSources =
+		[
+			Object.values(builder_globals.file_data.media_sets),
+			Object.values(builder_globals.file_data.file_sets),
+		
+		];
+
+	urlSources.forEach(
+		urlSets =>
+		{
+			urlSets.forEach(
+				urlSet =>
+				{
+					urlSet.forEach(
+						item =>
+						{
+							// this is a bit overly complex but it just checks to see if the URL should be replaced
+							console.log('url item', item);
+							const fullUrl = new URL(el[attr], document.baseURI);
+							const sourceUrl = new URL(item.name, document.baseURI);
+							if (fullUrl.href == sourceUrl.href)
+							{
+								el[attr] = item.url;
+							}
+						});
+				});
+		});
+	
+	/*
+	for (const mediaset of mediasets)
+	{
+		for (const media of mediaset)
+		{
+			if (media.name == el.src)
+			{
+				el.src = media.url;
+			}
+		}
+	}
+	*/
+}
+
+/*
 function fix_links(events)
 {
 	const iframe = document.querySelector("iframe");
 	iframe.contentDocument.querySelectorAll('a[href]').forEach(
 		el =>
 		{
-			el.href = `javascript: window.parent.forward_link("${el.href}")`;
+			fix_link(el);
+			//el.href = `javascript: window.parent.forward_link("${el.href}")`;
 		});
 	iframe.contentDocument.querySelectorAll('img[src]').forEach(
 		el =>
@@ -489,7 +547,67 @@ function fix_media(el)
 		}
 	}
 }
+*/
 
+const urlSelectors =
+	[
+		{type: 'a', attr: 'href'},
+		{type: 'body', attr: 'background'},
+		{type: 'form', attr: 'action'},
+		{type: 'img', attr: 'src'},
+		{type: 'link', attr: 'href'},
+		{type: 'script', attr: 'src'},
+		{type: 'embed', attr: 'src'},
+	];
+	
+/*
+So for HTML4 we've got:
+
+    Ã <a href=url>
+    <applet codebase=url>
+    <area href=url>
+    <base href=url>
+    <blockquote cite=url>
+    Ã <body background=url>
+    <del cite=url>
+    Ã <form action=url>
+    <frame longdesc=url> and <frame src=url>
+    <head profile=url>
+    <iframe longdesc=url> and <iframe src=url>
+    * <img longdesc=url> and Ã <img src=url> and <img usemap=url>
+    <input src=url> and <input usemap=url>
+    <ins cite=url>
+    Ã <link href=url>
+    <object classid=url> and <object codebase=url> and <object data=url> and <object usemap=url>
+    <q cite=url>
+    Ã <script src=url>
+
+HTML 5 adds a few (and HTML5 seems to not use some of the ones above as well):
+
+    <audio src=url>
+    <button formaction=url>
+    <command icon=url>
+    Ã <embed src=url>
+    <html manifest=url>
+    <input formaction=url>
+    <source src=url>
+    <track src=url>
+    <video poster=url> and <video src=url>
+
+These aren't necessarily simple URLs:
+
+    <img srcset="url1 resolution1, url2 resolution2">
+    <source srcset="url1 resolution1, url2 resolution2">
+    <object archive=url> or <object archive="url1 url2 url3">
+    <applet archive=url> or <applet archive=url1,url2,url3>
+    <meta http-equiv="refresh" content="seconds; url">
+
+SVGs can also contain links to resources: <svg><image href="url" /></svg>
+
+In addition, the style attribute can contain css declarations with one or several urls. For example: <div style="background: url(image.png)">
+*/
+
+/*
 function forward_link(url)
 {
 	const filesets = Object.values(builder_globals.file_data.file_sets);
@@ -501,11 +619,14 @@ function forward_link(url)
 		{
 			if (file.name == url)
 			{
-				iframe.contentDocument.location = file.uri;
+				return file.url;
+				//iframe.contentDocument.location = file.url;
 			}
 		}
 	}
+	return url; // fallback, shouldn't happen
 }
+*/
 
 function save_code()
 {
@@ -525,17 +646,12 @@ function save_code()
 	link.click(); // Save
 }
 
-// thanks https://stackoverflow.com/a/17819167
-function isPathAbsolute(path) {
-  return /^(?:\/|[a-z]+:\/\/)/.test(path);
-}
-
 var blocks_draggable = true;
 function toggle_draggable(event)
 {
 	blocks_draggable = !blocks_draggable;
 	if (blocks_draggable)
-		event.target.innerHTML = 'fix';
+		event.target.innerHTML = 'fix blocks';
 	else
 		event.target.innerHTML = 'make draggable';
 	

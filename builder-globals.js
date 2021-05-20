@@ -23,16 +23,16 @@ window.builder_globals =
 	{
 		
 		text_elements: ['title', 'style', 'script', 'option', ],
-		known_elements: ['!DOCTYPE html', 'html', 'head', 'body', 'link', 'body', 'h1', 'div', 'span', 'img', 'p', 'nav', 'form', 'input', 'option', 'br', ],
+		known_elements: ['!DOCTYPE html', 'html', 'head', 'body', 'link', 'body', 'h1', 'div', 'span', 'img', 'p', 'nav', 'form', 'input', 'option', 'br', 'a', ],
 		empty_elements: ['!DOCTYPE', 'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr', ],
 		dragged: null,
 		file_data:
 		{
 			file_sets: {
-				'default': [{name: 'index.html', content: ''}],
+				'default': [{name: 'index.html', content: ''}], // {name, content, url}
 			},
 			media_sets: {
-				'default': [], // {name, uri}
+				'default': [], // {name, url}
 			},
 			selectedSet: 'default',
 			selectedFileIndex: 0,
