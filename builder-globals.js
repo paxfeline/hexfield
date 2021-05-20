@@ -29,7 +29,10 @@ window.builder_globals =
 		file_data:
 		{
 			file_sets: {
-				'default': [{name: 'index.html', content: ''}]
+				'default': [{name: 'index.html', content: ''}],
+			},
+			media_sets: {
+				'default': [], // {name, uri}
 			},
 			selectedSet: 'default',
 			selectedFileIndex: 0,
@@ -38,9 +41,12 @@ window.builder_globals =
 		{
 			return this.file_data.file_sets[ this.file_data.selectedSet ]
 		},
+		get cur_media()
+		{
+			return this.file_data.media_sets[ this.file_data.selectedSet ]
+		},
 		get cur_file()
 		{
 			return this.cur_set[ this.file_data.selectedFileIndex ]
 		}
 	};
-

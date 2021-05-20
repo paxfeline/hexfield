@@ -334,6 +334,41 @@ function upload_file(event)
 	}
 }
 
+function create_media_div(name, index, url)
+{
+	const templates = document.querySelector('#templates');
+	
+	const file_entry = templates.querySelector('.media-entry').cloneNode(true);
+	file_entry.setAttribute('data-media-index', index);
+	
+	file_entry.querySelector('.media-name').innerHTML = name;
+	file_entry.querySelector('.media-preview').src = url;
+	
+	const file_list = document.querySelector('#media-list');
+	file_list.append(file_entry);
+}
+
+function upload_media(event)
+{
+	const fileList = event.target.files;
+	
+	for (let i = 0; i < fileList.length; i++)
+	{
+		const file = fileList[i];
+		const reader = new FileReader();
+		reader.onload = function(evt)
+		{
+			//console.log(evt.target.result);
+			
+			const sel_ind = builder_globals.cur_media.length;
+			builder_globals.cur_media.push({name: file.name, url: evt.target.result});
+		
+			create_media_div(file.name, sel_ind, evt.target.result);
+		};
+		reader.readAsDataURL(file);
+	}
+}
+
 
 
 

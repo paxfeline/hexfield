@@ -219,7 +219,7 @@ html
 	display: inline-block;
 }
 
-#file-bank
+#file-bank, #media-bank
 {
     display: inline-block;
     padding: 0.5em;
@@ -227,15 +227,16 @@ html
     width: 40vw;
     height: calc(20vh - 4em);
     margin-bottom: 1em;
+    vertical-align: top;
 }
 
-#file-list
+#file-list, #media-list
 {
 	height: calc(100% - 2em);
     overflow: auto;
 }
 
-#file-controls
+#file-controls, media-controls
 {
 	margin-top: 0.5em;
 }

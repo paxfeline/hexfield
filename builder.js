@@ -460,13 +460,34 @@ function render()
 
 function fix_links(events)
 {
-	debugger;
 	const iframe = document.querySelector("iframe");
 	iframe.contentDocument.querySelectorAll('a[href]').forEach(
 		el =>
 		{
 			el.href = `javascript: window.parent.forward_link("${el.href}")`;
 		});
+	iframe.contentDocument.querySelectorAll('img[src]').forEach(
+		el =>
+		{
+			fix_media(el);
+		});
+}
+
+function fix_media(el)
+{
+	const mediasets = Object.values(builder_globals.file_data.media_sets);
+	const iframe = document.querySelector("iframe");
+	
+	for (const mediaset of mediasets)
+	{
+		for (const media of mediaset)
+		{
+			if (media.name == el.src)
+			{
+				el.src = media.url;
+			}
+		}
+	}
 }
 
 function forward_link(url)
