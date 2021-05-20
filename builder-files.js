@@ -290,10 +290,13 @@ function addAttributes(source, dest)
 
 function create_new_file()
 {
-	const name = prompt('Enter a file name');
+	var name = prompt('Enter a file name');
 	
 	if (name)
 	{
+		if (!(name.slice(-5) == '.html' || name.slice(-4) == '.htm'))
+			name += '.html';
+	
 		const sel_ind = builder_globals.cur_set.length;
 		builder_globals.cur_set.push({name, content: ''});
 		
@@ -328,7 +331,6 @@ function upload_file(event)
 				change_select(sel_ind);
 		};
 		reader.readAsText(file);
-
 	}
 }
 
@@ -336,7 +338,7 @@ function upload_file(event)
 
 
 
-
+/* AT STARTUP, LOAD LOCAL FILE SETS */
 
 load_local_filesets();
 

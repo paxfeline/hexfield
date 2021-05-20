@@ -310,11 +310,19 @@ function renderCode(realHTML=false)
 		}
 	}
 	
-	builder_globals.cur_file.content = code;
-	save_local_filesets();
-	
 	if (realHTML)
+	{
+		builder_globals.cur_file.content = code;
+		save_local_filesets();
+	
+		// create uri for local linking
+		builder_globals.cur_file.uri = URL.createObjectURL(new Blob([code], {type: 'text/html'}));
+		debugger;
+		
+		document.querySelector("iframe").contentDocument.location = builder_globals.cur_file.uri;
+	
 		return code;
+	}
 	else
 		destCode.innerHTML = code;
 }
@@ -427,9 +435,14 @@ function render()
 	}
 	
 	// no longer checks for html, body, etc.
-	destBody.contentWindow.document.open();
-	destBody.contentWindow.document.write(renderCode(true));
-	destBody.contentWindow.document.close();
+	/*
+	destBody.contentDocument.open();
+	destBody.contentDocument.write(renderCode(true));
+	destBody.contentDocument.close();
+	*/
+	
+	// inject base element
+	
 }
 
 function save_code()

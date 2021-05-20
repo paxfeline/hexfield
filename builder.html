@@ -11,7 +11,7 @@
 <div id="templates" hidden>
 
 <div class="file-entry">
-<span class="file-name" data-file-index="0">index</span>
+<span class="file-name" data-file-index=""></span>
 <button class="file-remove-btn" onclick="select_file(event)">Select</button>
 <button class="file-remove-btn">Delete</button>
 </div>
@@ -23,7 +23,7 @@
 <div id="file-bank">
 <div id="file-list">
 <div class="file-entry" data-file-index="0" style="background-color: lightblue">
-<span class="file-name">index</span>
+<span class="file-name">index.html</span>
 <button class="file-remove-btn" onclick="select_file(event)">Select</button>
 <button class="file-remove-btn">Delete</button>
 </div>
@@ -134,6 +134,9 @@ Upload: <input type="file" accept=".html,.htm" multiple id="upload-file-btn" onc
 <div class="el hidden" data-type="[text]">
 <textarea onchange="renderCode(); render();"></textarea>
 </div>
+</div>
+
+<div class="el gold-set" data-type="br" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
 </div>
 
 </details>

@@ -1,0 +1,30 @@
+<html>
+<head>
+<script>
+
+const file_data_str = localStorage.getItem('HEXFIELD-FILE-DATA');
+
+if (file_data_str)
+{
+	const file_data = JSON.parse(file_data_str);
+
+	const to_find = window.location.search.substr(1);
+	
+	const filesets = Object.values(file_data.file_sets);
+	
+	for (const fileset of filesets)
+	{
+		for (const file of fileset)
+		{
+			if (file.name == to_find)
+			{
+				document.location = file.uri;
+			}
+		}
+	}
+}
+
+</script>
+</head>
+<body></body>
+</html>
