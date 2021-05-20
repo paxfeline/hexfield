@@ -19,7 +19,8 @@ function load_local_filesets()
 		const file_data = JSON.parse(file_data_str);
 	
 		builder_globals.file_data = file_data;
-	
+		
+		// html files
 		const file_set = builder_globals.cur_set;
 	
 		const file_list = document.querySelector('#file-list');
@@ -33,6 +34,17 @@ function load_local_filesets()
 		const sel_file = file_list.querySelector(`[data-file-index='${builder_globals.file_data.selectedFileIndex}']`);
 		sel_file.style.backgroundColor = "lightblue";
 		load_selected_code();
+		
+		// media
+		const media_set = builder_globals.cur_media;
+	
+		const media_list = document.querySelector('#media-list');
+		//media_list.innerHTML = '';
+	
+		for (var i = 0; i < media_set.length; i++)
+		{
+			create_media_div( media_set[i].name, i, media_set[i].url );
+		}
 	}
 }
 
@@ -71,6 +83,7 @@ function change_select(new_ind)
 	
 	load_selected_code();
 	
+	renderCode()
 	render();
 }
 
@@ -332,6 +345,8 @@ function upload_file(event)
 		};
 		reader.readAsText(file);
 	}
+	
+	save_local_filesets()
 }
 
 function create_media_div(name, index, url)
@@ -367,6 +382,8 @@ function upload_media(event)
 		};
 		reader.readAsDataURL(file);
 	}
+	
+	save_local_filesets()
 }
 
 
