@@ -529,3 +529,19 @@ function save_code()
 function isPathAbsolute(path) {
   return /^(?:\/|[a-z]+:\/\/)/.test(path);
 }
+
+var blocks_draggable = true;
+function toggle_draggable(event)
+{
+	blocks_draggable = !blocks_draggable;
+	if (blocks_draggable)
+		event.target.innerHTML = 'make draggable';
+	else
+		event.target.innerHTML = 'fix';
+	
+	document.querySelectorAll('[draggable]').forEach(
+		el =>
+		{
+			el.setAttribute('draggable', blocks_draggable);
+		});
+}
