@@ -535,9 +535,9 @@ function toggle_draggable(event)
 {
 	blocks_draggable = !blocks_draggable;
 	if (blocks_draggable)
-		event.target.innerHTML = 'make draggable';
-	else
 		event.target.innerHTML = 'fix';
+	else
+		event.target.innerHTML = 'make draggable';
 	
 	document.querySelectorAll('[draggable]').forEach(
 		el =>
