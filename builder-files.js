@@ -38,9 +38,7 @@ function load_local_filesets()
 			for (var i = 0; i < file_set.length; i++)
 			{
 				const file = file_set[i];
-				console.log("read in", file, file.url);
 				file.url = URL.createObjectURL(new Blob([file.content], {type: 'text/html'}));
-				console.log("read i2", file.url);
 			}
 		}
 	
@@ -58,6 +56,9 @@ function load_local_filesets()
 		{
 			create_media_div( media_set[i].name, i, media_set[i].url );
 		}
+		
+		// render selected file
+		render();
 	}
 }
 
