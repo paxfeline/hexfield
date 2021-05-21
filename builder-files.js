@@ -21,14 +21,27 @@ function load_local_filesets()
 		builder_globals.file_data = file_data;
 		
 		// html files
-		const file_set = builder_globals.cur_set;
+		const cur_file_set = builder_globals.cur_set;
 	
 		const file_list = document.querySelector('#file-list');
 		file_list.innerHTML = '';
 	
-		for (var i = 0; i < file_set.length; i++)
+		for (var i = 0; i < cur_file_set.length; i++)
 		{
-			create_file_div( file_set[i].name, i );
+			
+			create_file_div( cur_file_set[i].name, i );
+		}
+		
+		// create object URL for all files in all sets
+		for (const file_set of Object.values(file_data.file_sets))
+		{
+			for (var i = 0; i < file_set.length; i++)
+			{
+				const file = file_set[i];
+				console.log("read in", file, file.url);
+				file.url = URL.createObjectURL(new Blob([file.content], {type: 'text/html'}));
+				console.log("read i2", file.url);
+			}
 		}
 	
 		const sel_file = file_list.querySelector(`[data-file-index='${builder_globals.file_data.selectedFileIndex}']`);
@@ -262,7 +275,7 @@ function load_element(el)
 
 function addAttributes(source, dest)
 {
-	console.log("aa", source);
+	//console.log("aa", source);
 	if (!dest.hasAttribute("data-no-attributes"))
 	{
 		const wrapper = document.createElement('details');

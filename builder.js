@@ -388,7 +388,7 @@ function renderAttributesCode(source)
 {
 	var attrs = '';
 	
-	console.log('atts', source);
+	//console.log('atts', source);
 	
 	if (!source.firstElementChild) return '';
 	
@@ -476,10 +476,8 @@ function fix_urls(events)
 
 // /url\((['"])?(?!(data:))([^'")]*)\g1?\)/g
 
-function fix_urls(el, attr)
+function fix_urls(event)
 {
-	console.log(window);
-	
 	const iframe = document.querySelector("iframe");
 	
 	const urlSources =
@@ -502,27 +500,26 @@ function fix_urls(el, attr)
 						{
 							// FOR EVERY FILE AND MEDIA ITEM...
 							
-							console.log('file', item.name);
+							//console.log('file', item.name);
 							
 							// html attributes portion
 							urlSelectors.forEach(
 								urlSelector =>
 								{
-									console.log('iframe', iframe);
 									iframe.contentDocument.querySelectorAll(`${urlSelector.type}[${urlSelector.attr}]`).forEach(
 										el =>
 										{
 											//fix_url(el, urlSelector.attr);
 											
 											// this is a bit overly complex but it just checks to see if the URL should be replaced
-											//console.log('url item', item);
+											console.log('url item', item, el[urlSelector.attr]);
 											
-											const fullUrl = new URL(el[attr], 'http://hexfield.prog/');
+											const fullUrl = new URL(el[urlSelector.attr], 'http://hexfield.prog/');
 											const sourceUrl = new URL(item.name, 'http://hexfield.prog/');
 											
 											if (fullUrl.href == sourceUrl.href)
 											{
-												el[attr] = item.url;
+												el[urlSelector.attr] = item.url;
 											}
 										});
 								});
@@ -536,20 +533,20 @@ function fix_urls(el, attr)
 									{
 										if (rules.style && rules.style.getPropertyValue)
 										{
-											console.log('r s', rules.style);
+											//console.log('r s', rules.style);
 											
 											for (var i = 0; i < rules.style.length; i++)
 											{
 												const name = rules.style[i];
 												const valueIn = rules.style.getPropertyValue(name);
 				
-												console.log('check', valueIn);
+												console.log('check', valueIn, item.name);
 				
 												const re = /url\((['"])?(?!data:)([^'")]*)\1?\)/g;
 												const valueOut = valueIn.replaceAll(re,
 													(match, g1, g2, g3) =>
 													{
-														console.log('match', match);
+														//console.log('match', match);
 														const fullUrl = new URL(g2, 'http://hexfield.prog/');
 														const sourceUrl = new URL(item.name, 'http://hexfield.prog/');
 												
@@ -560,7 +557,7 @@ function fix_urls(el, attr)
 													});
 												
 												rules.style.setProperty(name, valueOut);
-												console.log('new', valueOut);
+												//console.log('new', valueOut);
 											}
 										}
 									}

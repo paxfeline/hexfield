@@ -1,4 +1,0 @@
-AuthName "The Hexfield is a closely guarded secret!"
-AuthType Basic
-AuthUserFile /.htpasswd
-require valid-user 
