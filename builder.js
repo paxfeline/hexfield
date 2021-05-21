@@ -444,7 +444,9 @@ function render()
 		} );
 		*/
 		
-	iframe.contentDocument.location = builder_globals.cur_file.url;
+	//iframe.contentDocument.location = builder_globals.cur_file.url;
+	//iframe.contentWindow.location = builder_globals.cur_file.url;
+	iframe.src = builder_globals.cur_file.url;
 	
 	
 	// no longer checks for html, body, etc.
@@ -455,6 +457,7 @@ function render()
 	*/
 }
 
+/*
 function fix_urls(events)
 {
 	const iframe = document.querySelector("iframe");
@@ -469,9 +472,16 @@ function fix_urls(events)
 				});
 		});
 }
+*/
 
-function fix_url(el, attr)
+// /url\((['"])?(?!(data:))([^'")]*)\g1?\)/g
+
+function fix_urls(el, attr)
 {
+	console.log(window);
+	
+	const iframe = document.querySelector("iframe");
+	
 	const urlSources =
 		[
 			Object.values(builder_globals.file_data.media_sets),
@@ -479,6 +489,8 @@ function fix_url(el, attr)
 		
 		];
 
+	// why not loops?
+	// loops are ok too.
 	urlSources.forEach(
 		urlSets =>
 		{
@@ -488,31 +500,97 @@ function fix_url(el, attr)
 					urlSet.forEach(
 						item =>
 						{
-							// this is a bit overly complex but it just checks to see if the URL should be replaced
-							console.log('url item', item);
-							const fullUrl = new URL(el[attr], document.baseURI);
-							const sourceUrl = new URL(item.name, document.baseURI);
-							if (fullUrl.href == sourceUrl.href)
+							// FOR EVERY FILE AND MEDIA ITEM...
+							
+							console.log('file', item.name);
+							
+							// html attributes portion
+							urlSelectors.forEach(
+								urlSelector =>
+								{
+									console.log('iframe', iframe);
+									iframe.contentDocument.querySelectorAll(`${urlSelector.type}[${urlSelector.attr}]`).forEach(
+										el =>
+										{
+											//fix_url(el, urlSelector.attr);
+											
+											// this is a bit overly complex but it just checks to see if the URL should be replaced
+											//console.log('url item', item);
+											
+											const fullUrl = new URL(el[attr], 'http://hexfield.prog/');
+											const sourceUrl = new URL(item.name, 'http://hexfield.prog/');
+											
+											if (fullUrl.href == sourceUrl.href)
+											{
+												el[attr] = item.url;
+											}
+										});
+								});
+							
+							// css portion
+							for (const styleSheet of iframe.contentDocument.styleSheets)
 							{
-								el[attr] = item.url;
+								if (styleSheet.cssRules)
+								{
+									for (const rules of styleSheet.cssRules)
+									{
+										if (rules.style && rules.style.getPropertyValue)
+										{
+											console.log('r s', rules.style);
+											
+											for (var i = 0; i < rules.style.length; i++)
+											{
+												const name = rules.style[i];
+												const valueIn = rules.style.getPropertyValue(name);
+				
+												console.log('check', valueIn);
+				
+												const re = /url\((['"])?(?!data:)([^'")]*)\1?\)/g;
+												const valueOut = valueIn.replaceAll(re,
+													(match, g1, g2, g3) =>
+													{
+														console.log('match', match);
+														const fullUrl = new URL(g2, 'http://hexfield.prog/');
+														const sourceUrl = new URL(item.name, 'http://hexfield.prog/');
+												
+														if (fullUrl.href == sourceUrl.href)
+															return `url("${item.url}")`;
+														else
+															return `url("${g2}")`;
+													});
+												
+												rules.style.setProperty(name, valueOut);
+												console.log('new', valueOut);
+											}
+										}
+									}
+								}
 							}
 						});
 				});
 		});
 	
-	/*
-	for (const mediaset of mediasets)
-	{
-		for (const media of mediaset)
-		{
-			if (media.name == el.src)
-			{
-				el.src = media.url;
-			}
-		}
-	}
-	*/
+	
 }
+
+/*
+	const re = /<(\/?)(!?[-_\w]+)(.*?)>/g;
+	code_str = code_str.replaceAll(re,
+		(match, p1, p2, p3) =>
+		{
+			if  (p1 == '/')
+				return `</div>`;
+			else
+			{
+				var tn;
+				if (builder_globals.empty_elements.includes(p2))
+					tn = 'br';
+				else
+					tn = 'div';
+				return `<${tn} data-converting-type='${p2}'${p3}>`;
+			}
+		}); // "<$1div data-converting-type='$2'$3>");
+*/
 
 /*
 function fix_links(events)
