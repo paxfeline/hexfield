@@ -512,7 +512,7 @@ function fix_urls(event)
 											//fix_url(el, urlSelector.attr);
 											
 											// this is a bit overly complex but it just checks to see if the URL should be replaced
-											console.log('url item', item, el[urlSelector.attr]);
+											//console.log('url item', item, el[urlSelector.attr]);
 											
 											const fullUrl = new URL(el[urlSelector.attr], 'http://hexfield.prog/');
 											const sourceUrl = new URL(item.name, 'http://hexfield.prog/');
@@ -540,7 +540,7 @@ function fix_urls(event)
 												const name = rules.style[i];
 												const valueIn = rules.style.getPropertyValue(name);
 				
-												console.log('check', valueIn, item.name);
+												//console.log('check', valueIn, item.name);
 				
 												const re = /url\((['"])?(?!data:)([^'")]*)\1?\)/g;
 												const valueOut = valueIn.replaceAll(re,
