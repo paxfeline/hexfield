@@ -171,7 +171,9 @@ function drop_trash_handler(ev) {
  {
  
 	 ev.preventDefault();
+	 
  	builder_globals.dragged.remove();
+ 	builder_globals.dragged = null;
  
  	trim_dropzones(document.querySelector("#code").firstElementChild);
 	
