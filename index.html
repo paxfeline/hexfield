@@ -5,6 +5,7 @@
 <script src="builder-globals.js"></script>
 <script src="builder.js"></script>
 <script src="builder-attributes.js"></script>
+<script src="builder-properties.js"></script>
 <script src="builder-files.js" defer></script>
 </head>
 <body>
@@ -24,8 +25,13 @@
 </div>
 
 <div class="builder-attribute-set">
-<div class="builder-attributes-container"></div>
-<div class="builder-attribte-dropzone" ondragenter="onAttributeDragEnter(event)" ondragleave="onAttributeDragLeave(event)" ondrop="drop_attribute_handler(event)" ondragover="dragover_attribute_handler(event)"></div>
+<div class="builder-attribute-container"></div>
+<div class="builder-attribute-dropzone" ondragenter="onAttributeDragEnter(event)" ondragleave="onAttributeDragLeave(event)" ondrop="drop_attribute_handler(event)" ondragover="dragover_attribute_handler(event)"></div>
+</div>
+
+<div class="builder-property-set">
+<div class="builder-property-container"></div>
+<div class="builder-property-dropzone" ondragenter="onPropertyDragEnter(event)" ondragleave="onPropertyDragLeave(event)" ondrop="drop_property_handler(event)" ondragover="dragover_property_handler(event)"></div>
 </div>
 
 </div>
@@ -64,12 +70,38 @@ Upload: <input type="file" accept="image/*" multiple id="upload-media-btn" oncha
 
 <div id="bank" ondragenter="onTrashDragEnter(event)" ondragleave="onTrashDragLeave(event)" ondrop="drop_trash_handler(event)" ondragover="dragover_trash_handler(event)">
 
-<div class="attr" data-custom-attribute draggable="true" ondragstart="dragstart_attribute_handler(event)">
+<div class="property" data-fixed-property-name data-property-name="font-size" draggable="true" ondragstart="dragstart_property_handler(event)">
+font-size: <input class="builder-attr-value">
+</div>
+
+<div class="attr" draggable="true" ondragstart="dragstart_attribute_handler(event)">
 <input class="builder-attr-name"> = &quot;<input class="builder-attr-value">&quot;
 </div>
 
-<div class="attr" data-fixed-attribute data-attribute-name="src" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+<div class="attr" data-fixed-attribute-name data-attribute-name="href" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+href = &quot;<input class="builder-attr-value">&quot;
+</div>
+
+
+<div class="attr" data-fixed-attribute-name data-attribute-name="src" draggable="true" ondragstart="dragstart_attribute_handler(event)">
 src = &quot;<input class="builder-attr-value">&quot;
+</div>
+
+<div class="attr" data-fixed-attribute-name data-attribute-name="width" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+width = &quot;<input class="builder-attr-value">&quot;
+</div>
+
+
+<div class="attr" data-fixed-attribute-name data-attribute-name="width" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+style = 
+<div class="builder-property-set">
+<div class="builder-property-container">
+<div class="property" data-fixed-property-name data-property-name="font-size" draggable="true" ondragstart="dragstart_property_handler(event)">
+font-size: <input class="builder-attr-value">
+</div>
+</div>
+<div class="builder-property-dropzone" ondragenter="onPropertyDragEnter(event)" ondragleave="onPropertyDragLeave(event)" ondrop="drop_property_handler(event)" ondragover="dragover_property_handler(event)"></div>
+</div>
 </div>
 
 <div class="el blue-set" data-type="!DOCTYPE html" data-self-closing data-no-attributes draggable="true" ondragstart="dragstart_handler(event)"></div>

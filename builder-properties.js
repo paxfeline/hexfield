@@ -1,12 +1,12 @@
-function dragstart_attribute_handler(ev)
+function dragstart_property_handler(ev)
 {
 	// Add the target element's id to the data transfer object
-	ev.dataTransfer.setData("application/hexfield-attribute", ev.target.outerHTML);
+	ev.dataTransfer.setData("application/hexfield-properties", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "copy";
-	builder_globals.dragged_attribute = null;
+	builder_globals.dragged_property = null;
 }
 
-function dragstart_move_attribute_handler(ev)
+function dragstart_move_property_handler(ev)
 {
 	// add any text area values to their elements as attributes
 	const tas = ev.target.querySelectorAll("textarea");
@@ -19,12 +19,12 @@ function dragstart_move_attribute_handler(ev)
 	
 	console.log('start', ev.target, tas);
 	//ev.target.firstElementChild.innerHTML = ev.target.firstElementChild.value;
-	ev.dataTransfer.setData("application/hexfield-attribute", ev.target.outerHTML);
+	ev.dataTransfer.setData("application/hexfield-properties", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "move";
-	builder_globals.dragged_attribute = ev.target;
+	builder_globals.dragged_property = ev.target;
 }
 
-function drop_attribute_handler(ev) {
+function drop_property_handler(ev) {
  if (builder_globals.dragged)
  {
  
@@ -43,41 +43,41 @@ function drop_attribute_handler(ev) {
 	bank.style.borderColor = '';
 }
 
-function dragover_attribute_handler(ev) {
+function dragover_property_handler(ev) {
  ev.preventDefault();
  //if (builder_globals.dragged)
 	 ev.dataTransfer.dropEffect = "copy";
 }
 
 
-function onAttributeDragLeave(event)
+function onPropertyDragLeave(event)
 {
 	event.target.style.background = '';
 	//--//event.target.parentElement.style.borderColor = '';
 	
 		event.target.parentElement.parentElement.style.filter = '';
 	//event.target.parentElement.style.removeProperty('--set-color');
-		event.target.style.removeProperty('--attribute-dropzone-color'); //'#1f904e';
+		event.target.style.removeProperty('--property-dropzone-color'); //'#1f904e';
 }
 
-function onAttributeDragEnter(event)
+function onPropertyDragEnter(event)
 {
 	event.preventDefault();
 	// Set the dropEffect to move
 	//event.dataTransfer.dropEffect = 'linkMove';
-	if (drop_attribute_ok(event))
+	if (drop_property_ok(event))
 	{
 		event.target.parentElement.parentElement.style.filter = 'brightness(75%)';
 		//event.target.parentElement.style.setProperty('--set-color', '#1f904e');
 		//--//event.target.parentElement.style.borderColor = '#1f904e';
-		event.target.style.setProperty('--attribute-dropzone-color', 'mediumseagreen'); //'#1f904e';
+		event.target.style.setProperty('--property-dropzone-color', 'mediumseagreen'); //'#1f904e';
 	}
 }
 
 
-function drop_attribute_ok(event)
+function drop_property_ok(event)
 {
-	return event.dataTransfer.getData("application/hexfield-attribute")
+	return event.dataTransfer.getData("application/hexfield-properties")
 				&& (event.shiftKey
-					|| !builder_globals.dragged_attribute);
+					|| !builder_globals.dragged_property);
 }
