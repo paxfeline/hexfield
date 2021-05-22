@@ -406,7 +406,7 @@ function upload_media(event)
 
 /* AT STARTUP, LOAD LOCAL FILE SETS */
 
-load_local_filesets();
+//load_local_filesets();
 
 
 

@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="builder.css">
 <script src="builder-globals.js"></script>
 <script src="builder.js"></script>
+<script src="builder-attributes.js"></script>
 <script src="builder-files.js" defer></script>
 </head>
 <body>
@@ -20,6 +21,11 @@
 <span class="media-name"></span>
 <img class="media-preview" width="50" height="50" src="">
 <button class="media-remove-btn">Delete</button>
+</div>
+
+<div class="builder-attribute-set">
+<div class="builder-attributes-container"></div>
+<div class="builder-attribte-dropzone" ondragenter="onAttributeDragEnter(event)" ondragleave="onAttributeDragLeave(event)" ondrop="drop_attribute_handler(event)" ondragover="dragover_attribute_handler(event)"></div>
 </div>
 
 </div>
@@ -58,7 +64,17 @@ Upload: <input type="file" accept="image/*" multiple id="upload-media-btn" oncha
 
 <div id="bank" ondragenter="onTrashDragEnter(event)" ondragleave="onTrashDragLeave(event)" ondrop="drop_trash_handler(event)" ondragover="dragover_trash_handler(event)">
 
-<div class="el blue-set" data-type="!DOCTYPE html" data-self-closing data-no-attributes draggable="true" ondragstart="dragstart_handler(event)"></div><br>
+<div class="attr" data-custom-attribute draggable="true" ondragstart="dragstart_attribute_handler(event)">
+<input class="builder-attr-name"> = <input class="builder-attr-value">
+</div>
+
+<div class="attr" data-fixed-attribute data-attribute-name="src" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+src = <input class="builder-attr-value">
+</div>
+
+<div class="el blue-set" data-type="!DOCTYPE html" data-self-closing data-no-attributes draggable="true" ondragstart="dragstart_handler(event)"></div>
+
+<br>
 
 <div class="el blue-set" data-type="html" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="dropzone"></div>

@@ -2,7 +2,7 @@
 function dragstart_handler(ev)
 {
 	// Add the target element's id to the data transfer object
-	ev.dataTransfer.setData("application/hexfield", ev.target.outerHTML);
+	ev.dataTransfer.setData("application/hexfield-element", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "copy";
 	builder_globals.dragged = null;
 }
@@ -22,7 +22,7 @@ function dragstart_move_handler(ev)
 	
 	console.log('start', ev.target, tas);
 	//ev.target.firstElementChild.innerHTML = ev.target.firstElementChild.value;
-	ev.dataTransfer.setData("application/hexfield", ev.target.outerHTML);
+	ev.dataTransfer.setData("application/hexfield-element", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "move";
 	builder_globals.dragged = ev.target;
 }
@@ -30,11 +30,77 @@ function dragstart_move_handler(ev)
 
 
 function dragover_handler(ev) {
+	if (ev.dataTransfer.getData("application/hexfield-element"))
+	{
+		ev.preventDefault();
+		if (builder_globals.dragged && !ev.shiftKey)
+			ev.dataTransfer.dropEffect = "move";
+		else
+			ev.dataTransfer.dropEffect = "copy";
+	}
+}
+
+function drop_handler(ev) {
+ if (!drop_ok(ev)) return;
  ev.preventDefault();
- if (builder_globals.dragged && !ev.shiftKey)
-	 ev.dataTransfer.dropEffect = "move";
- else
-	 ev.dataTransfer.dropEffect = "copy";
+ // Get the id of the target and add the moved element to the target's DOM
+ const data = ev.dataTransfer.getData("application/hexfield-element");
+ const rent = ev.target.parentElement;
+ //ev.target.style.backgroundColor = '';
+ const temp = document.createElement("div");
+
+
+	 temp.innerHTML = data;
+	 temp.firstElementChild.setAttribute("ondragstart", "dragstart_move_handler(event)");
+
+	if ( !builder_globals.dragged && !temp.firstElementChild.hasAttribute("data-no-attributes") ) 
+	{
+		const templates = document.querySelector('#templates');
+		const attribute_set = templates.querySelector('.builder-attribute-set').cloneNode(true);
+		
+		temp.firstElementChild.prepend(attribute_set);
+	}
+ 
+	 const dz = document.createElement('div');
+	 dz.setAttribute('class', 'dropzone');
+ 
+	 //--//ev.target.parentElement.style.borderColor = '';
+	 //ev.target.parentElement.style.removeProperty('--set-color');
+	ev.target.parentElement.style.filter = '';
+	 ev.target.replaceWith( dz.cloneNode(), temp.firstElementChild, dz.cloneNode() );
+	 
+	 dropify(rent);
+ 
+	 if (builder_globals.dragged && !ev.shiftKey)
+		builder_globals.dragged.remove();
+ 
+	 trim_dropzones(document.querySelector("#code").firstElementChild);
+	 
+	 renderCode();
+	 render();
+}
+
+function onDragLeave(event)
+{
+	event.target.style.background = '';
+	//--//event.target.parentElement.style.borderColor = '';
+	
+	event.target.parentElement.style.filter = '';
+	//event.target.parentElement.style.removeProperty('--set-color');
+}
+
+function onDragEnter(event)
+{
+	event.preventDefault();
+	// Set the dropEffect to move
+	//event.dataTransfer.dropEffect = 'linkMove';
+	if (drop_ok(event))
+	{
+		event.target.parentElement.style.filter = 'brightness(75%)';
+		//event.target.parentElement.style.setProperty('--set-color', '#1f904e');
+		//--//event.target.parentElement.style.borderColor = '#1f904e';
+		event.target.style.background = 'mediumseagreen'; //'#1f904e';
+	}
 }
 
 function rem_attr(ev)
@@ -62,82 +128,6 @@ function add_attr(ev)
 	
 	renderCode();
 	render()
-}
-
-function drop_handler(ev) {
- if (!drop_ok(ev)) return;
- ev.preventDefault();
- // Get the id of the target and add the moved element to the target's DOM
- const data = ev.dataTransfer.getData("application/hexfield");
- const rent = ev.target.parentElement;
- //ev.target.style.backgroundColor = '';
- const temp = document.createElement("div");
-
-
-	 temp.innerHTML = data;
-	 temp.firstElementChild.setAttribute("ondragstart", "dragstart_move_handler(event)");
- 
-
-	if ( !builder_globals.dragged && !temp.firstElementChild.hasAttribute("data-no-attributes") ) 
-	{
-		const wrapper = document.createElement('details');
-		temp.firstElementChild.prepend(wrapper);
-		//wrapper.setAttribute('class', 'wrapper');
-	
-		const summary = wrapper.appendChild(document.createElement("summary"))
-		summary.innerHTML = "attributes";
-	
-		const listContainer = wrapper.appendChild(document.createElement('div'));
-		listContainer.setAttribute('class', 'builder-attributes-container')
-	
-		const newName = wrapper.appendChild(document.createElement('input'));
-		const newValue = wrapper.appendChild(document.createElement('input'));
-		
-		newName.setAttribute('class', 'builder-attr-name');
-		newValue.setAttribute('class', 'builder-attr-value');
-	
-		const addBtn = wrapper.appendChild(document.createElement("button"));
-		addBtn.setAttribute("class", "btn")
-		addBtn.setAttribute('onclick', 'add_attr(event)')
-		addBtn.innerHTML = "&nbsp;+&nbsp;";
-	}
- 
-	 const dz = document.createElement('div');
-	 dz.setAttribute('class', 'dropzone');
- 
-	 //--//ev.target.parentElement.style.borderColor = '';
-	 //ev.target.parentElement.style.removeProperty('--set-color');
-	ev.target.parentElement.style.filter = '';
-	 ev.target.replaceWith( dz.cloneNode(), temp.firstElementChild, dz.cloneNode() );
-	 
-	 dropify(rent);
- 
-	 if (builder_globals.dragged && !ev.shiftKey)
-		builder_globals.dragged.remove();
- 
-	 trim_dropzones(document.querySelector("#code").firstElementChild);
-	 
-	 renderCode();
-	 render();
-}
-
-function drop_trash_handler(ev) {
- if (builder_globals.dragged)
- {
- 
-	 ev.preventDefault();
- 	builder_globals.dragged.remove();
- 
- 	trim_dropzones(document.querySelector("#code").firstElementChild);
-	
-	renderCode();
-	render();
- }
- 
- 
-	const bank = document.querySelector('#bank');
-	bank.style.background = '';
-	bank.style.borderColor = '';
 }
 
 function dropify(wut)
@@ -176,33 +166,32 @@ function trim_dropzones(el)
 	}
 }
 
-function onDragLeave(event)
-{
-	event.target.style.background = '';
-	//--//event.target.parentElement.style.borderColor = '';
+function drop_trash_handler(ev) {
+ if (builder_globals.dragged)
+ {
+ 
+	 ev.preventDefault();
+ 	builder_globals.dragged.remove();
+ 
+ 	trim_dropzones(document.querySelector("#code").firstElementChild);
 	
-	event.target.parentElement.style.filter = '';
-	//event.target.parentElement.style.removeProperty('--set-color');
-}
-
-function onDragEnter(event)
-{
-	event.preventDefault();
-	// Set the dropEffect to move
-	//event.dataTransfer.dropEffect = 'linkMove';
-	if (drop_ok(event))
-	{
-		event.target.parentElement.style.filter = 'brightness(75%)';
-		//event.target.parentElement.style.setProperty('--set-color', '#1f904e');
-		//--//event.target.parentElement.style.borderColor = '#1f904e';
-		event.target.style.background = 'mediumseagreen'; //'#1f904e';
-	}
+	renderCode();
+	render();
+ }
+ 
+ 
+	const bank = document.querySelector('#bank');
+	bank.style.background = '';
+	bank.style.borderColor = '';
 }
 
 function dragover_trash_handler(ev) {
- ev.preventDefault();
+//console.log('dot', ev);
  //if (builder_globals.dragged)
+ {
+	 ev.preventDefault();
 	 ev.dataTransfer.dropEffect = "move";
+	}
 }
 
 function onTrashDragLeave(event)
@@ -227,13 +216,14 @@ function onTrashDragEnter(event)
 
 function drop_ok(event)
 {
-	return (event.shiftKey
-				|| !builder_globals.dragged
-				|| (builder_globals.dragged
-					//&& builder_globals.dragged != event.target.parentElement
-					&& !check_in_tree(builder_globals.dragged, event.target.parentElement)
-					&& builder_globals.dragged.previousElementSibling != event.target
-					&& builder_globals.dragged.nextElementSibling != event.target));
+	return event.dataTransfer.getData("application/hexfield-element")
+				&&(event.shiftKey
+					|| !builder_globals.dragged
+					|| (builder_globals.dragged
+						//&& builder_globals.dragged != event.target.parentElement // replaced with line below
+						&& !check_in_tree(builder_globals.dragged, event.target.parentElement)
+						&& builder_globals.dragged.previousElementSibling != event.target
+						&& builder_globals.dragged.nextElementSibling != event.target));
 }
 
 function check_in_tree(el, check)

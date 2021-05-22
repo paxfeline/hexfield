@@ -6,6 +6,7 @@ body
 html
 {
 	--set-color: gray;
+	--attribute-dropzone-color: white;
 }
 
 .blue-set
@@ -208,13 +209,7 @@ html
 	margin-bottom: 1em;
 }
 
-/*
-.builder-btn
-{
-	float: right;
-	clear: right;
-}
-*/
+/* file bank */
 
 .file-remove-btn
 {
@@ -253,4 +248,96 @@ html
 {
     width: 10em;
     color: transparent;
+}
+
+/* attributes */
+
+.attr
+{
+    background-color: white;
+    padding: 0.5em;
+    display: inline-block;
+    vertical-align: bottom;
+    position: relative;
+    margin: 0 1em;
+    height: 1.5em;
+    border: .5em solid blue;
+	border-width: 0.5em 0;
+}
+
+.attr > input
+{
+    height: 2em;
+    width: 10em;
+}
+
+.attr::before {
+    position: absolute;
+    left: -1.25em;
+    content: "";
+    width: 2em;
+    height: 2em;
+    top: 0;
+	border: .5em solid blue;
+	transform: rotate(45deg);
+	border-width: 0 0 .5em .5em;
+}
+
+.attr::after {
+    position: absolute;
+    right: -1.25em;
+    content: "";
+    width: 2em;
+    height: 2em;
+    top: 0;
+	border: .5em solid blue;
+	transform: rotate(45deg);
+	border-width: .5em .5em 0 0;
+}
+
+#bank > .attr
+{
+	margin-bottom: 1em;
+}
+
+.builder-attribte-dropzone
+{
+	background-color: var(--attribute-dropzone-color);
+    padding: 0.5em;
+    display: inline-block;
+    vertical-align: bottom;
+    position: relative;
+    margin: 0 1em;
+    height: 1.5em;
+	width: 10em;
+}
+
+.builder-attribte-dropzone::before {
+    position: absolute;
+    left: -1em;
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 1.25em solid transparent;
+    border-right: 1em solid var(--attribute-dropzone-color);
+    border-bottom: 1.25em solid transparent;
+    top: 0;
+}
+
+.builder-attribte-dropzone::after {
+    position: absolute;
+    right: -1em;
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 1.25em solid transparent;
+    border-left: 1em solid var(--attribute-dropzone-color);
+    border-bottom: 1.25em solid transparent;
+    top: 0;
+}
+
+.builder-attribute-set
+{
+	background-color: var(--set-color);
+	padding: 0.5em 1em 0.5em 0;
 }
