@@ -267,19 +267,24 @@ html
 {
     background-color: white;
     padding: 0.5em;
-    display: inline-block;
     vertical-align: bottom;
     position: relative;
     margin: 0 1em;
     border: .5em solid blue;
-	/*border-width: 0.5em 0;*/
-	border-radius: 50%/25%;
+	border-radius: 50%/1em;
+	width: max-content;
+}
+
+.attr-style-label
+{
+    padding-top: 1em;
+    display: inline-block;
 }
 
 .builder-attribute-dropzone
 {
 	background-color: var(--attribute-dropzone-color);
-	border-radius: 50%/25%;
+	border-radius: 50%/1em;
     padding: 0.5em;
     display: inline-block;
     position: relative;
@@ -300,51 +305,6 @@ html
 	padding: 0.5em 1em 0.5em 0;
 }
 
-
-/*
-.attr
-{
-    background-color: white;
-    padding: 0.5em;
-    display: inline-block;
-    vertical-align: bottom;
-    position: relative;
-    margin: 0 1em;
-    height: 1.5em;
-    border: .5em solid blue;
-	border-width: 0.5em 0;
-	border-radius: 0.25em;
-}
-
-.attr::before {
-    position: absolute;
-    left: -1.25em;
-    content: "";
-    width: 1.9em;
-    height: 1.9em;
-    top: 0;
-	border: .5em solid blue;
-	transform: scaleX(0.75) rotate(45deg) ;
-	border-width: 0 0 .6em .6em;
-	background-image: linear-gradient(45deg, white 0 40%, transparent 40% 100%);
-	border-radius: 0.25em;
-}
-
-.attr::after {
-    position: absolute;
-    right: -1.25em;
-    content: "";
-    width: 1.9em;
-    height: 1.9em;
-    top: 0;
-	border: .5em solid blue;
-	transform: scaleX(0.75) rotate(45deg) ;
-	border-width: .6em .6em 0 0;
-	background-image: linear-gradient(45deg, transparent 0 60%, white 60% 100%);
-	border-radius: 0.25em;
-}
-*/
-
 #bank > .attr, #bank > .property
 {
 	margin-bottom: 1em;
@@ -361,14 +321,14 @@ html
 {
     background-color: white;
     padding: 0.5em;
-    display: inline-block;
     vertical-align: bottom;
     position: relative;
-    margin: 0.25em 1em;
+    margin: 0 1em 0.25em;
     height: 1.5em;
     border: .5em solid purple;
 	border-width: 0.5em 0;
 	border-radius: 0.25em;
+	width: max-content;
 }
 
 .property::before {
@@ -405,7 +365,7 @@ html
     padding: 0.5em;
     display: inline-block;
     position: relative;
-    margin: 0 1em;
+    margin: 0.25em 1em;
     height: 1.5em;
 	width: 10em;
 	vertical-align: middle;
@@ -438,7 +398,7 @@ html
 .builder-property-set
 {
 	display: inline-block;
-	vertical-align: middle;
+	vertical-align: top;
 }
 
 #bank input

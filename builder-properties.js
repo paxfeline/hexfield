@@ -24,32 +24,32 @@ function dragstart_move_property_handler(ev)
 	builder_globals.dragged_property = ev.target;
 }
 
-function drop_property_handler(ev) {
+function drop_property_handler(ev)
+{
+	console.log('dph', ev);
 
-	console.log(ev);
-
- if (!drop_property_ok(ev)) return;
- ev.preventDefault();
- // Get the id of the target and add the moved element to the target's DOM
- const data = ev.dataTransfer.getData("application/hexfield-property");
- //ev.target.style.backgroundColor = '';
- const temp = document.createElement("div");
+	if (!drop_property_ok(ev)) return;
+	ev.preventDefault();
+	// Get the id of the target and add the moved element to the target's DOM
+	const data = ev.dataTransfer.getData("application/hexfield-property");
+	//ev.target.style.backgroundColor = '';
+	const temp = document.createElement("div");
 
 
-	 temp.innerHTML = data;
-	 temp.firstElementChild.setAttribute("ondragstart", "dragstart_move_property_handler(event)");
+	temp.innerHTML = data;
+	temp.firstElementChild.setAttribute("ondragstart", "dragstart_move_property_handler(event)");
  
 	ev.target.parentElement.parentElement.style.filter = '';
-	
+		event.target.style.removeProperty('--property-dropzone-color'); //'#1f904e';
+
 	const attr_cont = ev.target.parentElement.querySelector('.builder-property-container');
 	attr_cont.append(temp.firstElementChild);
  
-	 if (builder_globals.dragged_property && !ev.shiftKey)
+	if (builder_globals.dragged_property && !ev.shiftKey)
 		builder_globals.dragged_property.remove();
 	 
-	 renderCode();
-	 render();
-
+	renderCode();
+	render();
 }
 
 function dragover_property_handler(ev) {

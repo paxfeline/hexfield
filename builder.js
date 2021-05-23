@@ -168,24 +168,30 @@ function trim_dropzones(el)
 }
 
 function drop_trash_handler(ev) {
- if (builder_globals.dragged)
- {
+if (builder_globals.dragged
+		|| builder_globals.dragged_attribute
+		|| builder_globals.dragged_property )
+	{
+		 if (builder_globals.dragged)
+		 {
  
-	 ev.preventDefault();
+			 ev.preventDefault();
 	 
- 	builder_globals.dragged.remove();
- 	builder_globals.dragged = null;
+			builder_globals.dragged.remove();
+			builder_globals.dragged = null;
  
- 	trim_dropzones(document.querySelector("#code").firstElementChild);
+			trim_dropzones(document.querySelector("#code").firstElementChild);
 	
-	renderCode();
-	render();
- }
- 
+			renderCode();
+			render();
+		 }
+	 }
  
 	const bank = document.querySelector('#bank');
 	bank.style.background = '';
 	bank.style.borderColor = '';
+	
+	trash_in_out_count = 0;
 }
 
 function dragover_trash_handler(ev) {
