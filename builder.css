@@ -283,15 +283,21 @@ html
     padding: 0.5em;
     display: inline-block;
     position: relative;
-    height: 1.5em;
-	width: 10em;
+    height: 2.5em;
+	width: 100%;
 	vertical-align: middle;
+	margin-right: 1em;
+	box-sizing: border-box;
 }
 
 .builder-attribute-set
 {
 	display: inline-block;
 	vertical-align: middle;
+	width: 100%;
+	box-sizing: border-box;
+	background-color: var(--set-color);
+	padding: 0.5em 1em 0.5em 0;
 }
 
 
@@ -344,10 +350,9 @@ html
 	margin-bottom: 1em;
 }
 
-.builder-attribute-set
+#bank > .property
 {
-	background-color: var(--set-color);
-	padding: 0.5em 1em 0.5em 0;
+	margin: 1em 2em;
 }
 
 /* properties */

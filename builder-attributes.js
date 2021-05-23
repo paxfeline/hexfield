@@ -1,5 +1,6 @@
 function dragstart_attribute_handler(ev)
 {
+	console.log('start drag attr', ev);
 	// Add the target element's id to the data transfer object
 	ev.dataTransfer.setData("application/hexfield-attribute", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "copy";
@@ -8,6 +9,8 @@ function dragstart_attribute_handler(ev)
 
 function dragstart_move_attribute_handler(ev)
 {
+
+	console.log('ds-m-a-h');
 	// add any text area values to their elements as attributes
 	const tas = ev.target.querySelectorAll("textarea");
 	tas.forEach(ta => ta.innerHTML = ta.value);
@@ -22,25 +25,38 @@ function dragstart_move_attribute_handler(ev)
 	ev.dataTransfer.setData("application/hexfield-attribute", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "move";
 	builder_globals.dragged_attribute = ev.target;
+	
+	ev.stopPropagation();
 }
 
 function drop_attribute_handler(ev) {
- if (builder_globals.dragged)
- {
+
+	console.log(ev);
+
+ if (!drop_attribute_ok(ev)) return;
+ ev.preventDefault();
+ // Get the id of the target and add the moved element to the target's DOM
+ const data = ev.dataTransfer.getData("application/hexfield-attribute");
+ const rent = ev.target.parentElement;
+ //ev.target.style.backgroundColor = '';
+ const temp = document.createElement("div");
+
+
+	 temp.innerHTML = data;
+	 temp.firstElementChild.setAttribute("ondragstart", "dragstart_move_attribute_handler(event)");
  
-	 ev.preventDefault();
- 	builder_globals.dragged.remove();
- 
- 	trim_dropzones(document.querySelector("#code").firstElementChild);
+	ev.target.parentElement.parentElement.style.filter = '';
+		event.target.style.removeProperty('--attribute-dropzone-color'); //'#1f904e';
 	
-	renderCode();
-	render();
- }
+	const attr_cont = ev.target.parentElement.querySelector('.builder-attribute-container');
+	attr_cont.append(temp.firstElementChild);
  
- 
-	const bank = document.querySelector('#bank');
-	bank.style.background = '';
-	bank.style.borderColor = '';
+	 if (builder_globals.dragged_attributes && !ev.shiftKey)
+		builder_globals.dragged_attribute.remove();
+	 
+	 renderCode();
+	 render();
+
 }
 
 function dragover_attribute_handler(ev) {

@@ -1,6 +1,7 @@
 
 function dragstart_handler(ev)
 {
+	console.log("dsh");
 	// Add the target element's id to the data transfer object
 	ev.dataTransfer.setData("application/hexfield-element", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "copy";

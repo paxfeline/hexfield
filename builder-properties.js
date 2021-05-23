@@ -1,7 +1,7 @@
 function dragstart_property_handler(ev)
 {
 	// Add the target element's id to the data transfer object
-	ev.dataTransfer.setData("application/hexfield-properties", ev.target.outerHTML);
+	ev.dataTransfer.setData("application/hexfield-property", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "copy";
 	builder_globals.dragged_property = null;
 }
@@ -19,28 +19,37 @@ function dragstart_move_property_handler(ev)
 	
 	console.log('start', ev.target, tas);
 	//ev.target.firstElementChild.innerHTML = ev.target.firstElementChild.value;
-	ev.dataTransfer.setData("application/hexfield-properties", ev.target.outerHTML);
+	ev.dataTransfer.setData("application/hexfield-property", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "move";
 	builder_globals.dragged_property = ev.target;
 }
 
 function drop_property_handler(ev) {
- if (builder_globals.dragged)
- {
+
+	console.log(ev);
+
+ if (!drop_property_ok(ev)) return;
+ ev.preventDefault();
+ // Get the id of the target and add the moved element to the target's DOM
+ const data = ev.dataTransfer.getData("application/hexfield-property");
+ //ev.target.style.backgroundColor = '';
+ const temp = document.createElement("div");
+
+
+	 temp.innerHTML = data;
+	 temp.firstElementChild.setAttribute("ondragstart", "dragstart_move_property_handler(event)");
  
-	 ev.preventDefault();
- 	builder_globals.dragged.remove();
- 
- 	trim_dropzones(document.querySelector("#code").firstElementChild);
+	ev.target.parentElement.parentElement.style.filter = '';
 	
-	renderCode();
-	render();
- }
+	const attr_cont = ev.target.parentElement.querySelector('.builder-property-container');
+	attr_cont.append(temp.firstElementChild);
  
- 
-	const bank = document.querySelector('#bank');
-	bank.style.background = '';
-	bank.style.borderColor = '';
+	 if (builder_globals.dragged_property && !ev.shiftKey)
+		builder_globals.dragged_property.remove();
+	 
+	 renderCode();
+	 render();
+
 }
 
 function dragover_property_handler(ev) {
@@ -77,7 +86,11 @@ function onPropertyDragEnter(event)
 
 function drop_property_ok(event)
 {
-	return event.dataTransfer.getData("application/hexfield-properties")
+	if (builder_globals.dragged_property)
+		console.log('dpo', builder_globals.dragged_property.parentElement.parentElement, event.target.parentElement)
+	return event.dataTransfer.getData("application/hexfield-property")
 				&& (event.shiftKey
-					|| !builder_globals.dragged_property);
+					|| !builder_globals.dragged_property
+					|| (builder_globals.dragged_property
+						&& builder_globals.dragged_property.parentElement.parentElement != event.target.parentElement));
 }

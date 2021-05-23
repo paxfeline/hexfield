@@ -70,6 +70,10 @@ Upload: <input type="file" accept="image/*" multiple id="upload-media-btn" oncha
 
 <div id="bank" ondragenter="onTrashDragEnter(event)" ondragleave="onTrashDragLeave(event)" ondrop="drop_trash_handler(event)" ondragover="dragover_trash_handler(event)">
 
+<div class="property" draggable="true" ondragstart="dragstart_property_handler(event)">
+<input class="builder-property-name">: <input class="builder-property-value">
+</div>
+
 <div class="property" data-fixed-property-name data-property-name="font-size" draggable="true" ondragstart="dragstart_property_handler(event)">
 font-size: <input class="builder-attr-value">
 </div>
