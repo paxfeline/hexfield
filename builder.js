@@ -89,34 +89,13 @@ function dragover_handler(ev) {
 	ev.preventDefault();
 }
 
-builder_globals.hover_element = null;
-
 function onDragLeave(event)
 {
-	builder_globals.hover_element = null;
-	
 	event.target.style.background = '';
 	//--//event.target.parentElement.style.borderColor = '';
 	
 	event.target.parentElement.style.filter = '';
 	//event.target.parentElement.style.removeProperty('--set-color');
-}
-
-function onDragEnter(event)
-{
-	builder_globals.hover_element = event.target;
-	
-	event.preventDefault();
-	
-	// Set the dropEffect to move
-	//event.dataTransfer.dropEffect = 'linkMove';
-	if (drop_ok(event))
-	{
-		event.target.parentElement.style.filter = 'brightness(75%)';
-		//event.target.parentElement.style.setProperty('--set-color', '#1f904e');
-		//--//event.target.parentElement.style.borderColor = '#1f904e';
-		event.target.style.background = 'mediumseagreen'; //'#1f904e';
-	}
 }
 
 function dropify(wut)
@@ -128,7 +107,6 @@ function dropify(wut)
 				// maybe change to setattribute
 				el.addEventListener("drop", drop_handler);
 				el.addEventListener("dragover", dragover_handler);
-				el.addEventListener("dragenter", onDragEnter);
 				el.addEventListener("dragleave", onDragLeave);
 			});
 	}
