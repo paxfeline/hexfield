@@ -69,21 +69,23 @@ function drop_handler(ev) {
 }
 
 function dragover_handler(ev) {
+	console.log('doh', ev);
+	
 	if (ev.dataTransfer.getData("application/hexfield-element")
-		&& drop_ok(event))
+		&& drop_ok(ev))
 	{
 		if (builder_globals.dragged && !ev.shiftKey)
 			ev.dataTransfer.dropEffect = "move";
 		else
 			ev.dataTransfer.dropEffect = "copy";
 			
-		event.target.parentElement.style.filter = 'brightness(75%)';
-		event.target.style.background = 'mediumseagreen';
+		ev.target.parentElement.style.filter = 'brightness(75%)';
+		ev.target.style.background = 'mediumseagreen';
 	}
 	else
 	{
-		event.target.parentElement.style.filter = '';
-		event.target.style.background = '';
+		ev.target.parentElement.style.filter = '';
+		ev.target.style.background = '';
 	}
 	
 	ev.preventDefault();
@@ -378,6 +380,8 @@ function fix_urls(event)
 							urlSelectors.forEach(
 								urlSelector =>
 								{
+									//console.log('urls', urlSelector.type, urlSelector.attr);
+									
 									iframe.contentDocument.querySelectorAll(`${urlSelector.type}[${urlSelector.attr}]`).forEach(
 										el =>
 										{
