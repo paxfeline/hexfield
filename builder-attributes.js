@@ -31,10 +31,11 @@ function dragstart_move_attribute_handler(ev)
 
 function drop_attribute_handler(ev) {
 
+console.log(ev.dataTransfer);
+
 	console.log(ev);
 
  if (!drop_attribute_ok(ev)) return;
- ev.preventDefault();
  // Get the id of the target and add the moved element to the target's DOM
  const data = ev.dataTransfer.getData("application/hexfield-attribute");
  const rent = ev.target.parentElement;
@@ -51,17 +52,21 @@ function drop_attribute_handler(ev) {
 	const attr_cont = ev.target.parentElement.querySelector('.builder-attribute-container');
 	attr_cont.append(temp.firstElementChild);
  
-	 if (builder_globals.dragged_attributes && !ev.shiftKey)
+	 if (builder_globals.dragged_attribute && !ev.shiftKey)
 		builder_globals.dragged_attribute.remove();
+	 
+	 builder_globals.dragged_attribute = null;
 	 
 	 renderCode();
 	 render();
+ 
+ ev.preventDefault();
 
 }
 
 function dragover_attribute_handler(ev) {
  ev.preventDefault();
- //if (builder_globals.dragged)
+ if (ev.shiftKey)
 	 ev.dataTransfer.dropEffect = "copy";
 }
 

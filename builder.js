@@ -28,19 +28,6 @@ function dragstart_move_handler(ev)
 	builder_globals.dragged = ev.target;
 }
 
-
-
-function dragover_handler(ev) {
-	if (ev.dataTransfer.getData("application/hexfield-element"))
-	{
-		ev.preventDefault();
-		if (builder_globals.dragged && !ev.shiftKey)
-			ev.dataTransfer.dropEffect = "move";
-		else
-			ev.dataTransfer.dropEffect = "copy";
-	}
-}
-
 function drop_handler(ev) {
  if (!drop_ok(ev)) return;
  ev.preventDefault();
@@ -79,6 +66,17 @@ function drop_handler(ev) {
 	 
 	 renderCode();
 	 render();
+}
+
+function dragover_handler(ev) {
+	if (ev.dataTransfer.getData("application/hexfield-element"))
+	{
+		ev.preventDefault();
+		if (builder_globals.dragged && !ev.shiftKey)
+			ev.dataTransfer.dropEffect = "move";
+		else
+			ev.dataTransfer.dropEffect = "copy";
+	}
 }
 
 function onDragLeave(event)
