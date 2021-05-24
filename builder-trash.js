@@ -31,7 +31,7 @@ function drop_trash_handler(ev) {
 	bank.style.background = '';
 	bank.style.borderColor = '';
 	
-	trash_in_out_count = 0;
+	builder_globals.trash_in_out_count = 0;
 }
 
 function dragover_trash_handler(ev) {
@@ -43,14 +43,14 @@ function dragover_trash_handler(ev) {
 	}
 }
 
-var trash_in_out_count = 0;
+builder_globals.trash_in_out_count = 0;
 
 function onTrashDragLeave(event)
 {
-	trash_in_out_count--;
-	console.log('trash leave', trash_in_out_count);
+	builder_globals.trash_in_out_count--;
+	console.log('trash leave', builder_globals.trash_in_out_count);
 	const bank = document.querySelector('#bank');
-	if (trash_in_out_count == 0)
+	if (builder_globals.trash_in_out_count == 0)
 	{
 		bank.style.background = '';
 		bank.style.borderColor = '';
@@ -59,8 +59,8 @@ function onTrashDragLeave(event)
 
 function onTrashDragEnter(event)
 {
-	trash_in_out_count++;
-	console.log('trash enter', trash_in_out_count);
+	builder_globals.trash_in_out_count++;
+	console.log('trash enter', builder_globals.trash_in_out_count);
 	if (builder_globals.dragged || builder_globals.dragged_attribute)
 	{
 		event.preventDefault();

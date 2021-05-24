@@ -69,18 +69,32 @@ function drop_handler(ev) {
 }
 
 function dragover_handler(ev) {
-	if (ev.dataTransfer.getData("application/hexfield-element"))
+	if (ev.dataTransfer.getData("application/hexfield-element")
+		&& drop_ok(event))
 	{
-		ev.preventDefault();
 		if (builder_globals.dragged && !ev.shiftKey)
 			ev.dataTransfer.dropEffect = "move";
 		else
 			ev.dataTransfer.dropEffect = "copy";
+			
+		event.target.parentElement.style.filter = 'brightness(75%)';
+		event.target.style.background = 'mediumseagreen';
 	}
+	else
+	{
+		event.target.parentElement.style.filter = '';
+		event.target.style.background = '';
+	}
+	
+	ev.preventDefault();
 }
+
+builder_globals.hover_element = null;
 
 function onDragLeave(event)
 {
+	builder_globals.hover_element = null;
+	
 	event.target.style.background = '';
 	//--//event.target.parentElement.style.borderColor = '';
 	
@@ -90,7 +104,10 @@ function onDragLeave(event)
 
 function onDragEnter(event)
 {
+	builder_globals.hover_element = event.target;
+	
 	event.preventDefault();
+	
 	// Set the dropEffect to move
 	//event.dataTransfer.dropEffect = 'linkMove';
 	if (drop_ok(event))
