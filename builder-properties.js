@@ -72,6 +72,8 @@ function drop_property_handler(ev)
 	if (builder_globals.dragged_property && !ev.shiftKey)
 		builder_globals.dragged_property.remove();
 	 
+	 builder_globals.dragged_property = null;
+	 
 	renderCode();
 	render();
 }

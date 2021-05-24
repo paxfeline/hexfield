@@ -6,12 +6,15 @@ function dragstart_handler(ev)
 	ev.dataTransfer.setData("application/hexfield-element", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "copy";
 	builder_globals.dragged = null;
+	
+	ev.stopPropagation();
 }
 
 
  // TODO: in this handler, set the value attribute explicitly so that it's copied
 function dragstart_move_handler(ev)
 {
+	console.log("dsmh");
 	// add any text area values to their elements as attributes
 	const tas = ev.target.querySelectorAll("textarea");
 	tas.forEach(ta => ta.innerHTML = ta.value);
@@ -27,7 +30,7 @@ function dragstart_move_handler(ev)
 	ev.dataTransfer.dropEffect = "move";
 	builder_globals.dragged = ev.target;
 	
-	// stop propagation? not needed apparently
+	ev.stopPropagation();
 }
 
 function drop_handler(ev) {

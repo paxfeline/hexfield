@@ -318,6 +318,8 @@ function addAttributes(source, dest)
 				const new_attr = document.querySelector(`[data-attribute-name='[custom]']`).cloneNode(true);
 				new_attr.querySelector('.builder-attr-name').value = attr.name;
 				new_attr.querySelector('.builder-attr-value').value = attr.value;
+				
+				listContainer.append(new_attr);
 			}
 		}
 	}
