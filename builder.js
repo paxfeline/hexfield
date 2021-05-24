@@ -26,6 +26,8 @@ function dragstart_move_handler(ev)
 	ev.dataTransfer.setData("application/hexfield-element", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "move";
 	builder_globals.dragged = ev.target;
+	
+	// stop propagation? not needed apparently
 }
 
 function drop_handler(ev) {
@@ -68,8 +70,9 @@ function drop_handler(ev) {
 	 render();
 }
 
-function dragover_handler(ev) {
-	console.log('doh', ev);
+function dragover_handler(ev)
+{
+	//console.log('doh', ev);
 	
 	if (ev.dataTransfer.getData("application/hexfield-element")
 		&& drop_ok(ev))

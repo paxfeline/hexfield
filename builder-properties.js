@@ -21,6 +21,7 @@ function update_value(event)
 
 function dragstart_property_handler(ev)
 {
+	console.log('dsp');
 	// Add the target element's id to the data transfer object
 	ev.dataTransfer.setData("application/hexfield-property", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "copy";
@@ -38,11 +39,13 @@ function dragstart_move_property_handler(ev)
 	if (inp)
 		inp.setAttribute('value', inp.value);
 	
-	console.log('start', ev.target, tas);
+	console.log('start p m', ev.target, tas);
 	//ev.target.firstElementChild.innerHTML = ev.target.firstElementChild.value;
 	ev.dataTransfer.setData("application/hexfield-property", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "move";
 	builder_globals.dragged_property = ev.target;
+	
+	ev.stopPropagation();
 }
 
 function drop_property_handler(ev)
@@ -60,8 +63,8 @@ function drop_property_handler(ev)
 	temp.innerHTML = data;
 	temp.firstElementChild.setAttribute("ondragstart", "dragstart_move_property_handler(event)");
  
-	ev.target.parentElement.parentElement.style.filter = '';
-		event.target.style.removeProperty('--property-dropzone-color'); //'#1f904e';
+	ev.target.parentElement.style.filter = '';
+	ev.target.style.removeProperty('--property-dropzone-color');
 
 	const attr_cont = ev.target.parentElement.querySelector('.builder-property-container');
 	attr_cont.append(temp.firstElementChild);
@@ -74,41 +77,42 @@ function drop_property_handler(ev)
 }
 
 function dragover_property_handler(ev) {
- ev.preventDefault();
- //if (builder_globals.dragged)
-	 ev.dataTransfer.dropEffect = "copy";
+	if (ev.dataTransfer.getData("application/hexfield-property")
+		&& drop_property_ok(event))
+	{
+		if (builder_globals.dragged_property && !ev.shiftKey)
+			ev.dataTransfer.dropEffect = "move";
+		else
+			ev.dataTransfer.dropEffect = "copy";
+			
+		ev.target.parentElement.style.filter = 'brightness(75%)';
+		ev.target.style.setProperty('--property-dropzone-color', 'mediumseagreen'); //'#1f904e';
+	}
+	else
+	{
+		ev.target.parentElement.style.filter = '';
+		ev.target.style.removeProperty('--property-dropzone-color');
+	}
+	
+	ev.preventDefault();
 }
 
 
-function onPropertyDragLeave(event)
+function onPropertyDragLeave(ev)
 {
-	event.target.style.background = '';
-	//--//event.target.parentElement.style.borderColor = '';
-	
-		event.target.parentElement.parentElement.style.filter = '';
-	//event.target.parentElement.style.removeProperty('--set-color');
-		event.target.style.removeProperty('--property-dropzone-color'); //'#1f904e';
+	ev.target.parentElement.style.filter = '';
+	ev.target.style.removeProperty('--property-dropzone-color');
 }
 
 function onPropertyDragEnter(event)
 {
-	event.preventDefault();
-	// Set the dropEffect to move
-	//event.dataTransfer.dropEffect = 'linkMove';
-	if (drop_property_ok(event))
-	{
-		event.target.parentElement.parentElement.style.filter = 'brightness(75%)';
-		//event.target.parentElement.style.setProperty('--set-color', '#1f904e');
-		//--//event.target.parentElement.style.borderColor = '#1f904e';
-		event.target.style.setProperty('--property-dropzone-color', 'mediumseagreen'); //'#1f904e';
-	}
 }
 
 
 function drop_property_ok(event)
 {
-	if (builder_globals.dragged_property)
-		console.log('dpo', builder_globals.dragged_property.parentElement.parentElement, event.target.parentElement)
+	//if (builder_globals.dragged_property)
+	//	console.log('dpo', builder_globals.dragged_property.parentElement.parentElement, event.target.parentElement)
 	return event.dataTransfer.getData("application/hexfield-property")
 				&& (event.shiftKey
 					|| !builder_globals.dragged_property

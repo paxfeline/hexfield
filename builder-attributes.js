@@ -24,6 +24,7 @@ function dragstart_move_attribute_handler(ev)
 	//ev.target.firstElementChild.innerHTML = ev.target.firstElementChild.value;
 	ev.dataTransfer.setData("application/hexfield-attribute", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "move";
+	
 	builder_globals.dragged_attribute = ev.target;
 	
 	ev.stopPropagation();
@@ -56,55 +57,26 @@ function drop_attribute_handler(ev) {
 	 renderCode();
 	 render();
  
- ev.preventDefault();
+	 ev.preventDefault();
 }
-
-/*
-function dragover_handler(ev) {
-	if (ev.dataTransfer.getData("application/hexfield-element")
-		&& drop_ok(event))
-	{
-		if (builder_globals.dragged && !ev.shiftKey)
-			ev.dataTransfer.dropEffect = "move";
-		else
-			ev.dataTransfer.dropEffect = "copy";
-			
-		event.target.parentElement.style.filter = 'brightness(75%)';
-		event.target.style.background = 'mediumseagreen';
-	}
-	else
-	{
-		event.target.parentElement.style.filter = '';
-		event.target.style.background = '';
-	}
-	
-	ev.preventDefault();
-}
-
-function onDragLeave(event)
-{
-	event.target.style.background = '';
-	event.target.parentElement.style.filter = '';
-}
-*/
 
 function dragover_attribute_handler(ev)
 {
 	if (ev.dataTransfer.getData("application/hexfield-attribute")
-		&& drop_attribute_ok(event))
+		&& drop_attribute_ok(ev))
 	{
 		if (builder_globals.dragged_attribute && !ev.shiftKey)
 			ev.dataTransfer.dropEffect = "move";
 		else
 			ev.dataTransfer.dropEffect = "copy";
 			
-		event.target.parentElement.parentElement.style.filter = 'brightness(75%)';
-		event.target.style.setProperty('--attribute-dropzone-color', 'mediumseagreen'); //'#1f904e';
+		ev.target.parentElement.parentElement.style.filter = 'brightness(75%)';
+		ev.target.style.setProperty('--attribute-dropzone-color', 'mediumseagreen'); //'#1f904e';
 	}
 	else
 	{
-		event.target.parentElement.parentElement.style.filter = '';
-		event.target.style.removeProperty('--attribute-dropzone-color');
+		ev.target.parentElement.parentElement.style.filter = '';
+		ev.target.style.removeProperty('--attribute-dropzone-color');
 	}
 	
 	ev.preventDefault();
@@ -124,7 +96,7 @@ function onAttributeDragEnter(event)
 
 function drop_attribute_ok(event)
 {
-	console.log('dao?', event.target.parentElement, builder_globals.dragged_attribute ? builder_globals.dragged_attribute.parentElement.parentElement : null);
+	//console.log('dao?', event.dataTransfer);
 	
 	return event.dataTransfer.getData("application/hexfield-attribute")
 				&& (event.shiftKey
