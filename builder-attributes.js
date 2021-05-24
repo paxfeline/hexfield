@@ -78,6 +78,7 @@ function onAttributeDragLeave(event)
 
 function onAttributeDragEnter(event)
 {
+	console.log('ae', event.target);
 	event.preventDefault();
 	// Set the dropEffect to move
 	//event.dataTransfer.dropEffect = 'linkMove';
@@ -93,7 +94,11 @@ function onAttributeDragEnter(event)
 
 function drop_attribute_ok(event)
 {
+	console.log('dao?', event.target.parentElement, builder_globals.dragged_attribute ? builder_globals.dragged_attribute.parentElement.parentElement : null);
+	
 	return event.dataTransfer.getData("application/hexfield-attribute")
 				&& (event.shiftKey
-					|| !builder_globals.dragged_attribute);
+					|| !builder_globals.dragged_attribute
+					|| (builder_globals.dragged_attribute
+						&& event.target.parentElement != builder_globals.dragged_attribute.parentElement.parentElement));
 }

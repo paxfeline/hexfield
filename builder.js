@@ -104,33 +104,6 @@ function onDragEnter(event)
 	}
 }
 
-function rem_attr(ev)
-{
-	ev.target.parentElement.remove();
-	renderCode();
-	render()
-}
-
-function add_attr(ev)
-{
-	const newAttr = document.createElement('div');
-	const newName = ev.target.parentElement.querySelector('.builder-attr-name');
-	const newValue = ev.target.parentElement.querySelector('.builder-attr-value');
-	const attr_cont = ev.target.parentElement.querySelector('.builder-attributes-container');
-	newAttr.innerHTML = `<span class="builder-attr-pair">${newName.value}="${newValue.value}"</span>`;
-	attr_cont.appendChild(newAttr);
-	const remAttr = document.createElement('button');
-	remAttr.setAttribute("class", "btn")
-	remAttr.innerHTML = "&nbsp;-&nbsp";
-	remAttr.setAttribute('onclick', 'rem_attr(event)')
-	newAttr.appendChild(remAttr);
-	newName.value = '';
-	newValue.value = '';
-	
-	renderCode();
-	render()
-}
-
 function dropify(wut)
 	{
 		const zones = wut.querySelectorAll(".dropzone");
@@ -167,68 +140,7 @@ function trim_dropzones(el)
 	}
 }
 
-function drop_trash_handler(ev) {
-if (builder_globals.dragged
-		|| builder_globals.dragged_attribute
-		|| builder_globals.dragged_property )
-	{
-		 if (builder_globals.dragged)
-		 {
- 
-			 ev.preventDefault();
-	 
-			builder_globals.dragged.remove();
-			builder_globals.dragged = null;
- 
-			trim_dropzones(document.querySelector("#code").firstElementChild);
-	
-			renderCode();
-			render();
-		 }
-	 }
- 
-	const bank = document.querySelector('#bank');
-	bank.style.background = '';
-	bank.style.borderColor = '';
-	
-	trash_in_out_count = 0;
-}
 
-function dragover_trash_handler(ev) {
-//console.log('dot', ev);
- //if (builder_globals.dragged)
- {
-	 ev.preventDefault();
-	 ev.dataTransfer.dropEffect = "move";
-	}
-}
-
-var trash_in_out_count = 0;
-
-function onTrashDragLeave(event)
-{
-	trash_in_out_count--;
-	console.log('trash leave', trash_in_out_count);
-	const bank = document.querySelector('#bank');
-	if (trash_in_out_count == 0)
-	{
-		bank.style.background = '';
-		bank.style.borderColor = '';
-	}
-}
-
-function onTrashDragEnter(event)
-{
-	trash_in_out_count++;
-	console.log('trash enter', trash_in_out_count);
-	if (builder_globals.dragged || builder_globals.dragged_attribute)
-	{
-		event.preventDefault();
-		const bank = document.querySelector('#bank');
-		bank.style.borderColor = 'darkred';
-		bank.style.background = 'red';
-	}
-}
 
 function drop_ok(event)
 {
@@ -438,47 +350,8 @@ function render()
 	
 	const iframe = document.querySelector("iframe");
 	
-	/*
-	iframe.addEventListener( 'load',
-		() =>
-		{
-			iframe.contentDocument.querySelectorAll('a[href]').forEach(
-				el =>
-				{
-					el.href = `javascript: window.parent.forward_link("${el.href}")`;
-				});
-		} );
-		*/
-		
-	//iframe.contentDocument.location = builder_globals.cur_file.url;
-	//iframe.contentWindow.location = builder_globals.cur_file.url;
 	iframe.src = builder_globals.cur_file.url;
-	
-	
-	// no longer checks for html, body, etc.
-	/*
-	destBody.contentDocument.open();
-	destBody.contentDocument.write(renderCode(true));
-	destBody.contentDocument.close();
-	*/
 }
-
-/*
-function fix_urls(events)
-{
-	const iframe = document.querySelector("iframe");
-	
-	urlSelectors.forEach(
-		urlSelector =>
-		{
-			iframe.contentDocument.querySelectorAll(`${urlSelector.type}[${urlSelector.attr}]`).forEach(
-				el =>
-				{
-					fix_url(el, urlSelector.attr);
-				});
-		});
-}
-*/
 
 // /url\((['"])?(?!(data:))([^'")]*)\g1?\)/g
 
@@ -576,60 +449,6 @@ function fix_urls(event)
 	
 }
 
-/*
-	const re = /<(\/?)(!?[-_\w]+)(.*?)>/g;
-	code_str = code_str.replaceAll(re,
-		(match, p1, p2, p3) =>
-		{
-			if  (p1 == '/')
-				return `</div>`;
-			else
-			{
-				var tn;
-				if (builder_globals.empty_elements.includes(p2))
-					tn = 'br';
-				else
-					tn = 'div';
-				return `<${tn} data-converting-type='${p2}'${p3}>`;
-			}
-		}); // "<$1div data-converting-type='$2'$3>");
-*/
-
-/*
-function fix_links(events)
-{
-	const iframe = document.querySelector("iframe");
-	iframe.contentDocument.querySelectorAll('a[href]').forEach(
-		el =>
-		{
-			fix_link(el);
-			//el.href = `javascript: window.parent.forward_link("${el.href}")`;
-		});
-	iframe.contentDocument.querySelectorAll('img[src]').forEach(
-		el =>
-		{
-			fix_media(el);
-		});
-}
-
-function fix_media(el)
-{
-	const mediasets = Object.values(builder_globals.file_data.media_sets);
-	const iframe = document.querySelector("iframe");
-	
-	for (const mediaset of mediasets)
-	{
-		for (const media of mediaset)
-		{
-			if (media.name == el.src)
-			{
-				el.src = media.url;
-			}
-		}
-	}
-}
-*/
-
 const urlSelectors =
 	[
 		{type: 'a', attr: 'href'},
@@ -688,27 +507,6 @@ SVGs can also contain links to resources: <svg><image href="url" /></svg>
 In addition, the style attribute can contain css declarations with one or several urls. For example: <div style="background: url(image.png)">
 */
 
-/*
-function forward_link(url)
-{
-	const filesets = Object.values(builder_globals.file_data.file_sets);
-	const iframe = document.querySelector("iframe");
-	
-	for (const fileset of filesets)
-	{
-		for (const file of fileset)
-		{
-			if (file.name == url)
-			{
-				return file.url;
-				//iframe.contentDocument.location = file.url;
-			}
-		}
-	}
-	return url; // fallback, shouldn't happen
-}
-*/
-
 function save_code()
 {
 	const source = document.querySelector("#code");
@@ -728,6 +526,7 @@ function save_code()
 }
 
 var blocks_draggable = true;
+
 function toggle_draggable(event)
 {
 	blocks_draggable = !blocks_draggable;

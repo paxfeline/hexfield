@@ -1,3 +1,24 @@
+function update_value(event)
+{
+	event.target.setAttribute('value', event.target.value);
+}
+
+
+
+/*
+	if (event.target.builder_input_timer)
+		clearTimeout(event.target.builder_input_timer);
+		
+	event.target.builder_input_timer = setTimeout(
+		() =>
+		{
+			renderCode()
+			render();
+		}, 100);
+	
+}
+*/
+
 function dragstart_property_handler(ev)
 {
 	// Add the target element's id to the data transfer object

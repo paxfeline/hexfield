@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="builder.css">
 <script src="builder-globals.js"></script>
 <script src="builder.js"></script>
+<script src="builder-trash.js"></script>
 <script src="builder-attributes.js"></script>
 <script src="builder-properties.js"></script>
 <script src="builder-files.js" defer></script>
@@ -74,29 +75,29 @@ Upload: <input type="file" accept="image/*" multiple id="upload-media-btn" oncha
 <input class="builder-property-name">: <input class="builder-property-value">
 </div>
 
-<div class="property" data-fixed-property-name data-property-name="font-size" draggable="true" ondragstart="dragstart_property_handler(event)">
+<div class="property" data-property-name="font-size" draggable="true" ondragstart="dragstart_property_handler(event)">
 font-size: <input class="builder-attr-value">
 </div>
 
-<div class="attr" draggable="true" ondragstart="dragstart_attribute_handler(event)">
-<input class="builder-attr-name"> = &quot;<input class="builder-attr-value">&quot;
+<div class="attr" data-attribute-name="[custom]" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+<input class="builder-attr-name" oninput="update_value(event)"> = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
 </div>
 
-<div class="attr" data-fixed-attribute-name data-attribute-name="href" draggable="true" ondragstart="dragstart_attribute_handler(event)">
-href = &quot;<input class="builder-attr-value">&quot;
-</div>
-
-
-<div class="attr" data-fixed-attribute-name data-attribute-name="src" draggable="true" ondragstart="dragstart_attribute_handler(event)">
-src = &quot;<input class="builder-attr-value">&quot;
-</div>
-
-<div class="attr" data-fixed-attribute-name data-attribute-name="width" draggable="true" ondragstart="dragstart_attribute_handler(event)">
-width = &quot;<input class="builder-attr-value">&quot;
+<div class="attr" data-attribute-name="href" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+href = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
 </div>
 
 
-<div class="attr" data-fixed-attribute-name data-attribute-name="width" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+<div class="attr" data-attribute-name="src" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+src = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
+</div>
+
+<div class="attr" data-attribute-name="width" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+width = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
+</div>
+
+
+<div class="attr" data-attribute-name="width" draggable="true" ondragstart="dragstart_attribute_handler(event)">
 <span class="attr-style-label">style = </span>
 <div class="builder-property-set">
 <div class="builder-property-container">

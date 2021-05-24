@@ -279,15 +279,20 @@ function addAttributes(source, dest)
 	//console.log("aa", source);
 	if (!dest.hasAttribute("data-no-attributes"))
 	{
-		const wrapper = document.createElement('details');
+		/*
+<div class="builder-attribute-set">
+<div class="builder-attribute-container"></div>
+<div class="builder-attribute-dropzone" ondragenter="onAttributeDragEnter(event)" ondragleave="onAttributeDragLeave(event)" ondrop="drop_attribute_handler(event)" ondragover="dragover_attribute_handler(event)"></div>
+</div>
+		*/
+		
+		
+		const templates = document.querySelector('#templates');
+	
+		const wrapper = templates.querySelector('.builder-attribute-set').cloneNode(true);
 		dest.prepend(wrapper);
-		//wrapper.setAttribute('class', 'wrapper');
-	
-		const summary = wrapper.appendChild(document.createElement("summary"))
-		summary.innerHTML = "attributes";
-	
-		const listContainer = wrapper.appendChild(document.createElement('div'));
-		listContainer.setAttribute('class', 'builder-attributes-container');
+		
+		const listContainer = wrapper.firstElementChild; // simpler but more brittle than querySelector('.builder-attribute-container').cloneNode(true);
 		
 		for (var i = 0; i < source.attributes.length; i++)
 		{
@@ -295,23 +300,26 @@ function addAttributes(source, dest)
 			
 			if (attr.name == 'data-converting-type') continue;
 			
-			const newAttr = listContainer.appendChild(document.createElement('div'));
 			
-			newAttr.innerHTML += `<span class="builder-attr-pair">${attr.name}="${attr.value}"</span>`;
-			newAttr.innerHTML += '<button onclick="rem_attr(event)">&nbsp;-&nbsp</button>';
-			// TODO simply code from builder.js that this came from
+			if (builder_globals.known_attributes.includes(attr.name))
+			{
+				// TODO change document to the bank div (or make templates)
+				const new_attr = document.querySelector(`[data-attribute-name='${attr.name}']`).cloneNode(true);
+				
+				if (attr.name == 'style')
+				{
+				
+				}
+				else
+					new_attr.querySelector('.builder-attr-value').value = attr.value;
+			}
+			else
+			{
+				const new_attr = document.querySelector(`[data-attribute-name='[custom]']`).cloneNode(true);
+				new_attr.querySelector('.builder-attr-name').value = attr.name;
+				new_attr.querySelector('.builder-attr-value').value = attr.value;
+			}
 		}
-	
-		const newName = wrapper.appendChild(document.createElement('input'));
-		const newValue = wrapper.appendChild(document.createElement('input'));
-		
-		newName.setAttribute('class', 'builder-attr-name');
-		newValue.setAttribute('class', 'builder-attr-value');
-	
-		const addBtn = wrapper.appendChild(document.createElement("button"));
-		addBtn.setAttribute("class", "btn")
-		addBtn.setAttribute('onclick', 'add_attr(event)')
-		addBtn.innerHTML = "&nbsp;+&nbsp;";
 	}
 }
 
@@ -406,7 +414,7 @@ function upload_media(event)
 
 /* AT STARTUP, LOAD LOCAL FILE SETS */
 
-//load_local_filesets();
+load_local_filesets();
 
 
 
