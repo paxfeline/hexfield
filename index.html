@@ -71,12 +71,12 @@ Upload: <input type="file" accept="image/*" multiple id="upload-media-btn" oncha
 
 <div id="bank" ondragenter="onTrashDragEnter(event)" ondragleave="onTrashDragLeave(event)" ondrop="drop_trash_handler(event)" ondragover="dragover_trash_handler(event)">
 
-<div class="property" draggable="true" ondragstart="dragstart_property_handler(event)">
+<div class="property" data-property-name="[custom]" draggable="true" ondragstart="dragstart_property_handler(event)">
 <input class="builder-property-name" onchange="update_value(event)">: <input class="builder-property-value" onchange="update_value(event)">
 </div>
 
 <div class="property" data-property-name="font-size" draggable="true" ondragstart="dragstart_property_handler(event)">
-font-size: <input class="builder-attr-value" onchange="update_value(event)">
+font-size: <input class="builder-property-value" onchange="update_value(event)">
 </div>
 
 <div class="attr" data-attribute-name="[custom]" draggable="true" ondragstart="dragstart_attribute_handler(event)">
@@ -86,7 +86,6 @@ font-size: <input class="builder-attr-value" onchange="update_value(event)">
 <div class="attr" data-attribute-name="href" draggable="true" ondragstart="dragstart_attribute_handler(event)">
 href = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
 </div>
-
 
 <div class="attr" data-attribute-name="src" draggable="true" ondragstart="dragstart_attribute_handler(event)">
 src = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
@@ -100,9 +99,17 @@ width = &quot;<input class="builder-attr-value" oninput="update_value(event)">&q
 <div class="attr" data-attribute-name="style" draggable="true" ondragstart="dragstart_attribute_handler(event)">
 <span class="attr-style-label">style = </span>
 <div class="builder-property-set">
+<div class="builder-property-container"></div>
+<div class="builder-property-dropzone" ondragenter="onPropertyDragEnter(event)" ondragleave="onPropertyDragLeave(event)" ondrop="drop_property_handler(event)" ondragover="dragover_property_handler(event)"></div>
+</div>
+</div>
+
+<div class="attr" data-attribute-name="style" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+<span class="attr-style-label">style = </span>
+<div class="builder-property-set">
 <div class="builder-property-container">
-<div class="property" data-fixed-property-name data-property-name="font-size" draggable="true" ondragstart="dragstart_move_property_handler(event)">
-font-size: <input class="builder-attr-value" onchange="update_value(event)">
+<div class="property" data-property-name="font-size" draggable="true" ondragstart="dragstart_move_property_handler(event)">
+font-size: <input class="builder-property-value" onchange="update_value(event)">
 </div>
 </div>
 <div class="builder-property-dropzone" ondragenter="onPropertyDragEnter(event)" ondragleave="onPropertyDragLeave(event)" ondrop="drop_property_handler(event)" ondragover="dragover_property_handler(event)"></div>

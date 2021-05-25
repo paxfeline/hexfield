@@ -234,6 +234,8 @@ function renderCode(realHTML=false)
 		builder_globals.cur_file.content = code;
 		save_local_filesets();
 	
+		console.log('gen url', builder_globals.cur_file.name);	
+
 		// create uri for local linking
 		builder_globals.cur_file.url = URL.createObjectURL(new Blob([code], {type: 'text/html'}));
 	
@@ -311,14 +313,44 @@ function renderAttributesCode(source)
 	
 	if (!source.firstElementChild) return '';
 	
-	const list = source.firstElementChild.querySelectorAll('.builder-attr-pair');
+	const list = source.firstElementChild.querySelectorAll('.attr');
 	
-	if ( list.length == 0 )
-		return '';
-	else
-		list.forEach( el => attrs += ' ' + el.textContent );
+	for (const attr of list)
+	{
+		const attr_name_attr = attr.getAttribute('data-attribute-name');
+		let name = attr_name_attr != '[custom]' ? attr_name_attr : attr.querySelector('.builder-attr-name').value;
+		let value;
+	
+		if (name == 'style')
+			value = renderStyleProperties(attr);
+		else
+			value = attr.querySelector('.builder-attr-value').value;
+		
+		attrs += ` ${name}="${value}"`;
+	}
 	
 	return attrs;
+}
+
+function renderStyleProperties(source)
+{
+	var style = '';
+	
+	const list = source.querySelector('.builder-property-container');
+	
+	for (const prop of list.children)
+	{
+		const prop_name_attr = prop.getAttribute('data-property-name');
+		let name = prop_name_attr != '[custom]' ? prop_name_attr : prop.querySelector('.builder-property-name').value;
+		const value = prop.querySelector('.builder-property-value').value;
+		
+		style += `${name}: ${value};`;
+		
+		if (prop != list.lastElementChild)
+			style += ' ';
+	}
+	
+	return style;
 }
 
 function render()

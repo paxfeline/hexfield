@@ -26,6 +26,8 @@ function dragstart_property_handler(ev)
 	ev.dataTransfer.setData("application/hexfield-property", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "copy";
 	builder_globals.dragged_property = null;
+	
+	ev.stopPropagation();
 }
 
 function dragstart_move_property_handler(ev)

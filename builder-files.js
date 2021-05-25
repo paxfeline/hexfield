@@ -300,7 +300,6 @@ function addAttributes(source, dest)
 			
 			if (attr.name == 'data-converting-type') continue;
 			
-			
 			if (builder_globals.known_attributes.includes(attr.name))
 			{
 				// TODO change document to the bank div (or make templates)
@@ -308,10 +307,43 @@ function addAttributes(source, dest)
 				
 				if (attr.name == 'style')
 				{
-				
+					const prop_list = new_attr.querySelector('.builder-property-container');
+					
+					// /([\w-]+):\s*([^;]+);?/gm
+					
+					
+					
+					
+					////////////
+					
+					const cssdiv = document.createElement('div');
+					cssdiv.style.cssText = attr.value;
+					
+					/*const cssdoc = document.implementation.createHTMLDocument();
+					cssdoc.body.append(cssdiv);*/
+			
+					console.log('r s', cssdiv.style);
+					
+					for (var css_i = 0; css_i < cssdiv.style.length; css_i++)
+					{
+						const name = cssdiv.style[css_i];
+						const value = cssdiv.style.getPropertyValue(name);
+						
+						const templ_name = builder_globals.known_properties.includes(name) ? name : '[custom]';
+						const new_prop = document.querySelector(`[data-property-name='${templ_name}']`).cloneNode(true);
+						
+						if (templ_name == '[custom]')
+							new_prop.querySelector('.builder-property-name').value = name;
+						
+						new_prop.querySelector('.builder-property-value').value = value;
+						
+						prop_list.append(new_prop);
+					}
 				}
 				else
 					new_attr.querySelector('.builder-attr-value').value = attr.value;
+				
+				listContainer.append(new_attr);
 			}
 			else
 			{
