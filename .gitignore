@@ -67,3 +67,6 @@ yarn-debug.log*
 /storage/*
 !/storage/.keep
 /public/uploads
+
+# Google Service Account credentials
+hexfield-db71a6c4c88e.json
