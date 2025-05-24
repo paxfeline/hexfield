@@ -1,7 +1,10 @@
-<h1>Hexfield#index</h1>
+<h1>Hexfield</h1>
 <p>Find me in app/views/hexfield/index.html.erb</p>
-<p> <%= @user.inspect %> </p>
+<p> <% if @user %>
+  <%= @user.inspect %> </p>
 <p> <%= link_to "Sign out", "/users/sign_out", data: { turbo_method: :delete } %> </p>
+<% else %>
 <p> <%= link_to "Sign in", "/users/sign_in" %> </p>
+<% end %>
 
 <script src="/codemirror/editor.bundle.js"></script>
