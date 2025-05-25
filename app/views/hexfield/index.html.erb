@@ -1,10 +1,24 @@
+<script src="/hex/hex-files.js"></script>
+
 <h1>Hexfield</h1>
 <p>Find me in app/views/hexfield/index.html.erb</p>
-<p> <% if @user %>
+<p> <% if @user_signed_in %>
   <%= @user.inspect %> </p>
 <p> <%= link_to "Sign out", "/users/sign_out", data: { turbo_method: :delete } %> </p>
 <% else %>
 <p> <%= link_to "Sign in", "/users/sign_in" %> </p>
 <% end %>
 
+<hex-files></hex-files>
+
 <script src="/codemirror/editor.bundle.js"></script>
+
+<script>
+
+if (window.Worker)
+{
+  window.myWorker = new Worker("/hex/file-worker.js");
+
+}
+
+</script>
