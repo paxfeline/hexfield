@@ -5,7 +5,18 @@ class HexFiles extends HTMLElement {
     super();
   }
 
-  connectedCallback() {
+  connectedCallback()
+  {
+    let myWorker;
+
+    if (window.Worker)
+    {
+      myWorker = new Worker("/hex/file-worker.js");
+      myWorker.onmessage = (e) => {
+        console.log("Message received from worker", e);
+      };
+    }
+
     // Create a shadow root
     const shadow = this.attachShadow({ mode: "open" });
 
@@ -42,8 +53,7 @@ class HexFiles extends HTMLElement {
       "click",
       () =>
       {
-        //debugger;
-        window.myWorker.postMessage(
+        myWorker?.postMessage(
           shadow.querySelector('#file-input').files
         );
       }
