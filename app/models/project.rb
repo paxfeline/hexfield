@@ -1,4 +1,4 @@
 class Project < ApplicationRecord
-  enum visibility: { female: 'fem', male: 'mal' }
-  belongs_to :owner
+  enum :visibility, [ :vis_private, :vis_public, :vis_unlisted ], default: :vis_private
+  belongs_to :owner, class_name: "User"
 end
