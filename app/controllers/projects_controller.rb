@@ -1,5 +1,6 @@
 class ProjectsController < ApplicationController
   before_action :set_project, only: %i[ show edit update destroy ]
+  before_action :numerize_params, only: %i[ create update ]
 
   # GET /projects or /projects.json
   def index
@@ -21,6 +22,8 @@ class ProjectsController < ApplicationController
 
   # POST /projects or /projects.json
   def create
+    params[:project][:owner_id] = current_user.id
+
     @project = Project.new(project_params)
 
     respond_to do |format|
@@ -58,13 +61,22 @@ class ProjectsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_project
-      @project = Project.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def project_params
-      params.expect(project: [ :owner_id, :visibility ])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_project
+    @project = Project.find(params.expect(:id))
+  end
+
+  # Only allow a list of trusted parameters through.
+  def project_params
+    params.expect(project: [ :owner_id, :name, :visibility ])
+  end
+
+  # Turn visibility into a numbers
+  def numerize_params
+    # Silly:
+    # ("" becomes nil, otherwise converted to integer)
+    inviz = params[:project][:visibility]
+    params[:project][:visibility] = inviz == "" ? nil : inviz&.to_i
+  end
 end
