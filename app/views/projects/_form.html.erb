@@ -22,6 +22,15 @@
   </div>
 
   <div>
-    <%= form.submit %>
+    <%# form.submit #%>
+    <button type="button" id="submit">
+      Submit Async
+    </button>
   </div>
 <% end %>
+
+<script type="module">
+import { doot } from '/new_project.js';
+
+document.querySelector("#submit").addEventListener("click", doot);
+</script>

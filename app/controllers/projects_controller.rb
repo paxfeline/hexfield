@@ -69,7 +69,7 @@ class ProjectsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def project_params
-    params.expect(project: [ :owner_id, :name, :visibility ])
+    params.expect(project: [ :name, :visibility ])
   end
 
   # Turn visibility into a numbers
