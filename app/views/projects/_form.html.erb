@@ -30,7 +30,19 @@
 <% end %>
 
 <script type="module">
-import { doot } from '/new_project.js';
+import { FetchRequest } from '@rails/request.js'
+
+async function doot() {
+  const form = document.querySelector("form");
+  const fd = new FormData(form);
+  const request = new FetchRequest('post', '/projects', {body: fd})
+  const response = await request.perform()
+  if (response.ok) {
+    const body = await response.text
+  }
+  else
+    console.log("error", response);
+}
 
 document.querySelector("#submit").addEventListener("click", doot);
 </script>

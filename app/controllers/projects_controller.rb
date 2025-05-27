@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
   before_action :set_project, only: %i[ show edit update destroy ]
-  before_action :numerize_params, only: %i[ create update ]
+  before_action :set_visibility_enum, only: %i[ create update ]
 
   # GET /projects or /projects.json
   def index
@@ -22,6 +22,8 @@ class ProjectsController < ApplicationController
 
   # POST /projects or /projects.json
   def create
+    debugger
+
     params[:project][:owner_id] = current_user.id
 
     @project = Project.new(project_params)
@@ -69,14 +71,13 @@ class ProjectsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def project_params
-    params.expect(project: [ :name, :visibility ])
+    params.expect(project: [ :owner_id, :name, :visibility ])
   end
 
   # Turn visibility into a numbers
-  def numerize_params
-    # Silly:
-    # ("" becomes nil, otherwise converted to integer)
-    inviz = params[:project][:visibility]
-    params[:project][:visibility] = inviz == "" ? nil : inviz&.to_i
+  def set_visibility_enum
+    params[:project][:visibility] = params[:project][:visibility] == "1" ?
+      :vis_public :
+      :vis_private
   end
 end
