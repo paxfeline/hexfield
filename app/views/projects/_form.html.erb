@@ -36,12 +36,21 @@ async function doot() {
   const form = document.querySelector("form");
   const fd = new FormData(form);
   const request = new FetchRequest('post', '/projects', {body: fd})
-  const response = await request.perform()
-  if (response.ok) {
-    const body = await response.text
+  request.perform().then(
+    response =>
+    {
+      if (response?.ok) {
+        return response.text
+      }
+    }
+  ).then( body =>
+  {
+    console.log("got response body:", body)
   }
-  else
-    console.log("error", response);
+  ).catch( err =>
+  {
+    console.log("error", err);
+  });
 }
 
 document.querySelector("#submit").addEventListener("click", doot);
