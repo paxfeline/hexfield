@@ -3,12 +3,7 @@
 <h1>Hexfield</h1>
 <p>Find me in app/views/hexfield/index.html.erb</p>
 <p> <% if @user_signed_in %>
-  <%= @user.inspect %> </p>
-<p> <%= link_to "Sign out", "/users/sign_out", data: { turbo_method: :delete } %> </p>
+<p> <%= link_to "Projects", "/projects" %> </p>
 <% else %>
-<p> <%= link_to "Sign in", "/users/sign_in" %> </p>
+<p> <%= link_to "Sign in", "/users/sign_in" %> to get started! </p>
 <% end %>
-
-<hex-files></hex-files>
-
-<script src="/codemirror/editor.bundle.js"></script>

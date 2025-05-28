@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  resources :projects
-  get "hexfield/index"
+  resources :projects, except: [:edit]
+  get "hexfield" => "hexfield#hexfield"
+  #get "hexfield/index" # don't want/need
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
