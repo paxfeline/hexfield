@@ -7,7 +7,8 @@ Rails.application.routes.draw do
   resources :projects, except: [:edit]
   get "edit" => "hexfield#edit"
   # files
-  get "api/get-files" => "hexfield#get_files"
+  post "api/get-project" => "hexfield#get_project"
+  post "api/get-files" => "hexfield#get_files"
   post "api/upload-code-file" => "hexfield#upload_code_file"
   post "api/upload-media-file" => "hexfield#upload_media_file"
 

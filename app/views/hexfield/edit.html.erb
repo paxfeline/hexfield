@@ -1,0 +1,68 @@
+<script src="/hex/hex-files.js"></script>
+
+<h1>Hexfield</h1>
+<% if @user_signed_in %>
+<%= link_to "Sign out", "/users/sign_out", data: { turbo_method: :delete } %> </p>
+  <p> <%= @user.inspect %> </p>
+  <hex-files></hex-files>
+  
+  <script src="/codemirror/editor.bundle.js"></script>
+<% else %>
+<p> <%= link_to "Sign in", "/users/sign_in" %> to get started! </p>
+<% end %>
+
+
+<script type="module">
+import { FetchRequest } from '@rails/request.js'
+
+async function get_project() {
+  const fd = new FormData();
+  const sp = new URLSearchParams(document.location.search);
+  for (const [key, value] of sp.entries())
+    fd.append(key, value)
+  const request = new FetchRequest('post', '/api/get-project', {body: fd})
+  request.perform().then(
+    response =>
+    {
+      if (response?.ok) {
+        console.log("GP response:", response)
+        return response.text
+      }
+    }
+  ).then( body =>
+  {
+    console.log("GP body:", body)
+  }
+  ).catch( err =>
+  {
+    console.log("error", err);
+  });
+}
+
+async function create_project() {
+  const fd = new FormData();
+  const sp = new URLSearchParams(document.location.search);
+  for (const [key, value] of sp.entries())
+    fd.append(key, value)
+  const request = new FetchRequest('post', '/projects', {body: fd})
+  request.perform().then(
+    response =>
+    {
+      if (response?.ok) {
+        console.log("GP response:", response)
+        return response.text
+      }
+    }
+  ).then( body =>
+  {
+    console.log("CP response:", body)
+  }
+  ).catch( err =>
+  {
+    console.log("error", err);
+  });
+}
+
+get_project();
+
+</script>

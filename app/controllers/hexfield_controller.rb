@@ -5,8 +5,22 @@ class HexfieldController < ApplicationController
 
   def index
   end
-  
+
   def edit
+  end
+
+  # get "api/get-project" => "hexfield#get_project"
+  def get_project
+    project = Project.find_by(name: params[:project][:name])
+    if project.nil?
+      render plain: "Project not found", status: :not_found and return
+    else
+      if project.owner == current_user
+        render json: project
+      else
+        render plain: "Not authorized as owner of project", status: :forbidden
+      end
+    end
   end
 
   # get "api/get-files" => "hexfield#get_files"
@@ -26,6 +40,7 @@ class HexfieldController < ApplicationController
   end
 
   private
+
   def set_user
     @user = current_user
     @user_signed_in = user_signed_in?
