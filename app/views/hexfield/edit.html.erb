@@ -15,7 +15,9 @@
 <script type="module">
 import { FetchRequest } from '@rails/request.js'
 
-async function get_project() {
+// get info on this project (mainly: does it exist?)
+async function get_project()
+{
   const fd = new FormData();
   const sp = new URLSearchParams(document.location.search);
   for (const [key, value] of sp.entries())
@@ -24,22 +26,28 @@ async function get_project() {
   request.perform().then(
     response =>
     {
-      if (response?.ok) {
-        console.log("GP response:", response)
-        return response.text
-      }
+      console.log("GP response:", response);
+      return Promise.all([response, response.text]);
     }
-  ).then( body =>
+  ).then( ([{response}, body]) =>
   {
-    console.log("GP body:", body)
+    console.log("GP body:", response.status, body);
+    if (response.status == 404)
+      throw new Error("Project not found")
   }
   ).catch( err =>
   {
     console.log("error", err);
+    if (err.message == "Project not found")
+    {
+      create_project();
+    }
   });
 }
 
-async function create_project() {
+// create this project if neededs
+async function create_project()
+{
   const fd = new FormData();
   const sp = new URLSearchParams(document.location.search);
   for (const [key, value] of sp.entries())
