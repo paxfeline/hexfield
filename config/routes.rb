@@ -1,9 +1,15 @@
 Rails.application.routes.draw do
-  resources :projects, except: [:edit]
-  get "hexfield" => "hexfield#hexfield"
   #get "hexfield/index" # don't want/need
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  
+  #hexfield
+  resources :projects, except: [:edit]
+  get "edit" => "hexfield#edit"
+  # files
+  get "api/get-files" => "hexfield#get_files"
+  post "api/upload-code-file" => "hexfield#upload_code_file"
+  post "api/upload-media-file" => "hexfield#upload_media_file"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
