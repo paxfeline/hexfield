@@ -1,4 +1,4 @@
-<script src="/hex/hex-files.js"></script>
+<script src="/hex/files.js"></script>
 
 <h1>Hexfield</h1>
 <% if @user_signed_in %>
@@ -13,7 +13,7 @@
 
 
 <script type="module">
-import { FetchRequest } from '@rails/request.js'
+import { get, post } from '@rails/request.js'
 
 // create FormData object from search params
 function fd_from_sp()
@@ -21,7 +21,7 @@ function fd_from_sp()
   const fd = new FormData();
   const sp = new URLSearchParams(document.location.search);
   for (const [key, value] of sp.entries())
-    fd.append(key, value)
+    fd.append(key, value);
   return fd;
 }
 
@@ -29,23 +29,22 @@ function fd_from_sp()
 async function get_project()
 {
   const fd = fd_from_sp();
-  const request = new FetchRequest('post', '/api/get-project', {body: fd})
-  const response = await request.perform();
+  const response = await post('/api/get-project', {body: fd});
   console.log("GP response:", response);
   const body = await response.text;
   console.log("GP body:", response.response.status, body);
   if (response.response.status == 404)
-    create_project();
+    await create_project();
   else
-    get_files();
+    // could go outside else, but new projs will be empty
+    await get_files();
 }
 
 // create this project if neededs
 async function create_project()
 {
   const fd = fd_from_sp();
-  const request = new FetchRequest('post', '/projects', {body: fd})
-  const response = await request.perform();
+  const response = await post('/projects', {body: fd});
   console.log("GP response:", response);
   const body = await response.text;
   console.log("GP body:", response.response.status, body);
@@ -54,8 +53,10 @@ async function create_project()
 // get code and media files
 async function get_files()
 {
-  get_code_files();
-  get_media_files();
+  await Promise.all([
+    get_code_files(),
+    get_media_files()
+  ]);
 }
 
 
@@ -63,8 +64,7 @@ async function get_files()
 async function get_code_files()
 {
   const fd = fd_from_sp();
-  const request = new FetchRequest('post', '/api/get-code-files', {body: fd})
-  const response = await request.perform();
+  const response = await post('/api/get-code-files', {body: fd});
   console.log("GP response:", response);
   const body = await response.text;
   console.log("GP body:", response.response.status, body);
@@ -74,8 +74,8 @@ async function get_code_files()
 async function get_media_files()
 {
   const fd = fd_from_sp();
-  const request = new FetchRequest('post', '/api/get-media-files', {body: fd})
-  const response = await request.perform();
+  const request = new FetchRequest('post', '/api/get-media-files', {body: fd});
+  const response = await post('/api/get-media-files', {body: fd});
   console.log("GP response:", response);
   const body = await response.text;
   console.log("GP body:", response.response.status, body);
