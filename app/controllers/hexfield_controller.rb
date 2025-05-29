@@ -41,8 +41,18 @@ class HexfieldController < ApplicationController
 
   # post "api/upload-code-file" => "hexfield#upload_code_file"
   def upload_code_file
-  end
+    debugger
+    
+    upfile = params[:code_file]
+    storage = Google::Cloud::Storage.new
+    bucket  = storage.bucket "hexfield"
 
+    project = params[:project][:name]
+    file_name = "#{current_user.id}/#{project}/#{upfile.original_filename}"
+    file = bucket.create_file upfile.path, file_name
+    puts "Uploaded #{upfile.path} as #{file.name} in bucket hexfield"
+  end
+  
   # post "api/upload-media-file" => "hexfield#upload_media_file"
   def upload_media_file
   end

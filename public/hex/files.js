@@ -11,7 +11,7 @@ class HexFiles extends HTMLElement {
 
     if (window.Worker)
     {
-      myWorker = new Worker("/hex/file-worker.js");
+      myWorker = new Worker("/hex/file-worker.js", { type: "module" });
       myWorker.onmessage = (e) => {
         console.log("Message received from worker", e);
       };
@@ -54,7 +54,10 @@ class HexFiles extends HTMLElement {
       () =>
       {
         myWorker?.postMessage(
-          shadow.querySelector('#file-input').files
+          {
+            search_params: document.location.search,
+            file: shadow.querySelector('#file-input').files[0]
+          }
         );
       }
     )

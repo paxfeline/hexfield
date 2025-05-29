@@ -1,22 +1,7 @@
-<script src="/hex/files.js"></script>
-
-<h1>Hexfield</h1>
-<% if @user_signed_in %>
-<%= link_to "Sign out", "/users/sign_out", data: { turbo_method: :delete } %> </p>
-  <p> <%= @user.inspect %> </p>
-  <hex-files></hex-files>
-  
-  <script src="/codemirror/editor.bundle.js"></script>
-<% else %>
-<p> <%= link_to "Sign in", "/users/sign_in" %> to get started! </p>
-<% end %>
-
-
-<script type="module">
-import { get, post } from '@rails/request.js'
+import { post } from '@rails/request.js'
 
 // create FormData object from search params
-function fd_from_sp()
+export function fd_from_sp()
 {
   const fd = new FormData();
   const sp = new URLSearchParams(document.location.search);
@@ -26,7 +11,7 @@ function fd_from_sp()
 }
 
 // get info on this project (mainly: does it exist?)
-async function get_project()
+export async function get_project()
 {
   const fd = fd_from_sp();
   const response = await post('/api/get-project', {body: fd});
@@ -41,7 +26,7 @@ async function get_project()
 }
 
 // create this project if neededs
-async function create_project()
+export async function create_project()
 {
   const fd = fd_from_sp();
   const response = await post('/projects', {body: fd});
@@ -51,7 +36,7 @@ async function create_project()
 }
 
 // get code and media files
-async function get_files()
+export async function get_files()
 {
   await Promise.all([
     get_code_files(),
@@ -61,7 +46,7 @@ async function get_files()
 
 
 // get code files in this project
-async function get_code_files()
+export async function get_code_files()
 {
   const fd = fd_from_sp();
   const response = await post('/api/get-code-files', {body: fd});
@@ -71,7 +56,7 @@ async function get_code_files()
 }
 
 // get media files in this project
-async function get_media_files()
+export async function get_media_files()
 {
   const fd = fd_from_sp();
   const response = await post('/api/get-media-files', {body: fd});
@@ -79,7 +64,3 @@ async function get_media_files()
   const body = await response.text;
   console.log("GP body:", response.response.status, body);
 }
-
-get_project();
-
-</script>
