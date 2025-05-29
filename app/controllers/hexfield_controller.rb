@@ -23,12 +23,20 @@ class HexfieldController < ApplicationController
     end
   end
 
-  # get "api/get-files" => "hexfield#get_files"
-  def get_files
+  # get "api/get-code-files" => "hexfield#get_code_files"
+  def get_code_files
     storage = Google::Cloud::Storage.new
     bucket  = storage.bucket "hexfield"
-    files   = bucket.files prefix: "#{current_user.id}/"
-    render json: files.map(&:name) # { |f| f.name }
+    files   = bucket.files prefix: "#{current_user.id}/#{params[:project][:name]}", delimiter: "/"
+    render json: files.map(&:name)
+  end
+
+  # get "api/get-media-files" => "hexfield#get_media_files"
+  def get_media_files
+    storage = Google::Cloud::Storage.new
+    bucket  = storage.bucket "hexfield"
+    files   = bucket.files prefix: "#{current_user.id}/#{params[:project][:name]}/media", delimiter: "/"
+    render json: files.map(&:name)
   end
 
   # post "api/upload-code-file" => "hexfield#upload_code_file"
@@ -45,5 +53,4 @@ class HexfieldController < ApplicationController
     @user = current_user
     @user_signed_in = user_signed_in?
   end
-
 end

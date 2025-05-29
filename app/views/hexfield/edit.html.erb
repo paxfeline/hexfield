@@ -15,60 +15,70 @@
 <script type="module">
 import { FetchRequest } from '@rails/request.js'
 
-// get info on this project (mainly: does it exist?)
-async function get_project()
+// create FormData object from search params
+function fd_from_sp()
 {
   const fd = new FormData();
   const sp = new URLSearchParams(document.location.search);
   for (const [key, value] of sp.entries())
     fd.append(key, value)
+  return fd;
+}
+
+// get info on this project (mainly: does it exist?)
+async function get_project()
+{
+  const fd = fd_from_sp();
   const request = new FetchRequest('post', '/api/get-project', {body: fd})
-  request.perform().then(
-    response =>
-    {
-      console.log("GP response:", response);
-      return Promise.all([response, response.text]);
-    }
-  ).then( ([{response}, body]) =>
-  {
-    console.log("GP body:", response.status, body);
-    if (response.status == 404)
-      throw new Error("Project not found")
-  }
-  ).catch( err =>
-  {
-    console.log("error", err);
-    if (err.message == "Project not found")
-    {
-      create_project();
-    }
-  });
+  const response = await request.perform();
+  console.log("GP response:", response);
+  const body = await response.text;
+  console.log("GP body:", response.response.status, body);
+  if (response.response.status == 404)
+    create_project();
+  else
+    get_files();
 }
 
 // create this project if neededs
 async function create_project()
 {
-  const fd = new FormData();
-  const sp = new URLSearchParams(document.location.search);
-  for (const [key, value] of sp.entries())
-    fd.append(key, value)
+  const fd = fd_from_sp();
   const request = new FetchRequest('post', '/projects', {body: fd})
-  request.perform().then(
-    response =>
-    {
-      if (response?.ok) {
-        console.log("GP response:", response)
-        return response.text
-      }
-    }
-  ).then( body =>
-  {
-    console.log("CP response:", body)
-  }
-  ).catch( err =>
-  {
-    console.log("error", err);
-  });
+  const response = await request.perform();
+  console.log("GP response:", response);
+  const body = await response.text;
+  console.log("GP body:", response.response.status, body);
+}
+
+// get code and media files
+async function get_files()
+{
+  get_code_files();
+  get_media_files();
+}
+
+
+// get code files in this project
+async function get_code_files()
+{
+  const fd = fd_from_sp();
+  const request = new FetchRequest('post', '/api/get-code-files', {body: fd})
+  const response = await request.perform();
+  console.log("GP response:", response);
+  const body = await response.text;
+  console.log("GP body:", response.response.status, body);
+}
+
+// get media files in this project
+async function get_media_files()
+{
+  const fd = fd_from_sp();
+  const request = new FetchRequest('post', '/api/get-media-files', {body: fd})
+  const response = await request.perform();
+  console.log("GP response:", response);
+  const body = await response.text;
+  console.log("GP body:", response.response.status, body);
 }
 
 get_project();

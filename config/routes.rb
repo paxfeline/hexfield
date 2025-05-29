@@ -8,7 +8,8 @@ Rails.application.routes.draw do
   get "edit" => "hexfield#edit"
   # files
   post "api/get-project" => "hexfield#get_project"
-  post "api/get-files" => "hexfield#get_files"
+  post "api/get-code-files" => "hexfield#get_code_files"
+  post "api/get-media-files" => "hexfield#get_media_files"
   post "api/upload-code-file" => "hexfield#upload_code_file"
   post "api/upload-media-file" => "hexfield#upload_media_file"
 

@@ -22,8 +22,6 @@ class ProjectsController < ApplicationController
 
   # POST /projects or /projects.json
   def create
-    debugger
-
     params[:project][:owner_id] = current_user.id
 
     @project = Project.new(project_params)
