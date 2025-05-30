@@ -8,7 +8,7 @@ class HexFiles extends HTMLElement {
     super();
   }
 
-  loadFileData([code_files, media_files])
+  loadFileList([code_files, media_files])
   {
     console.log("loading...", code_files, media_files);
     this.file_display.innerHTML = "";
@@ -59,7 +59,7 @@ class HexFiles extends HTMLElement {
 
     mcp.regHexEvent(
       mcp.events.files_loaded,
-      this.loadFileData.bind(this)
+      this.loadFileList.bind(this)
     );
 
     shadow.querySelector("#upload-btn").addEventListener(
