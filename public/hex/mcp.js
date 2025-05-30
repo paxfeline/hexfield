@@ -1,6 +1,7 @@
 import * as api from "/hex/api.js";
+import * as opfs from "/hex/opfs.js";
 
-export const eventClientMap = {};
+// event types
 
 export const events = {};
 [
@@ -8,14 +9,23 @@ export const events = {};
 ]
 .forEach(x => events[x] = Symbol(x));
 
+// associate events with callbacks to invoke
+
+export const eventClientMap = {};
+
+function fireEvent(e, data)
+{
+  eventClientMap[e]?.forEach(cb => cb(data))
+}
 
 export function regHexEvent(e, cb)
 {
   eventClientMap[e] = [...(eventClientMap[e] || []), cb];
+
   console.log("hex reg event", ...arguments);
 
   // this special event will trigger the cb when its registered if appropriate
-  if ((e == events.files_loaded) && files)
+  if (e == events.files_loaded && files)
   {
     fireEvent(e, files);
   }
@@ -30,9 +40,10 @@ export function remHexEvent(e, cb)
 
 export const files = await api.get_project();
 
-function fireEvent(e, data)
-{
-  eventClientMap[e]?.forEach(cb => cb(data))
-}
+// coordinate OPFS and Google Cloud storage
 
-console.log("files loaded", files)
+export function store_and_upload_code_file(e)
+{
+  opfs.store_code_file(e);
+  api.upload_code_file(e);
+}

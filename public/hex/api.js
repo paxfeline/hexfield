@@ -67,7 +67,7 @@ export async function get_media_files()
 
 export async function upload_code_file(e)
 {
-  const fd = fd_from_sp(e.search_params);
+  const fd = fd_from_sp(); // used to have e.search_params but why?
   fd.append("code_file", e.file);
   const response = await post('/api/upload-code-file', {body: fd});
   const body = await response.json;

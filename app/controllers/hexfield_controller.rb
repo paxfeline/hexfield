@@ -50,7 +50,7 @@ class HexfieldController < ApplicationController
     file = bucket.create_file upfile.path, file_name
     puts "Uploaded #{upfile.path} as #{file.name} in bucket hexfield"
 
-    render json: {filename: original_filename}
+    render json: {filename: upfile.original_filename}
   end
   
   # post "api/upload-media-file" => "hexfield#upload_media_file"
