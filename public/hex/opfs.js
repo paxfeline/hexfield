@@ -6,9 +6,20 @@ export async function store_code_file(file)
   // to properly store this, we need to also get the user id from the backend
 
   const opfsRoot = await navigator.storage.getDirectory();
-  const fileHandle = await opfsRoot.getFileHandle(file.name, {
-    create: true,
-  });
+  const userDirectoryHandle = await
+    opfsRoot.getDirectoryHandle(sp.get("project[owner_id]"),
+    {
+      create: true,
+    });
+  const projectDirectoryHandle = await
+    userDirectoryHandle.getDirectoryHandle(sp.get("project[name]"),
+    {
+      create: true,
+    });
+  const fileHandle = await projectDirectoryHandle.getFileHandle(file.name,
+    {
+      create: true,
+    });
   const writeable = await fileHandle.createWritable();
   let data = await file.arrayBuffer();
   console.log(data);
