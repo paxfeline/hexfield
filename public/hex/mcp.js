@@ -42,8 +42,8 @@ export const files = await api.get_project();
 
 // coordinate OPFS and Google Cloud storage
 
-export function store_and_upload_code_file(e)
+export function store_and_upload_code_file(file)
 {
-  opfs.store_code_file(e);
-  api.upload_code_file(e);
+  opfs.store_code_file(file);
+  api.upload_code_file(file);
 }

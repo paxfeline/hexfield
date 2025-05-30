@@ -66,10 +66,9 @@ class HexFiles extends HTMLElement {
       "click",
       () =>
       {
-        mcp.store_and_upload_code_file({
-          search_params: document.location.search,
-          file: shadow.querySelector("#file-input").files[0]
-        })
+        mcp.store_and_upload_code_file(
+          shadow.querySelector("#file-input").files[0]
+        );
       }
     )
   }

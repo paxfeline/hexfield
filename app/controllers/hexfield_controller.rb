@@ -16,7 +16,7 @@ class HexfieldController < ApplicationController
       render plain: "Project not found", status: :not_found and return
     else
       if project.owner == current_user
-        render json: project
+        render json: {project: project, user: current_user.id}
       else
         render plain: "Not authorized as owner of project", status: :forbidden
       end

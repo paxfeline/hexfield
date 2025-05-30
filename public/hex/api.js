@@ -15,16 +15,18 @@ export async function get_project()
 {
   const fd = fd_from_sp();
   const response = await post('/api/get-project', {body: fd});
-  const body = await response.json;
-  console.log("GP body:", response.response.status, body);
   if (response.response.status == 404)
   {
     await create_project();
     return [[], []];
   }
   else
+  {
+    const body = await response.json;
+    console.log("GP body:", response.response.status, body);
     // could go outside else, but new projs will be empty
     return await get_files();
+  }
 }
 
 // create this project if neededs
@@ -65,10 +67,10 @@ export async function get_media_files()
   return body;
 }
 
-export async function upload_code_file(e)
+export async function upload_code_file(file)
 {
-  const fd = fd_from_sp(); // used to have e.search_params but why?
-  fd.append("code_file", e.file);
+  const fd = fd_from_sp();
+  fd.append("code_file", file);
   const response = await post('/api/upload-code-file', {body: fd});
   const body = await response.json;
   console.log(body);

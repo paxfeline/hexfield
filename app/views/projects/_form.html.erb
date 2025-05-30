@@ -1,4 +1,4 @@
-<%= form_with(model: project, method: "get", url: "/hexfield") do |form| %>
+<%= form_with(model: project, method: "get", url: "/edit") do |form| %>
   <% if project.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
@@ -20,6 +20,8 @@
     <%= form.label :visibility, style: "display: block" %>
     <%= form.number_field :visibility %>
   </div>
+
+  <%= form.hidden_field :id, value: @user %>
 
   <div>
     <%= form.submit %>
