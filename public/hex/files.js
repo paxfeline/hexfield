@@ -13,6 +13,11 @@ class HexFiles extends HTMLElement {
     // Create a shadow root
     const shadow = this.attachShadow({ mode: "open" });
 
+    mcp.addEventListener(
+      mcp.events.files_initial_load,
+      function logit (data) {console.log(data);}
+    );
+
     // Create spans
     const root = document.createElement("div");
     root.id = "root";
@@ -46,7 +51,6 @@ class HexFiles extends HTMLElement {
       "click",
       () =>
       {
-        debugger;
         api.upload_code_file({
           search_params: document.location.search,
           file: shadow.querySelector("#file-input").files[0]

@@ -15,11 +15,13 @@ export async function get_project()
 {
   const fd = fd_from_sp();
   const response = await post('/api/get-project', {body: fd});
-  console.log("GP response:", response);
-  const body = await response.text;
+  const body = await response.json;
   console.log("GP body:", response.response.status, body);
   if (response.response.status == 404)
-    return await create_project();
+  {
+    await create_project();
+    return [[], []];
+  }
   else
     // could go outside else, but new projs will be empty
     return await get_files();
@@ -30,7 +32,6 @@ export async function create_project()
 {
   const fd = fd_from_sp();
   const response = await post('/projects', {body: fd});
-  console.log("GP response:", response);
   const body = await response.text;
   console.log("GP body:", response.response.status, body);
 }
@@ -50,8 +51,7 @@ export async function get_code_files()
 {
   const fd = fd_from_sp();
   const response = await post('/api/get-code-files', {body: fd});
-  console.log("GP response:", response);
-  const body = await response.text;
+  const body = await response.json;
   console.log("GP body:", response.response.status, body);
   return body;
 }
@@ -61,8 +61,7 @@ export async function get_media_files()
 {
   const fd = fd_from_sp();
   const response = await post('/api/get-media-files', {body: fd});
-  console.log("GP response:", response);
-  const body = await response.text;
+  const body = await response.json;
   console.log("GP body:", response.response.status, body);
   return body;
 }
@@ -72,6 +71,6 @@ export async function upload_code_file(e)
   const fd = fd_from_sp(e.search_params);
   fd.append("code_file", e.file);
   const response = await post('/api/upload-code-file', {body: fd});
-  const body = await response.text;
+  const body = await response.json;
   console.log(body);
 }
