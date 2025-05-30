@@ -8,23 +8,31 @@ class HexFiles extends HTMLElement {
     super();
   }
 
+  loadFileData([code_files, media_files])
+  {
+    console.log("loading...", code_files, media_files);
+    this.file_display.innerHTML = "";
+    code_files.forEach(file => {
+      const opt = document.createElement("option");
+      opt.value = file;
+      opt.innerHTML = file.split("/").pop();
+      this.file_display.add(opt);
+    });
+  }
+
   connectedCallback()
   {
     // Create a shadow root
     const shadow = this.attachShadow({ mode: "open" });
-
-    mcp.addEventListener(
-      mcp.events.files_initial_load,
-      function logit (data) {console.log(data);}
-    );
+    this.shadow = shadow;
 
     // Create spans
     const root = document.createElement("div");
     root.id = "root";
 
     root.innerHTML = `
-      <div id="file-display">
-      </div>
+      <select id="file-display">
+      </select>
       <div id="controls">
         <input type="file" id="file-input">
         <button id="upload-btn">
@@ -46,6 +54,13 @@ class HexFiles extends HTMLElement {
     // Attach the created elements to the shadow dom
     shadow.appendChild(style);
     shadow.appendChild(root);
+
+    this.file_display = shadow.querySelector("#file-display");
+
+    mcp.regHexEvent(
+      mcp.events.files_loaded,
+      this.loadFileData.bind(this)
+    );
 
     shadow.querySelector("#upload-btn").addEventListener(
       "click",

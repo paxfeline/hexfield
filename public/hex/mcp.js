@@ -4,27 +4,24 @@ export const eventClientMap = {};
 
 export const events = {};
 [
-  "code_files_loaded",
-  "media_files_loaded",
-  "files_initial_load"
+  "files_loaded",
 ]
 .forEach(x => events[x] = Symbol(x));
 
 
-export function addEventListener(e, cb)
+export function regHexEvent(e, cb)
 {
   eventClientMap[e] = [...(eventClientMap[e] || []), cb];
   console.log("hex reg event", ...arguments);
 
   // this special event will trigger the cb when its registered if appropriate
-  if (e == events.files_initial_load && files)
+  if ((e == events.files_loaded) && files)
   {
     fireEvent(e, files);
-    removeEventListener(e, cb);
   }
 }
 
-export function removeEventListener(e, cb)
+export function remHexEvent(e, cb)
 {
   eventClientMap[e] = (eventClientMap[e] ?
     eventClientMap[e].filter(el => el != cb) :
