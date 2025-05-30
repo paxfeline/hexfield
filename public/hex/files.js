@@ -1,3 +1,6 @@
+import * as mcp from "/hex/mcp.js";
+import * as api from "/hex/api.js";
+
 // Create a class for the element
 class HexFiles extends HTMLElement {
   constructor() {
@@ -7,16 +10,6 @@ class HexFiles extends HTMLElement {
 
   connectedCallback()
   {
-    let myWorker;
-
-    if (window.Worker)
-    {
-      myWorker = new Worker("/hex/file-worker.js", { type: "module" });
-      myWorker.onmessage = (e) => {
-        console.log("Message received from worker", e);
-      };
-    }
-
     // Create a shadow root
     const shadow = this.attachShadow({ mode: "open" });
 
@@ -53,12 +46,11 @@ class HexFiles extends HTMLElement {
       "click",
       () =>
       {
-        myWorker?.postMessage(
-          {
-            search_params: document.location.search,
-            file: shadow.querySelector('#file-input').files[0]
-          }
-        );
+        debugger;
+        api.upload_code_file({
+          search_params: document.location.search,
+          file: shadow.querySelector("#file-input").files[0]
+        })
       }
     )
   }

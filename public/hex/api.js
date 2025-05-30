@@ -19,10 +19,10 @@ export async function get_project()
   const body = await response.text;
   console.log("GP body:", response.response.status, body);
   if (response.response.status == 404)
-    await create_project();
+    return await create_project();
   else
     // could go outside else, but new projs will be empty
-    await get_files();
+    return await get_files();
 }
 
 // create this project if neededs
@@ -38,7 +38,7 @@ export async function create_project()
 // get code and media files
 export async function get_files()
 {
-  await Promise.all([
+  return await Promise.all([
     get_code_files(),
     get_media_files()
   ]);
@@ -53,6 +53,7 @@ export async function get_code_files()
   console.log("GP response:", response);
   const body = await response.text;
   console.log("GP body:", response.response.status, body);
+  return body;
 }
 
 // get media files in this project
@@ -63,4 +64,14 @@ export async function get_media_files()
   console.log("GP response:", response);
   const body = await response.text;
   console.log("GP body:", response.response.status, body);
+  return body;
+}
+
+export async function upload_code_file(e)
+{
+  const fd = fd_from_sp(e.search_params);
+  fd.append("code_file", e.file);
+  const response = await post('/api/upload-code-file', {body: fd});
+  const body = await response.text;
+  console.log(body);
 }
