@@ -1,6 +1,16 @@
 import * as api from "/hex/api.js";
 import * as opfs from "/hex/opfs.js";
 
+/*
+  Loading a project while signed in copies its files
+  from the cloud to the opfs.
+  When signing out, the opfs temp files are removed.
+  
+  Projects can also be created while signed out.
+  These will use a user with id "local", and these
+  projects will also be stored in the opfs and will persist.
+*/
+
 // event types
 
 export const events = {};
