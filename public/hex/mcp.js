@@ -60,10 +60,12 @@ export function store_and_upload_code_file(file)
 
 export const files = await api.get_project();
 
-export const file_data = [];
+export const file_data = {};
 for (const file of files[0])
 {
-  file_data.push(await api.get_code_file(file.split("/").pop()));
+  const name = file.split("/").pop();
+  file_data[name] = await api.get_code_file(name);
+  opfs.store_code_file_data(name, file_data[name]);
 }
 
 console.log(file_data);
