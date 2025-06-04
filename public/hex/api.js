@@ -75,3 +75,14 @@ export async function upload_code_file(file)
   const body = await response.json;
   console.log(body);
 }
+
+// get code file in this project
+export async function get_code_file(name)
+{
+  const fd = fd_from_sp();
+  fd.append("file_name", name)
+  const response = await post('/api/get-code-file', {body: fd});
+  const body = await response.json;
+  console.log("GP body:", response.response.status, body);
+  return body.body;
+}

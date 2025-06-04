@@ -48,8 +48,6 @@ export function remHexEvent(e, cb)
     []);
 }
 
-export const files = await api.get_project();
-
 // coordinate OPFS and Google Cloud storage
 
 export function store_and_upload_code_file(file)
@@ -57,3 +55,15 @@ export function store_and_upload_code_file(file)
   opfs.store_code_file(file);
   api.upload_code_file(file);
 }
+
+// initial actions
+
+export const files = await api.get_project();
+
+export const file_data = [];
+for (const file of files[0])
+{
+  file_data.push(await api.get_code_file(file.split("/").pop()));
+}
+
+console.log(file_data);
