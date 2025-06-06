@@ -16,6 +16,9 @@ import * as opfs from "/hex/opfs.js";
 export const events = {};
 [
   "files_loaded",
+  "connection_lost",
+  "connection_restored",
+  "sw_msg",
 ]
 .forEach(x => events[x] = Symbol(x));
 
@@ -56,6 +59,15 @@ export function store_and_upload_code_file(file)
   api.upload_code_file(file);
 }
 
+export function install_sw(sw)
+{
+  console.log(sw);
+  navigator.serviceWorker.addEventListener("message", (message) => {
+    console.log(message);
+  });
+  sw.postMessage("test42");
+}
+
 // initial actions
 
 export const files = await api.get_project();
@@ -67,5 +79,3 @@ for (const file of files[0])
   file_data[name] = await api.get_code_file(name);
   opfs.store_code_file_data(name, file_data[name]);
 }
-
-console.log(file_data);
