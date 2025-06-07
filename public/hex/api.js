@@ -1,11 +1,25 @@
 import { post } from '@rails/request.js'
 import * as util from "/hex/util.js";
 
+export async function post_with_abort(url, data) {
+  try
+  {
+    return await post(url, {body: data, signal: AbortSignal.timeout(5000)});
+  }
+  catch (error)
+  {
+    console.log(error);
+    return null;
+  }
+}
+
 // get info on this project (mainly: does it exist?)
 export async function get_project()
 {
   const fd = util.fd_from_sp();
-  const response = await post('/api/get-project', {body: fd});
+  const response = await post_with_abort('/api/get-project', {body: fd);
+  if (!response)
+    return [[], []];
   if (response.response.status == 404)
   {
     await create_project();
@@ -44,7 +58,7 @@ export async function get_code_files()
   const fd = util.fd_from_sp();
   const response = await post('/api/get-code-files', {body: fd});
   const body = await response.json;
-  //console.log("GP body:", response.response.status, body);
+  console.log("GP body:", response.response.status, body);
   return body;
 }
 
@@ -54,7 +68,7 @@ export async function get_media_files()
   const fd = util.fd_from_sp();
   const response = await post('/api/get-media-files', {body: fd});
   const body = await response.json;
-  //console.log("GP body:", response.response.status, body);
+  console.log("GP body:", response.response.status, body);
   return body;
 }
 
@@ -74,6 +88,6 @@ export async function get_code_file(name)
   fd.append("file_name", name)
   const response = await post('/api/get-code-file', {body: fd});
   const body = await response.json;
-  console.log("GP body:", response.response.status, body);
+  //console.log("GP body:", response.response.status, body);
   return body.body;
 }
