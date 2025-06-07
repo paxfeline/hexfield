@@ -70,12 +70,19 @@ export function install_sw(sw)
 
 // initial actions
 
+// retrieve project info (file list) from backend.
+// if the project doesn't exist, it will be created.
 export const files = await api.get_project();
 
+// if we're offline, files could be null.
+// if it exists, load the files into the opfs.
 export const file_data = {};
-for (const file of files[0])
+if (files)
 {
-  const name = file.split("/").pop();
-  file_data[name] = await api.get_code_file(name);
-  opfs.store_code_file_data(name, file_data[name]);
+  for (const file of files[0])
+  {
+    const name = file.split("/").pop();
+    file_data[name] = await api.get_code_file(name);
+    opfs.store_code_file_data(name, file_data[name]);
+  }
 }

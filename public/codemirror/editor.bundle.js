@@ -27426,7 +27426,7 @@
   */
 
 
-  new EditorView({
+  window.hex_cm = new EditorView({
     extensions: [
       basicSetup,
       keymap.of([indentWithTab]),

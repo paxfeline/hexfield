@@ -1,7 +1,10 @@
 import { post } from '@rails/request.js'
 import * as util from "/hex/util.js";
 
-export async function post_with_abort(url, data) {
+// uses rails/request.js post function, passing an AbortSignal object
+// that will timeout after 5 seconds.
+// Returns the response to the post, or null.
+export async function post_with_timeout(url, data) {
   try
   {
     return await post(url, {body: data, signal: AbortSignal.timeout(5000)});
@@ -17,9 +20,9 @@ export async function post_with_abort(url, data) {
 export async function get_project()
 {
   const fd = util.fd_from_sp();
-  const response = await post_with_abort('/api/get-project', {body: fd);
+  const response = await post_with_timeout('/api/get-project', fd);
   if (!response)
-    return [[], []];
+    return null;
   if (response.response.status == 404)
   {
     await create_project();
