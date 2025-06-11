@@ -2,6 +2,7 @@ class HexfieldController < ApplicationController
   before_action :set_user
 
   require "google/cloud/storage"
+  require 'tempfile'
 
   def index
   end
@@ -11,7 +12,7 @@ class HexfieldController < ApplicationController
 
   # get "api/get-project" => "hexfield#get_project"
   def get_project
-    sleep 5
+    #sleep 5
     project = Project.find_by(name: params[:project][:name])
     if project.nil?
       render plain: "Project not found", status: :not_found and return
@@ -28,15 +29,17 @@ class HexfieldController < ApplicationController
   def get_code_files
     storage = Google::Cloud::Storage.new
     bucket  = storage.bucket hexfield_bucket
-    files   = bucket.files prefix: "#{current_user.id}/#{params[:project][:name]}/"
+    puts params.inspect
+    files   = bucket.files prefix: "#{@user.id}/#{params[:project][:name]}/"
     render json: files.map(&:name)
   end
-
+  
   # get "api/get-media-files" => "hexfield#get_media_files"
   def get_media_files
     storage = Google::Cloud::Storage.new
     bucket  = storage.bucket hexfield_bucket
-    files   = bucket.files prefix: "#{current_user.id}/#{params[:project][:name]}/media/"
+    puts params.inspect
+    files   = bucket.files prefix: "#{@user.id}/#{params[:project][:name]}/media/"
     render json: files.map(&:name)
   end
 
@@ -94,6 +97,35 @@ class HexfieldController < ApplicationController
     puts "Contents of storage object #{file.name} in bucket #{hexfield_bucket} are: #{contents}"
 
     render json: { body: contents }
+  end
+
+  def public_get_code_file
+    storage = Google::Cloud::Storage.new
+    bucket  = storage.bucket hexfield_bucket
+
+    #debugger
+
+    file_name = params[:file]
+    frmt = params[:format]
+    userid = params[:user]
+    project_name = params[:project]
+    file_path = "#{userid}/#{project_name}/#{file_name}.#{frmt}"
+
+    project = Project.find_by(name: project_name)
+
+    render plain: "Project is not public", status: :unauthorized and return unless project.vis_public?
+
+    file = bucket.file file_path
+
+    local_file = Tempfile.new(file_name)
+    local_file.close
+
+    # download contents to tempfile path
+    file.download(local_file.path)
+
+    render file: local_file.path, content_type: file.content_type
+
+    local_file.unlink # delete tempfile file
   end
 
   private

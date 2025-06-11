@@ -48,7 +48,7 @@ export async function get_project()
 export async function create_project()
 {
   const fd = util.fd_from_sp();
-  const response = await post_with_timeout('/projects', {body: fd});
+  const response = await post_with_timeout('/projects', fd);
   const body = await response.text;
   console.log("GP body:", response.response.status, body);
 }
@@ -66,7 +66,7 @@ export async function get_files()
 export async function get_code_files()
 {
   const fd = util.fd_from_sp();
-  const response = await post_with_timeout('/api/get-code-files', {body: fd});
+  const response = await post_with_timeout('/api/get-code-files', fd);
   const body = await response.json;
   console.log("GP body:", response.response.status, body);
   return body;
@@ -76,7 +76,7 @@ export async function get_code_files()
 export async function get_media_files()
 {
   const fd = util.fd_from_sp();
-  const response = await post_with_timeout('/api/get-media-files', {body: fd});
+  const response = await post_with_timeout('/api/get-media-files', fd);
   const body = await response.json;
   console.log("GP body:", response.response.status, body);
   return body;
@@ -86,7 +86,7 @@ export async function upload_code_file(file)
 {
   const fd = util.fd_from_sp();
   fd.append("code_file", file);
-  const response = await post_with_timeout('/api/upload-code-file', {body: fd});
+  const response = await post_with_timeout('/api/upload-code-file', fd);
   const body = await response.json;
   console.log(body);
 }
@@ -96,7 +96,7 @@ export async function get_code_file(name)
 {
   const fd = util.fd_from_sp();
   fd.append("file_name", name)
-  const response = await post_with_timeout('/api/get-code-file', {body: fd});
+  const response = await post_with_timeout('/api/get-code-file', fd);
   const body = await response.json;
   //console.log("GP body:", response.response.status, body);
   return body.body;

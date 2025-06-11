@@ -15,6 +15,9 @@ Rails.application.routes.draw do
   post "api/get-code-file" => "hexfield#private_get_code_file"
   post "api/get-media-file" => "hexfield#private_get_media_file"
 
+  get "home/:user/:project/:file" => "hexfield#public_get_code_file"
+  get "home/:user/:project/media/:file" => "hexfield#public_get_media_file"
+
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check

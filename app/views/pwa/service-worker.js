@@ -92,4 +92,4 @@ self.addEventListener("message", (event) => {
     _hexOnLine = false;
   if (event.data === "fetch success")
     _hexOnLine = true;
-});)
+});
