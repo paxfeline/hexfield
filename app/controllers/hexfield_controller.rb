@@ -11,6 +11,7 @@ class HexfieldController < ApplicationController
 
   # get "api/get-project" => "hexfield#get_project"
   def get_project
+    sleep 5
     project = Project.find_by(name: params[:project][:name])
     if project.nil?
       render plain: "Project not found", status: :not_found and return

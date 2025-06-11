@@ -76,3 +76,20 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
+// Hex communication
+
+let _hexOnLine;
+
+function hexOnLine()
+{
+  return _hexOnLine === undefined ? navigator.onLine : _hexOnLine;
+}
+
+self.addEventListener("message", (event) => {
+  console.log(`Message received: ${event.data}`);
+  if (event.data === "fetch timeout")
+    _hexOnLine = false;
+  if (event.data === "fetch success")
+    _hexOnLine = true;
+});)

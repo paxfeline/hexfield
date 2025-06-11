@@ -7,11 +7,18 @@ import * as util from "/hex/util.js";
 export async function post_with_timeout(url, data) {
   try
   {
-    return await post(url, {body: data, signal: AbortSignal.timeout(5000)});
+    const ret = await post(url, {body: data, signal: AbortSignal.timeout(5000)});
+    sw.postMessage("fetch success")
+    return ret;
   }
   catch (error)
   {
     console.log(error);
+    console.log(error.name);
+    console.log(error.message);
+    console.log(typeof(error));
+    if (error.name === "TimeoutError")
+      sw.postMessage("fetch timeout");
     return null;
   }
 }
@@ -41,7 +48,7 @@ export async function get_project()
 export async function create_project()
 {
   const fd = util.fd_from_sp();
-  const response = await post('/projects', {body: fd});
+  const response = await post_with_timeout('/projects', {body: fd});
   const body = await response.text;
   console.log("GP body:", response.response.status, body);
 }
@@ -59,7 +66,7 @@ export async function get_files()
 export async function get_code_files()
 {
   const fd = util.fd_from_sp();
-  const response = await post('/api/get-code-files', {body: fd});
+  const response = await post_with_timeout('/api/get-code-files', {body: fd});
   const body = await response.json;
   console.log("GP body:", response.response.status, body);
   return body;
@@ -69,7 +76,7 @@ export async function get_code_files()
 export async function get_media_files()
 {
   const fd = util.fd_from_sp();
-  const response = await post('/api/get-media-files', {body: fd});
+  const response = await post_with_timeout('/api/get-media-files', {body: fd});
   const body = await response.json;
   console.log("GP body:", response.response.status, body);
   return body;
@@ -79,7 +86,7 @@ export async function upload_code_file(file)
 {
   const fd = util.fd_from_sp();
   fd.append("code_file", file);
-  const response = await post('/api/upload-code-file', {body: fd});
+  const response = await post_with_timeout('/api/upload-code-file', {body: fd});
   const body = await response.json;
   console.log(body);
 }
@@ -89,7 +96,7 @@ export async function get_code_file(name)
 {
   const fd = util.fd_from_sp();
   fd.append("file_name", name)
-  const response = await post('/api/get-code-file', {body: fd});
+  const response = await post_with_timeout('/api/get-code-file', {body: fd});
   const body = await response.json;
   //console.log("GP body:", response.response.status, body);
   return body.body;
