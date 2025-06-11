@@ -70,3 +70,7 @@ yarn-debug.log*
 
 # Google Service Account credentials
 hexfield-db71a6c4c88e.json
+
+# DS Store
+.DS_Store
+public/.DS_Store
