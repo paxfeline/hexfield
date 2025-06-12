@@ -8,6 +8,11 @@ class HexFiles extends HTMLElement {
     super();
   }
 
+  loadSelectedFile(file)
+  {
+    mcp.fireEvent(mcp.events.load_code_file_text, file)
+  }
+
   loadFileList([code_files, media_files])
   {
     console.log("loading...", code_files, media_files);
@@ -19,7 +24,10 @@ class HexFiles extends HTMLElement {
       opt.innerHTML = file.split("/").pop();
       this.file_display.add(opt);
     });
-    
+
+    if (this.file_display.selectedOptions.length > 0)
+      this.loadSelectedFile(this.file_display.selectedOptions[0].value);
+
     this.media_file_display.innerHTML = "";
     media_files.forEach(file => {
       const opt = document.createElement("option");
@@ -76,6 +84,14 @@ class HexFiles extends HTMLElement {
 
     this.file_display = shadow.querySelector("#file-display");
     this.media_file_display = shadow.querySelector("#media-file-display");
+
+    this.file_display.addEventListener("change",
+      e =>
+      {
+        console.log(e.target.value);
+        this.loadSelectedFile(e.target.value)
+      }
+    )
 
     mcp.regHexEvent(
       mcp.events.files_loaded,

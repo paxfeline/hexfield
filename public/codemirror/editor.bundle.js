@@ -27425,8 +27425,7 @@
 
   */
 
-
-  window.hex_cm = new EditorView({
+  const hex_cm = new EditorView({
     extensions: [
       basicSetup,
       keymap.of([indentWithTab]),
@@ -27434,5 +27433,19 @@
     ],
     parent: document.body
   });
+  window.hex_cm = hex_cm;
+
+  window.update_codemirror = (code) =>
+  {
+    let transaction = hex_cm.state.update({
+        changes: {
+            from: 0,
+            to: hex_cm.state.doc.length,
+            insert: code
+        }
+    });
+    const update = hex_cm.state.update(transaction);
+    hex_cm.update([update]);
+  }
 
 })();

@@ -19,16 +19,21 @@ export const events = {};
   "connection_lost",
   "connection_restored",
   "sw_msg",
+  "load_code_file_text",
 ]
 .forEach(x => events[x] = Symbol(x));
+
+const firedEvents = {};
 
 // associate events with callbacks to invoke
 
 export const eventClientMap = {};
 
-function fireEvent(e, data)
+export function fireEvent(e, data)
 {
-  eventClientMap[e]?.forEach(cb => cb(data))
+  console.log("hex fire event", ...arguments);
+  eventClientMap[e]?.forEach(cb => cb(data));
+  firedEvents[e] = data;
 }
 
 export function regHexEvent(e, cb)
@@ -37,11 +42,11 @@ export function regHexEvent(e, cb)
 
   console.log("hex reg event", ...arguments);
 
-  // this special event will trigger the cb when its registered if appropriate
-  if (e == events.files_loaded && files)
-  {
-    fireEvent(e, files);
-  }
+  // catch up with previous events
+  let fe = firedEvents[e];
+  console.log(fe);
+  if (fe)
+    cb(fe)
 }
 
 export function remHexEvent(e, cb)
@@ -85,10 +90,12 @@ export const files = await api.get_project();
 export const file_data = {};
 if (files)
 {
+  fireEvent(events.files_loaded, files);
+  
   for (const file of files[0])
   {
     const name = file.split("/").pop();
-    file_data[name] = await api.get_code_file(name);
+    file_data[file] = await api.get_code_file(name);
     opfs.store_code_file_data(name, file_data[name]);
   }
 }

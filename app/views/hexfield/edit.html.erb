@@ -11,6 +11,21 @@
   
   <script src="/codemirror/editor.bundle.js"></script>
 
+  <script type="module">
+
+import * as mcp from "/hex/mcp.js";
+
+window.mcp = mcp;
+
+mcp.regHexEvent(mcp.events.load_code_file_text,
+  data =>
+  {
+    console.log(data);
+    window.update_codemirror(mcp.file_data[data]);
+  });
+
+  </script>
+
 <% else %>
 <p> <%= link_to "Sign in", "/users/sign_in" %> to get started! </p>
 <% end %>
