@@ -27,26 +27,23 @@ class HexfieldController < ApplicationController
 
   # get "api/get-code-files" => "hexfield#get_code_files"
   def get_code_files
-    storage = Google::Cloud::Storage.new
-    bucket  = storage.bucket hexfield_bucket
     puts params.inspect
-    files   = bucket.files prefix: "#{@user.id}/#{params[:project][:name]}/"
+    bucket = get_bucket
+    files = bucket.files prefix: "#{@user.id}/#{params[:project][:name]}/", delimiter: "/"
     render json: files.map(&:name)
   end
   
   # get "api/get-media-files" => "hexfield#get_media_files"
   def get_media_files
-    storage = Google::Cloud::Storage.new
-    bucket  = storage.bucket hexfield_bucket
     puts params.inspect
-    files   = bucket.files prefix: "#{@user.id}/#{params[:project][:name]}/media/"
+    bucket = get_bucket
+    files = bucket.files prefix: "#{@user.id}/#{params[:project][:name]}/media/", delimiter: "/"
     render json: files.map(&:name)
   end
 
   # post "api/upload-code-file" => "hexfield#upload_code_file"
   def upload_code_file
-    storage = Google::Cloud::Storage.new
-    bucket  = storage.bucket hexfield_bucket
+    bucket = get_bucket
 
     upfile = params[:code_file]
     name = upfile.original_filename
@@ -55,6 +52,7 @@ class HexfieldController < ApplicationController
     file_name = "#{userid}/#{project}/#{name}"
 
     file = bucket.create_file upfile.path, file_name
+
     puts "Uploaded #{upfile.path} as #{file.name} in bucket hexfield"
 
     render json: { filename: name }
@@ -62,26 +60,23 @@ class HexfieldController < ApplicationController
 
   # post "api/upload-media-file" => "hexfield#upload_media_file"
   def upload_media_file
-    storage = Google::Cloud::Storage.new
-    bucket  = storage.bucket hexfield_bucket
+    bucket = get_bucket
 
-    upfile = params[:code_file]
+    upfile = params[:media_file]
     name = upfile.original_filename
     userid = current_user.id
     project = params[:project][:name]
     file_name = "#{userid}/#{project}/media/#{name}"
 
     file = bucket.create_file upfile.path, file_name
+
     puts "Uploaded #{upfile.path} as #{file.name} in bucket hexfield"
 
     render json: { filename: "/media/#{name}" }
   end
 
   def private_get_code_file
-    storage = Google::Cloud::Storage.new
-    bucket  = storage.bucket hexfield_bucket
-
-    #debugger
+    bucket = get_bucket\
 
     name = params[:file_name]
     userid = current_user.id
@@ -91,7 +86,6 @@ class HexfieldController < ApplicationController
     file = bucket.file file_name
 
     downloaded = file.download
-    #downloaded.rewind # Optional - not needed on first read
     contents = downloaded.read
 
     puts "Contents of storage object #{file.name} in bucket #{hexfield_bucket} are: #{contents}"
@@ -100,20 +94,43 @@ class HexfieldController < ApplicationController
   end
 
   def public_get_code_file
-    storage = Google::Cloud::Storage.new
-    bucket  = storage.bucket hexfield_bucket
+    project_name = params[:project]
+    project = Project.find_by(name: project_name)
 
-    #debugger
+    render plain: "Project is not public", status: :unauthorized and return unless project.vis_public?
+
+    bucket = get_bucket
 
     file_name = params[:file]
     frmt = params[:format]
     userid = params[:user]
-    project_name = params[:project]
     file_path = "#{userid}/#{project_name}/#{file_name}.#{frmt}"
 
+    file = bucket.file file_path
+
+    local_file = Tempfile.new(file_name)
+    local_file.close
+
+    # download contents to tempfile path
+    file.download(local_file.path)
+
+    render file: local_file.path, content_type: file.content_type
+
+    local_file.unlink # delete tempfile file
+  end
+
+  def public_get_media_file
+    project_name = params[:project]
     project = Project.find_by(name: project_name)
 
     render plain: "Project is not public", status: :unauthorized and return unless project.vis_public?
+
+    bucket = get_bucket
+
+    file_name = params[:file]
+    frmt = params[:format]
+    userid = params[:user]
+    file_path = "#{userid}/#{project_name}/media/#{file_name}.#{frmt}"
 
     file = bucket.file file_path
 
@@ -137,5 +154,10 @@ class HexfieldController < ApplicationController
 
   def hexfield_bucket
     "hexfield"
+  end
+
+  def get_bucket
+    storage = Google::Cloud::Storage.new
+    return storage.bucket hexfield_bucket
   end
 end

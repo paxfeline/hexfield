@@ -11,12 +11,21 @@ class HexFiles extends HTMLElement {
   loadFileList([code_files, media_files])
   {
     console.log("loading...", code_files, media_files);
+
     this.file_display.innerHTML = "";
     code_files.forEach(file => {
       const opt = document.createElement("option");
       opt.value = file;
       opt.innerHTML = file.split("/").pop();
       this.file_display.add(opt);
+    });
+    
+    this.media_file_display.innerHTML = "";
+    media_files.forEach(file => {
+      const opt = document.createElement("option");
+      opt.value = file;
+      opt.innerHTML = file.split("/").pop();
+      this.media_file_display.add(opt);
     });
   }
 
@@ -31,11 +40,21 @@ class HexFiles extends HTMLElement {
     root.id = "root";
 
     root.innerHTML = `
+      Code files:
       <select id="file-display">
       </select>
-      <div id="controls">
+      <div>
         <input type="file" id="file-input">
         <button id="upload-btn">
+          Upload
+        </button>
+      </div>
+      Media files:
+      <select id="media-file-display">
+      </select>
+      <div>
+        <input type="file" id="media-file-input">
+        <button id="media-upload-btn">
           Upload
         </button>
       </div>
@@ -56,6 +75,7 @@ class HexFiles extends HTMLElement {
     shadow.appendChild(root);
 
     this.file_display = shadow.querySelector("#file-display");
+    this.media_file_display = shadow.querySelector("#media-file-display");
 
     mcp.regHexEvent(
       mcp.events.files_loaded,
@@ -68,6 +88,16 @@ class HexFiles extends HTMLElement {
       {
         mcp.store_and_upload_code_file(
           shadow.querySelector("#file-input").files[0]
+        );
+      }
+    )
+
+    shadow.querySelector("#media-upload-btn").addEventListener(
+      "click",
+      () =>
+      {
+        mcp.store_and_upload_media_file(
+          shadow.querySelector("#media-file-input").files[0]
         );
       }
     )

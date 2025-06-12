@@ -91,6 +91,15 @@ export async function upload_code_file(file)
   console.log(body);
 }
 
+export async function upload_media_file(file)
+{
+  const fd = util.fd_from_sp();
+  fd.append("media_file", file);
+  const response = await post_with_timeout('/api/upload-media-file', fd);
+  const body = await response.json;
+  console.log(body);
+}
+
 // get code file in this project
 export async function get_code_file(name)
 {

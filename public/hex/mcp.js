@@ -59,6 +59,12 @@ export function store_and_upload_code_file(file)
   api.upload_code_file(file);
 }
 
+export function store_and_upload_media_file(file)
+{
+  opfs.store_media_file(file);
+  api.upload_media_file(file);
+}
+
 export function install_sw(sw)
 {
   console.log(sw);

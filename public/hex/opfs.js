@@ -8,6 +8,12 @@ export async function store_code_file(file)
   store_code_file_data(file.name, data);
 }
 
+export async function store_media_file(file)
+{
+  let data = await file.arrayBuffer();
+  store_media_file_data(file.name, data);
+}
+
 export async function get_proj_dir(create = false)
 {
   const sp = util.search_params();
@@ -25,9 +31,24 @@ export async function get_proj_dir(create = false)
   );
 }
 
+export async function get_media_dir(create = false)
+{
+  const proj_dir = get_proj_dir(true);
+  return (await proj_dir).getDirectoryHandle("media", { create });
+}
+
 export async function store_code_file_data(name, data)
 {
   const projDirectoryHandle = await get_proj_dir(true);
+  const fileHandle = await projDirectoryHandle.getFileHandle(name, { create: true, });
+  const writeable = await fileHandle.createWritable();
+  writeable.write(data);
+  writeable.close();
+}
+
+export async function store_media_file_data(name, data)
+{
+  const projDirectoryHandle = await get_media_dir(true);
   const fileHandle = await projDirectoryHandle.getFileHandle(name, { create: true, });
   const writeable = await fileHandle.createWritable();
   writeable.write(data);
