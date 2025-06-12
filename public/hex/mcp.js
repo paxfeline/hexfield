@@ -96,6 +96,6 @@ if (files)
   {
     const name = file.split("/").pop();
     file_data[file] = await api.get_code_file(name);
-    opfs.store_code_file_data(name, file_data[name]);
+    opfs.store_code_file_data(name, file_data[file]);
   }
 }
