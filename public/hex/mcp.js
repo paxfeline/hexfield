@@ -79,6 +79,31 @@ export function install_sw(sw)
   sw.postMessage("test42");
 }
 
+export let html_editor;
+export function register_html_editor(editor)
+{
+  html_editor = editor;
+  regHexEvent(events.load_code_file_text,
+    data =>
+    {
+      console.log(data);
+      update_html_code(file_data[data]);
+    });
+}
+
+export function update_html_code(code)
+{
+  let transaction = html_editor.state.update({
+    changes: {
+      from: 0,
+      to: html_editor.state.doc.length,
+      insert: code
+    }
+  });
+  const update = html_editor.state.update(transaction);
+  html_editor.update([update]);
+}
+
 // initial actions
 
 // retrieve project info (file list) from backend.
