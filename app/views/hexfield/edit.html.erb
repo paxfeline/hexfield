@@ -26,6 +26,21 @@ mcp.regHexEvent(mcp.events.load_code_file_text,
 
   </script>
 
+  
+  <script type="module">
+import {html} from "@codemirror/lang-html"
+import {EditorView, basicSetup} from "codemirror"
+
+const view = new EditorView({
+  doc: "Start document",
+  parent: document.body,
+  extensions: [
+    basicSetup,
+    html()
+  ]
+})
+</script>
+
 <% else %>
 <p> <%= link_to "Sign in", "/users/sign_in" %> to get started! </p>
 <% end %>

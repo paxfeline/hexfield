@@ -23,6 +23,8 @@ class ProjectsController < ApplicationController
 
   # POST /projects or /projects.json
   def create
+    render plain: 'no', status: :unauthorized and return unless user_signed_in?
+
     params[:project][:owner_id] = current_user.id
 
     @project = Project.new(project_params)
