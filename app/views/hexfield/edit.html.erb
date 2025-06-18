@@ -9,6 +9,12 @@
 
   <hex-files></hex-files>
 
+  <button
+    type="button"
+    id="code-save-btn">
+  save
+  </button>
+
   <script type="module">
 import * as mcp from "/hex/mcp.js";
 import {html} from "@codemirror/lang-html"
@@ -24,6 +30,14 @@ const view = new EditorView({
 })
 
 mcp.register_html_editor(view);
+
+function save_code_file()
+{
+  mcp.update_html_code_file();
+}
+
+const code_save_btn = document.querySelector("#code-save-btn");
+code_save_btn.addEventListener("click", save_code_file);
 </script>
 
 <% else %>

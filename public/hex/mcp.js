@@ -80,6 +80,7 @@ export function install_sw(sw)
 }
 
 export let html_editor;
+export let current_file_name;
 export function register_html_editor(editor)
 {
   html_editor = editor;
@@ -87,11 +88,12 @@ export function register_html_editor(editor)
     data =>
     {
       console.log(data);
-      update_html_code(file_data[data]);
+      current_file_name = data.split("/").pop();;
+      update_html_code_editor(file_data[data]);
     });
 }
 
-export function update_html_code(code)
+export function update_html_code_editor(code)
 {
   let transaction = html_editor.state.update({
     changes: {
@@ -104,7 +106,14 @@ export function update_html_code(code)
   html_editor.update([update]);
 }
 
-// initial actions
+export async function update_html_code_file()
+{
+  const code = html_editor.state.doc.toString();
+  const file = await opfs.store_code_file_data(current_file_name, code);
+  api.upload_code_file(file);
+}
+
+// initial actions:
 
 // retrieve project info (file list) from backend.
 // if the project doesn't exist, it will be created.
@@ -117,6 +126,7 @@ if (files)
 {
   fireEvent(events.files_loaded, files);
   
+  // files[0] = code files
   for (const file of files[0])
   {
     const name = file.split("/").pop();

@@ -42,8 +42,9 @@ export async function store_code_file_data(name, data)
   const projDirectoryHandle = await get_proj_dir(true);
   const fileHandle = await projDirectoryHandle.getFileHandle(name, { create: true, });
   const writeable = await fileHandle.createWritable();
-  writeable.write(data);
-  writeable.close();
+  await writeable.write(data);
+  await writeable.close();
+  return await fileHandle.getFile();
 }
 
 export async function store_media_file_data(name, data)
