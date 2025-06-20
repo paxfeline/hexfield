@@ -34,7 +34,7 @@ export async function get_proj_dir(create = false)
 export async function get_media_dir(create = false)
 {
   const proj_dir = get_proj_dir(true);
-  return (await proj_dir).getDirectoryHandle("media", { create });
+  return await (await proj_dir).getDirectoryHandle("media", { create });
 }
 
 export async function store_code_file_data(name, data)
