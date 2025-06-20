@@ -48,23 +48,27 @@ class HexFiles extends HTMLElement {
     root.id = "root";
 
     root.innerHTML = `
-      Code files:
-      <select id="file-display">
-      </select>
-      <div>
-        <input type="file" id="file-input">
-        <button id="upload-btn">
-          Upload
-        </button>
+      <div class="file-section">
+        Code files:
+        <select id="file-display">
+        </select>
+        <div>
+          <input type="file" id="file-input" accept=".html, .css, .js">
+          <button id="upload-btn">
+            Upload
+          </button>
+        </div>
       </div>
-      Media files:
-      <select id="media-file-display">
-      </select>
-      <div>
-        <input type="file" id="media-file-input">
-        <button id="media-upload-btn">
-          Upload
-        </button>
+      <div class="file-section">
+        Media files:
+        <select id="media-file-display">
+        </select>
+        <div>
+          <input type="file" id="media-file-input" accept=".png, .jpg, .jpeg, .gif, image/*">
+          <button id="media-upload-btn">
+            Upload
+          </button>
+        </div>
       </div>
     `;
 
@@ -75,6 +79,12 @@ class HexFiles extends HTMLElement {
       #root
       {
         display: flex;
+      }
+      
+      .file-section
+      {
+        border: 0.5em solid black;
+        padding: 0.5em;
       }
     `;
 
