@@ -82,20 +82,20 @@ export async function get_media_files()
   return body;
 }
 
-export async function upload_code_file(file)
+export async function upload_code_files(files)
 {
   const fd = util.fd_from_sp();
-  fd.append("code_file", file);
-  const response = await post_with_timeout('/api/upload-code-file', fd);
+  Array.from(files).forEach(file => fd.append("code_file[]", file));
+  const response = await post_with_timeout('/api/upload-code-files', fd);
   const body = await response.json;
   console.log(body);
 }
 
-export async function upload_media_file(file)
+export async function upload_media_files(files)
 {
   const fd = util.fd_from_sp();
-  fd.append("media_file", file);
-  const response = await post_with_timeout('/api/upload-media-file', fd);
+  Array.from(files).forEach(file => fd.append("media_file[]", file));
+  const response = await post_with_timeout('/api/upload-media-files', fd);
   const body = await response.json;
   console.log(body);
 }

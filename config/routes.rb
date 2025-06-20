@@ -10,8 +10,8 @@ Rails.application.routes.draw do
   post "api/get-project" => "hexfield#get_project"
   post "api/get-code-files" => "hexfield#get_code_files"
   post "api/get-media-files" => "hexfield#get_media_files"
-  post "api/upload-code-file" => "hexfield#upload_code_file"
-  post "api/upload-media-file" => "hexfield#upload_media_file"
+  post "api/upload-code-files" => "hexfield#upload_code_file"
+  post "api/upload-media-files" => "hexfield#upload_media_file"
   post "api/get-code-file" => "hexfield#private_get_code_file"
   post "api/get-media-file" => "hexfield#private_get_media_file"
 

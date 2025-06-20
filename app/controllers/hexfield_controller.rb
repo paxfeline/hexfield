@@ -45,38 +45,44 @@ class HexfieldController < ApplicationController
   def upload_code_file
     bucket = get_bucket
 
-    upfile = params[:code_file]
-    name = upfile.original_filename
-    userid = current_user.id
-    project = params[:project][:name]
-    file_name = "#{userid}/#{project}/#{name}"
+    upfiles = params[:code_file]
 
-    file = bucket.create_file upfile.path, file_name
+    upfiles.each do |upfile|
+      name = upfile.original_filename
+      userid = current_user.id
+      project = params[:project][:name]
+      file_name = "#{userid}/#{project}/#{name}"
 
-    puts "Uploaded #{upfile.path} as #{file.name} in bucket hexfield"
+      file = bucket.create_file upfile.path, file_name
 
-    render json: { filename: name }
+      puts "Uploaded #{upfile.path} as #{file.name} in bucket hexfield"
+    end
+
+    render plain: "code files uploaded"
   end
 
   # post "api/upload-media-file" => "hexfield#upload_media_file"
   def upload_media_file
     bucket = get_bucket
 
-    upfile = params[:media_file]
-    name = upfile.original_filename
-    userid = current_user.id
-    project = params[:project][:name]
-    file_name = "#{userid}/#{project}/media/#{name}"
+    upfiles = params[:media_file]
 
-    file = bucket.create_file upfile.path, file_name
+    upfiles.each do |upfile|
+      name = upfile.original_filename
+      userid = current_user.id
+      project = params[:project][:name]
+      file_name = "#{userid}/#{project}/media/#{name}"
 
-    puts "Uploaded #{upfile.path} as #{file.name} in bucket hexfield"
+      file = bucket.create_file upfile.path, file_name
 
-    render json: { filename: "/media/#{name}" }
+      puts "Uploaded #{upfile.path} as #{file.name} in bucket hexfield"
+    end
+
+    render plain: "media files uploaded"
   end
 
   def private_get_code_file
-    bucket = get_bucket\
+    bucket = get_bucket
 
     name = params[:file_name]
     userid = current_user.id

@@ -53,7 +53,11 @@ class HexFiles extends HTMLElement {
         <select id="file-display">
         </select>
         <div>
-          <input type="file" id="file-input" accept=".html, .css, .js">
+          <input
+            type="file"
+            id="file-input"
+            multiple="multiple"
+            accept=".html, .css, .js">
           <button id="upload-btn">
             Upload
           </button>
@@ -64,7 +68,11 @@ class HexFiles extends HTMLElement {
         <select id="media-file-display">
         </select>
         <div>
-          <input type="file" id="media-file-input" accept=".png, .jpg, .jpeg, .gif, image/*">
+          <input
+            type="file"
+            id="media-file-input"
+            multiple="multiple"
+            accept=".png, .jpg, .jpeg, .gif, image/*">
           <button id="media-upload-btn">
             Upload
           </button>
@@ -112,8 +120,8 @@ class HexFiles extends HTMLElement {
       "click",
       () =>
       {
-        mcp.store_and_upload_code_file(
-          shadow.querySelector("#file-input").files[0]
+        mcp.store_and_upload_code_files(
+          shadow.querySelector("#file-input").files
         );
       }
     )
@@ -122,8 +130,8 @@ class HexFiles extends HTMLElement {
       "click",
       () =>
       {
-        mcp.store_and_upload_media_file(
-          shadow.querySelector("#media-file-input").files[0]
+        mcp.store_and_upload_media_files(
+          shadow.querySelector("#media-file-input").files
         );
       }
     )
