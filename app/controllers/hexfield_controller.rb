@@ -108,11 +108,13 @@ class HexfieldController < ApplicationController
 
     file = bucket.file file_path
 
+    render plain: "File not found", status: :not_found and return unless file.present?
+
     local_file = Tempfile.new(file_name)
     local_file.close
 
     # download contents to tempfile path
-    file.download(local_file.path)
+    file.download local_file.path
 
     render file: local_file.path, content_type: file.content_type
 
