@@ -2,7 +2,7 @@
 <script src="/hex/files.js" type="module"></script>
 
 <h1>Hexfield</h1>
-<% if @user_signed_in %>
+<%# if @user_signed_in %>
 
 <%= link_to "Sign out", "/users/sign_out", data: { turbo_method: :delete } %> </p>
   <p> <%= @user.inspect %> </p>
@@ -40,7 +40,7 @@ const code_save_btn = document.querySelector("#code-save-btn");
 code_save_btn.addEventListener("click", save_code_file);
 </script>
 
-<% else %>
-<p> <%= link_to "Sign in", "/users/sign_in" %> to get started! </p>
-<% end %>
+<%# else %>
+<p> <%#= link_to "Sign in", "/users/sign_in" %> to get started! </p>
+<%# end %>
 

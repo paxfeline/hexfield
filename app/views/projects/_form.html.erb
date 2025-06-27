@@ -25,35 +25,5 @@
 
   <div>
     <%= form.submit %>
-    <button type="button" id="submit">
-      Submit Async
-    </button>
   </div>
 <% end %>
-
-<script type="module">
-import { FetchRequest } from '@rails/request.js'
-
-async function doot() {
-  const form = document.querySelector("form");
-  const fd = new FormData(form);
-  const request = new FetchRequest('post', '/projects', {body: fd})
-  request.perform().then(
-    response =>
-    {
-      if (response?.ok) {
-        return response.text
-      }
-    }
-  ).then( body =>
-  {
-    console.log("got response body:", body)
-  }
-  ).catch( err =>
-  {
-    console.log("error", err);
-  });
-}
-
-document.querySelector("#submit").addEventListener("click", doot);
-</script>

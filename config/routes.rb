@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   #hexfield
   resources :projects, except: [:edit]
   get "edit" => "hexfield#edit"
+  
   # files
   post "api/get-project" => "hexfield#get_project"
   post "api/get-code-files" => "hexfield#get_code_files"
