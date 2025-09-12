@@ -10,9 +10,19 @@ const putInCache = async (request, response) => {
   await cache.put(request, response);
 };
 
+const getOPFSDirs = async (userId, projectName) =>
+{
+  const opfsRoot = await navigator.storage.getDirectory();
+  const userDirectoryHandle = await opfsRoot.getDirectoryHandle(userId);
+  const projectDir = await userDirectoryHandle?.getDirectoryHandle(projectName);
+  const mediaDir = await projectDir?.getDirectoryHandle("media");
+  return [projectDir, mediaDir];
+}
+
 const networkFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
   // First try to get the resource from the network
-  try {
+  try
+  {
     const responseFromNetwork = await fetch(request, {signal: AbortSignal.timeout(5000)});
     _hexOnLine = true;
     // response may be used only once
@@ -20,9 +30,28 @@ const networkFirst = async ({ request, preloadResponsePromise, fallbackUrl }) =>
     // and serve second one
     putInCache(request, responseFromNetwork.clone());
     return responseFromNetwork;
-  } catch (error) {
+  }
+  catch (error)
+  {
     if (error.name === "TimeoutError")
       _hexOnLine = false;
+
+    console.log(request);
+
+    let m = request.url.match(/.+\/web\/([^/]+)\/([^/]+)/);
+    if (m)
+    {
+      const [_, userId, projectName] = m;
+      const [projectDir, mediaDir] = await getOPFSDirs(userId, projectName);
+      try
+      {
+
+      }
+      catch (innerError)
+      {
+
+      }
+    }
 
     // Next try to get the resource from the cache
     const responseFromCache = await caches.match(request);
