@@ -1,6 +1,8 @@
 import { post } from '@rails/request.js'
 import * as util from "/hex/util.js";
 
+// TODO: remove post_with_timeout: handled by SW
+
 // uses rails/request.js post function, passing an AbortSignal object
 // that will timeout after 5 seconds.
 // Returns the response to the post, or null.

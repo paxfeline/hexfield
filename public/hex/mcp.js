@@ -70,6 +70,7 @@ export function store_and_upload_media_files(files)
   api.upload_media_files(files);
 }
 
+// TODO: check: used?
 export function install_sw(sw)
 {
   console.log(sw);
