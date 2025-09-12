@@ -1,13 +1,16 @@
 <script src="/hex/mcp.js" type="module"></script>
 <script src="/hex/files.js" type="module"></script>
 
+<div id="main">
+
+<div id="header">
+
 <h1>Hexfield</h1>
 <%# if @user_signed_in %>
 
-<%= link_to "Sign out", "/users/sign_out", data: { turbo_method: :delete } %> </p>
   <p> <%= @user.inspect %> </p>
 
-  <hex-files></hex-files>
+<%= link_to "Sign out", "/users/sign_out", data: { turbo_method: :delete } %> 
 
   <button
     type="button"
@@ -15,16 +18,33 @@
   save
   </button>
 
+</div>
+<div id="body">
+
+</div>
+
+<div id="footer">
+  <hex-files></hex-files>
+</div>
+
+</div>
+
   <script type="module">
 import * as mcp from "/hex/mcp.js";
 import {html} from "@codemirror/lang-html"
 import {EditorView, basicSetup} from "codemirror"
 
+const fixedHeightEditor = EditorView.theme({
+  "&": {height: "100%"},
+  ".cm-scroller": {overflow: "auto"}
+})
+
 const view = new EditorView({
   doc: "Start document",
-  parent: document.body,
+  parent: body,
   extensions: [
     basicSetup,
+    fixedHeightEditor,
     html()
   ]
 })
@@ -39,8 +59,3 @@ function save_code_file()
 const code_save_btn = document.querySelector("#code-save-btn");
 code_save_btn.addEventListener("click", save_code_file);
 </script>
-
-<%# else %>
-<p> <%#= link_to "Sign in", "/users/sign_in" %> to get started! </p>
-<%# end %>
-
