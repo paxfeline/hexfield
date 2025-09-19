@@ -36,7 +36,7 @@ const networkFirst = async ({ request, preloadResponsePromise, fallbackUrl }) =>
     if (error.name === "TimeoutError")
       _hexOnLine = false;
 
-    console.log(request);
+    console.log(error, request);
 
     let m = request.url.match(/.+\/web\/([^/]+)\/([^/]+)/);
     if (m)
