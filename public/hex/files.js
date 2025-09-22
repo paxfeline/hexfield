@@ -48,10 +48,17 @@ class HexFiles extends HTMLElement {
     root.id = "root";
 
     root.innerHTML = `
+      <template id="file-row-template">
+        <div class="file-row">
+          <div class="file-row-name"></div>
+          <div class="file-row-delete"></div>
+        </div>
+      </template>
+      
       <div class="file-section">
         Code files:
-        <select id="file-display">
-        </select>
+        <div id="file-display">
+        </div>
         <div>
           <input
             type="file"

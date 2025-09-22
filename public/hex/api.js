@@ -76,7 +76,7 @@ export async function get_code_files()
 export async function get_media_files()
 {
   const body = util.fd_from_sp();
-  const response = await post_with_timeout('/api/get-media-files', {body});
+  const response = await post('/api/get-media-files', {body});
   if (response.response.status == 200)
   {
     const resp_body = await response.json;
