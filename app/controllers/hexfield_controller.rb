@@ -18,7 +18,7 @@ class HexfieldController < ApplicationController
       render plain: "Project not found", status: :not_found and return
     else
       if project.owner == current_user
-        render json: {project: project, user: current_user.id}
+        render json: { project: project, user: current_user.id }
       else
         render plain: "Not authorized as owner of project", status: :forbidden
       end
@@ -47,18 +47,22 @@ class HexfieldController < ApplicationController
 
     upfiles = params[:code_file]
 
+    ret = Array.new
+
     upfiles.each do |upfile|
       name = upfile.original_filename
       userid = current_user.id
       project = params[:project][:name]
       file_name = "#{userid}/#{project}/#{name}"
 
+      ret.push file_name
+
       file = bucket.create_file upfile.path, file_name
 
       puts "Uploaded #{upfile.path} as #{file.name} in bucket hexfield"
     end
 
-    render plain: "code files uploaded"
+    render json: { uploaded: ret }
   end
 
   # post "api/upload-media-file" => "hexfield#upload_media_file"

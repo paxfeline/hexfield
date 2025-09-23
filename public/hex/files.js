@@ -2,8 +2,10 @@ import * as mcp from "/hex/mcp.js";
 import * as api from "/hex/api.js";
 
 // Create a class for the element
-class HexFiles extends HTMLElement {
-  constructor() {
+class HexFiles extends HTMLElement
+{
+  constructor()
+  {
     // Always call super first in constructor
     super();
   }
@@ -104,6 +106,13 @@ class HexFiles extends HTMLElement {
         border: 0.5em solid black;
         padding: 0.5em;
       }
+      
+      #file-display
+      {
+        height: 5rem;
+        overflow: auto;
+        border: 1px solid black;
+      }
 
       .file-row
       {
@@ -113,6 +122,9 @@ class HexFiles extends HTMLElement {
       .file-row-name
       {
         flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       
       .file-row div
