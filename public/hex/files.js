@@ -13,28 +13,31 @@ class HexFiles extends HTMLElement {
     mcp.fireEvent(mcp.events.load_code_file_text, file)
   }
 
+  addCodeFile(code_file)
+  {
+    const row = this.file_row_template.cloneNode(true);
+    row.querySelector(".file-row-name").innerHTML = code_file.split("/").pop();
+    row.setAttribute("value", code_file);
+    row.firstElementChild.addEventListener("click",
+      () =>
+      {
+        this.loadSelectedFile(code_file);
+      }
+    )
+    this.file_display.appendChild(row);
+  }
+
   loadFileList([code_files, media_files])
   {
     console.log("loading...", code_files, media_files);
 
     this.file_display.innerHTML = "";
-    code_files.forEach(file => {
-      const opt = document.createElement("option");
-      opt.value = file;
-      opt.innerHTML = file.split("/").pop();
-      this.file_display.add(opt);
-    });
+    code_files.forEach(this.addCodeFile.bind(this));
 
-    if (this.file_display.selectedOptions.length > 0)
-      this.loadSelectedFile(this.file_display.selectedOptions[0].value);
+    this.loadSelectedFile(this.file_display.firstElementChild?.getAttribute("value"));
 
     this.media_file_display.innerHTML = "";
-    media_files.forEach(file => {
-      const opt = document.createElement("option");
-      opt.value = file;
-      opt.innerHTML = file.split("/").pop();
-      this.media_file_display.add(opt);
-    });
+    //media_files.forEach(this.addCodeFile);
   }
 
   connectedCallback()
@@ -51,7 +54,7 @@ class HexFiles extends HTMLElement {
       <template id="file-row-template">
         <div class="file-row">
           <div class="file-row-name"></div>
-          <div class="file-row-delete"></div>
+          <div class="file-row-delete">DELETE</div>
         </div>
       </template>
       
@@ -101,6 +104,26 @@ class HexFiles extends HTMLElement {
         border: 0.5em solid black;
         padding: 0.5em;
       }
+
+      .file-row
+      {
+        display: flex;
+      }
+
+      .file-row-name
+      {
+        flex: 1;
+      }
+      
+      .file-row div
+      {
+        margin: 0.12rem 0.5rem;
+      }
+
+      .file-row-name:hover
+      {
+        background-color: pink;
+      }
     `;
 
     // Attach the created elements to the shadow dom
@@ -109,6 +132,10 @@ class HexFiles extends HTMLElement {
 
     this.file_display = shadow.querySelector("#file-display");
     this.media_file_display = shadow.querySelector("#media-file-display");
+
+    this.file_row_template = shadow.querySelector("#file-row-template").content.firstElementChild;
+
+    console.log("FRT", this.file_row_template);
 
     this.file_display.addEventListener("change",
       e =>

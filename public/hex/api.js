@@ -93,7 +93,7 @@ export async function get_media_files()
 export async function upload_code_files(files)
 {
   const body = util.fd_from_sp();
-  Array.from(files).forEach(file => fd.append("code_file[]", file));
+  Array.from(files).forEach(file => body.append("code_file[]", file));
   const response = await post('/api/upload-code-files', {body});
   if (response.response.status == 200)
   {

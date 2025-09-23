@@ -21,6 +21,7 @@
     <%= form.number_field :visibility %>
   </div>
 
+  <%# TODO: remove owner_id field; handled by backend %>
   <%= form.hidden_field :owner_id, value: @user.id %>
 
   <div>
