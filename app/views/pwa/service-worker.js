@@ -102,6 +102,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  //debugger;
   event.respondWith(
     networkFirst({
       request: event.request,

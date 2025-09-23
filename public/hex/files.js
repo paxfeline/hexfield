@@ -1,13 +1,34 @@
 import * as mcp from "/hex/mcp.js";
-import * as api from "/hex/api.js";
 
 // Create a class for the element
 class HexFiles extends HTMLElement
 {
+  #selectedIndex; // private field
+
   constructor()
   {
     // Always call super first in constructor
     super();
+  }
+
+  get selectedIndex()
+  {
+    return this.#selectedIndex;
+  }
+
+  get selectedRow()
+  {
+    return this.file_display.children[this.#selectedIndex];
+  }
+
+  set selectedIndex(i)
+  {
+    if (this.#selectedIndex !== undefined)
+      this.selectedRow.removeAttribute("selected");
+    
+    this.#selectedIndex = i;
+    
+    this.selectedRow.setAttribute("selected", "");
   }
 
   loadSelectedFile(file)
@@ -15,7 +36,7 @@ class HexFiles extends HTMLElement
     mcp.fireEvent(mcp.events.load_code_file_text, file)
   }
 
-  addCodeFile(code_file)
+  addCodeFile(code_file, ind)
   {
     const row = this.file_row_template.cloneNode(true);
     row.querySelector(".file-row-name").innerHTML = code_file.split("/").pop();
@@ -23,6 +44,7 @@ class HexFiles extends HTMLElement
     row.firstElementChild.addEventListener("click",
       () =>
       {
+        this.selectedIndex = ind;
         this.loadSelectedFile(code_file);
       }
     )
@@ -36,7 +58,11 @@ class HexFiles extends HTMLElement
     this.file_display.innerHTML = "";
     code_files.forEach(this.addCodeFile.bind(this));
 
-    this.loadSelectedFile(this.file_display.firstElementChild?.getAttribute("value"));
+    if (code_files.length > 0)
+    {
+      this.loadSelectedFile(this.file_display.firstElementChild.getAttribute("value"));
+      this.selectedIndex = 0;
+    }
 
     this.media_file_display.innerHTML = "";
     //media_files.forEach(this.addCodeFile);
@@ -105,6 +131,7 @@ class HexFiles extends HTMLElement
       {
         border: 0.5em solid black;
         padding: 0.5em;
+        flex: 1;
       }
       
       #file-display
@@ -136,6 +163,11 @@ class HexFiles extends HTMLElement
       {
         background-color: pink;
       }
+
+      .file-row[selected] .file-row-name
+      {
+        background-color: lightblue;
+      }
     `;
 
     // Attach the created elements to the shadow dom
@@ -148,14 +180,6 @@ class HexFiles extends HTMLElement
     this.file_row_template = shadow.querySelector("#file-row-template").content.firstElementChild;
 
     console.log("FRT", this.file_row_template);
-
-    this.file_display.addEventListener("change",
-      e =>
-      {
-        console.log(e.target.value);
-        this.loadSelectedFile(e.target.value)
-      }
-    )
 
     mcp.regHexEvent(
       mcp.events.files_loaded,

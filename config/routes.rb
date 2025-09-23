@@ -1,12 +1,12 @@
 Rails.application.routes.draw do
-  #get "hexfield/index" # don't want/need
+  # get "hexfield/index" # don't want/need
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  
-  #hexfield
+
+  # hexfield
   resources :projects, except: [:edit]
   get "edit" => "hexfield#edit"
-  
+
   # files
   post "api/get-project" => "hexfield#get_project"
   post "api/get-code-files" => "hexfield#get_code_files"
