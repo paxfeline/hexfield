@@ -3,7 +3,7 @@ import * as mcp from "/hex/mcp.js";
 // Create a class for the element
 class HexFiles extends HTMLElement
 {
-  #selectedIndex; // private field
+  #selectedIndex = null; // private field
 
   constructor()
   {
@@ -23,7 +23,7 @@ class HexFiles extends HTMLElement
 
   set selectedIndex(i)
   {
-    if (this.#selectedIndex !== undefined)
+    if (this.#selectedIndex !== null)
       this.selectedRow.removeAttribute("selected");
     
     this.#selectedIndex = i;
@@ -82,7 +82,6 @@ class HexFiles extends HTMLElement
       <template id="file-row-template">
         <div class="file-row">
           <div class="file-row-name"></div>
-          <div class="file-row-delete">DELETE</div>
         </div>
       </template>
       
@@ -90,15 +89,25 @@ class HexFiles extends HTMLElement
         Code files:
         <div id="file-display">
         </div>
-        <div>
-          <input
-            type="file"
-            id="file-input"
-            multiple="multiple"
-            accept=".html, .css, .js">
-          <button id="upload-btn">
-            Upload
-          </button>
+        <div class="file-code-controls">
+          <div class="file-code-upload-controls">
+            <input
+              type="file"
+              id="file-input"
+              multiple="multiple"
+              accept=".html, .css, .js">
+            <button id="code-file-upload-btn">
+              Upload
+            </button>
+          </div>
+          <div class="file-code-other-controls">
+            <button id="code-file-delete-btn">
+              Delete
+            </button>
+            <button id="code-file-new-btn">
+              New
+            </button>
+          </div>
         </div>
       </div>
       <div class="file-section">
@@ -167,6 +176,16 @@ class HexFiles extends HTMLElement
       .file-row[selected] .file-row-name
       {
         background-color: lightblue;
+      }
+
+      .file-code-controls
+      {
+        display: flex;
+      }
+
+      .file-code-upload-controls
+      {
+        flex: 1;
       }
     `;
 

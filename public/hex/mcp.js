@@ -111,7 +111,7 @@ export async function update_html_code_file()
 {
   const code = html_editor.state.doc.toString();
   const file = await opfs.store_code_file_data(current_file_name, code);
-  api.upload_code_file(file);
+  api.upload_code_files([file]);
 }
 
 // initial actions:
