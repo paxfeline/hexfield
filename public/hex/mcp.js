@@ -90,7 +90,7 @@ export function register_html_editor(editor)
     {
       console.log(data);
       current_file_name = data.split("/").pop();;
-      update_html_code_editor(file_data[data]);
+      update_html_code_editor(file_data[current_file_name]);
     });
 }
 
@@ -111,6 +111,7 @@ export async function update_html_code_file()
 {
   const code = html_editor.state.doc.toString();
   const file = await opfs.store_code_file_data(current_file_name, code);
+  file_data[current_file_name] = code;
   await api.upload_code_files([file]);
 }
 
@@ -143,7 +144,7 @@ if (files)
   for (const file of files[0])
   {
     const name = file.split("/").pop();
-    file_data[file] = await api.get_code_file(name);
-    await opfs.store_code_file_data(name, file_data[file]); // maybe skip await?
+    file_data[name] = await api.get_code_file(name);
+    await opfs.store_code_file_data(name, file_data[name]); // maybe skip await?
   }
 }

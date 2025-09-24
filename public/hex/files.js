@@ -233,7 +233,8 @@ class HexFiles extends HTMLElement
         if (path)
         {
           this.addCodeFile(path, this.file_display.children.length)
-          this.#selectedIndex = this.file_display.children.length - 1;
+          this.selectedIndex = this.file_display.children.length - 1;
+          this.loadSelectedFile(path);
         }
       }
     )
