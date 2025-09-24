@@ -111,7 +111,19 @@ export async function update_html_code_file()
 {
   const code = html_editor.state.doc.toString();
   const file = await opfs.store_code_file_data(current_file_name, code);
-  api.upload_code_files([file]);
+  await api.upload_code_files([file]);
+}
+
+export async function create_code_file()
+{
+  let name = prompt("Enter a file name:\nWarning: Entering an existing file name will overwrite it with a blank file.")
+  
+  if (name)
+  {
+    let file = await opfs.create_code_file(name);
+    let [path] = await api.upload_code_files([file]);
+    return path;
+  }
 }
 
 // initial actions:
@@ -132,6 +144,6 @@ if (files)
   {
     const name = file.split("/").pop();
     file_data[file] = await api.get_code_file(name);
-    opfs.store_code_file_data(name, file_data[file]);
+    await opfs.store_code_file_data(name, file_data[file]); // maybe skip await?
   }
 }

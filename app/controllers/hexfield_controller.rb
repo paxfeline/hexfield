@@ -114,7 +114,7 @@ class HexfieldController < ApplicationController
     file_name = params[:file]
     frmt = params[:format]
     userid = params[:user]
-    file_path = "#{userid}/#{project_name}/#{file_name}.#{frmt}"
+    file_path = "#{userid}/#{project_name}/#{file_name}#{".#{frmt}" if frmt}"
 
     file = bucket.file file_path
 

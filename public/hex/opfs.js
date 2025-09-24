@@ -39,12 +39,18 @@ export async function get_media_dir(create = false)
 
 export async function store_code_file_data(name, data)
 {
-  const projDirectoryHandle = await get_proj_dir(true);
-  const fileHandle = await projDirectoryHandle.getFileHandle(name, { create: true, });
-  const writeable = await fileHandle.createWritable();
-  await writeable.write(data);
-  await writeable.close();
-  return await fileHandle.getFile();
+  try
+  {
+    const projDirectoryHandle = await get_proj_dir(true);
+    const fileHandle = await projDirectoryHandle.getFileHandle(name, { create: true, });
+    const writeable = await fileHandle.createWritable();
+    if (data !== null)
+      await writeable.write(data);
+    await writeable.close();
+    return await fileHandle.getFile();
+  } catch (err) {
+    console.error(err.name, err.message, err);
+  }
 }
 
 export async function store_media_file_data(name, data)
@@ -54,9 +60,16 @@ export async function store_media_file_data(name, data)
   const writeable = await fileHandle.createWritable();
   writeable.write(data);
   writeable.close();
+
+  return fileHandle.getFile();
 }
 
 export async function get_code_file_data(name)
 {
-  
+  // not needed yet
+}
+
+export async function create_code_file(name)
+{
+  return store_code_file_data(name, null);
 }

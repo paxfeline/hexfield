@@ -205,7 +205,7 @@ class HexFiles extends HTMLElement
       this.loadFileList.bind(this)
     );
 
-    shadow.querySelector("#upload-btn").addEventListener(
+    shadow.querySelector("#code-file-upload-btn").addEventListener(
       "click",
       () =>
       {
@@ -222,6 +222,19 @@ class HexFiles extends HTMLElement
         mcp.store_and_upload_media_files(
           shadow.querySelector("#media-file-input").files
         );
+      }
+    )
+
+    shadow.querySelector("#code-file-new-btn").addEventListener(
+      "click",
+      async () =>
+      {
+        let path = await mcp.create_code_file();
+        if (path)
+        {
+          this.addCodeFile(path, this.file_display.children.length)
+          this.#selectedIndex = this.file_display.children.length - 1;
+        }
       }
     )
   }

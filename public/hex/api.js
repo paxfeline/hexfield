@@ -99,6 +99,7 @@ export async function upload_code_files(files)
   {
     const resp_body = await response.json;
     console.log("UCF body", resp_body);
+    return resp_body.uploaded;
   }
   else
   {
