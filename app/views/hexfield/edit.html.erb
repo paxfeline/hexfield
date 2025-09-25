@@ -1,5 +1,6 @@
 <script src="/hex/mcp.js" type="module"></script>
 <script src="/hex/files.js" type="module"></script>
+<script src="/hex/tabs.js" type="module"></script>
 
 <div id="main">
 
@@ -19,6 +20,12 @@
   </button>
 
 </div>
+
+<hex-tabs>
+<div tab="one">bar</div>
+<div data-data="data" tab="two">baz</div>
+</hex-tabs>
+
 <div id="body">
 
 </div>
@@ -38,6 +45,8 @@ const fixedHeightEditor = EditorView.theme({
   "&": {height: "100%"},
   ".cm-scroller": {overflow: "auto"}
 })
+
+let body = document.querySelector("#body");
 
 const view = new EditorView({
   doc: "Start document",
