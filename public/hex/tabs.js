@@ -49,7 +49,7 @@ class HexTabs extends HTMLElement
     // Create spans
     const root = document.createElement("div");
     root.id = "root";
-    root.part = "root";
+    root.part = "root"; // for CSS
 
     root.innerHTML = `
       <div id="tab-header"></div>
@@ -87,14 +87,15 @@ class HexTabs extends HTMLElement
       #tab-bodies
       {
         flex: 1;
-        min-height: 0%;
+        /* min-height: 0%; -> moved to hex-tabs element */
+        overflow: auto;
       }
 
       #tab-bodies > *
       {
         display: none;
       }
-        
+
       #tab-bodies > *[selected]
       {
         display: initial;

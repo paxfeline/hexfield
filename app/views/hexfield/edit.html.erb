@@ -2,6 +2,14 @@
 <script src="/hex/files.js" type="module"></script>
 <script src="/hex/tabs.js" type="module"></script>
 
+<style>
+hex-tabs
+{
+  height: 100%;
+  min-height: 0;
+}
+</style>
+
 <div id="main">
 
 <div id="header">
@@ -22,13 +30,14 @@
 </div>
 
 <hex-tabs>
-<div tab="one">bar</div>
-<div data-data="data" tab="two">baz</div>
+  <div tab="Builder">
+    TBD
+  </div>
+  <div tab="Code">
+    <div id="body"></div>
+  </div>
 </hex-tabs>
 
-<div id="body">
-
-</div>
 
 <div id="footer">
   <hex-files></hex-files>
@@ -44,13 +53,18 @@ import {EditorView, basicSetup} from "codemirror"
 const fixedHeightEditor = EditorView.theme({
   "&": {height: "100%"},
   ".cm-scroller": {overflow: "auto"}
-})
+});
 
-let body = document.querySelector("#body");
+//body = document.querySelector("hex-tabs").shadowRoot.querySelector("#root");
+let root = document.querySelector("hex-tabs").shadowRoot;
+let body = document.querySelector("hex-tabs").shadowRoot.querySelector("#body");
+
+debugger;
 
 const view = new EditorView({
-  doc: "Start document",
+  //doc: "Start document",
   parent: body,
+  root: root,
   extensions: [
     basicSetup,
     fixedHeightEditor,
