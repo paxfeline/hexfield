@@ -72,6 +72,14 @@ class HexTabs extends HTMLElement
         display: flex;
       }
 
+      #tab-header::after
+      {
+        flex: 1;
+        border: 0rem solid black;
+        border-width: 0 0 0.2rem 0;
+        content: '';
+      }
+
       .tab-tab
       {
         border: 0.2rem outset black;
@@ -82,6 +90,7 @@ class HexTabs extends HTMLElement
       .tab-tab[selected]
       {
         border-style: inset;
+        border-color: black black transparent;
       }
 
       #tab-bodies
