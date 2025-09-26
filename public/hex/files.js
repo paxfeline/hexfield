@@ -102,6 +102,9 @@ class HexFiles extends HTMLElement
               accept=".html, .css, .js">
           </div>
           <div class="file-code-other-controls">
+            <button id="code-file-save-btn">
+              Save
+            </button>
             <button id="code-file-delete-btn">
               Delete
             </button>
@@ -110,8 +113,9 @@ class HexFiles extends HTMLElement
       </div>
       <div class="file-section">
         Media files:
-        <select id="media-file-display">
-        </select>
+        <div>
+          <select size=5 id="media-file-display"></select>
+        </div>
         <div>
           <input
             type="file"
@@ -187,6 +191,16 @@ class HexFiles extends HTMLElement
         flex: 1;
         margin: 0 0.5rem;
       }
+
+      .file-code-other-controls
+      {
+      }
+
+      #media-file-display
+      {
+        width: 100%;
+        text-size: 150%;
+      }
     `;
 
     // Attach the created elements to the shadow dom
@@ -205,22 +219,23 @@ class HexFiles extends HTMLElement
       this.loadFileList.bind(this)
     );
 
-    let file_input = shadow.querySelector("#file-input")
+    let file_input = shadow.querySelector("#file-input");
     file_input.addEventListener(
       "change",
       async () =>
-      {
-        if (file_input.files?.length > 0 && confirm("Upload?"))
         {
-          let code_files = await mcp.store_and_upload_code_files(
-            file_input.files
-          );
-          code_files.forEach(this.addCodeFile.bind(this));
-          file_input.value = null;
-        }
-      }
-    )
-
+          if (file_input.files?.length > 0 && confirm("Upload?"))
+            {
+              let code_files = await mcp.store_and_upload_code_files(
+                file_input.files
+              );
+              code_files.forEach(this.addCodeFile.bind(this));
+              file_input.value = null;
+            }
+          }
+        )
+        
+    let media_file_input = shadow.querySelector("#file-input");
     shadow.querySelector("#media-upload-btn").addEventListener(
       "click",
       () =>
@@ -242,6 +257,14 @@ class HexFiles extends HTMLElement
           this.selectedIndex = this.file_display.children.length - 1;
           this.loadSelectedFile(path);
         }
+      }
+    )
+
+    shadow.querySelector("#code-file-save-btn").addEventListener(
+      "click",
+      () =>
+      {
+        mcp.update_html_code_file();
       }
     )
   }

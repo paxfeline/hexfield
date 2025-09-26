@@ -8,6 +8,23 @@ hex-tabs
   height: 100%;
   min-height: 0;
 }
+
+#header
+{
+  display: flex;
+}
+
+#header > *
+{
+  flex: 1;
+  margin: 0 1rem;
+}
+
+#user-div,
+#user-div > div
+{
+  text-align: right;
+}
 </style>
 
 <div id="main">
@@ -17,15 +34,15 @@ hex-tabs
 <h1>Hexfield</h1>
 <%# if @user_signed_in %>
 
-  <p> <%= @user.inspect %> </p>
 
-<%= link_to "Sign out", "/users/sign_out", data: { turbo_method: :delete } %> 
-
-  <button
-    type="button"
-    id="code-save-btn">
-  save
-  </button>
+<div id="user-div">
+  <div>User: <%= @user.name %></div>
+  <div>
+    <% if @user.present? %>
+    <%= link_to "Sign out", "/users/sign_out", data: { turbo_method: :delete } %> 
+    <% end %>
+  </div>
+</div>
 
 </div>
 
@@ -73,12 +90,4 @@ const view = new EditorView({
 })
 
 mcp.register_html_editor(view);
-
-function save_code_file()
-{
-  mcp.update_html_code_file();
-}
-
-const code_save_btn = document.querySelector("#code-save-btn");
-code_save_btn.addEventListener("click", save_code_file);
 </script>
