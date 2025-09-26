@@ -85,6 +85,7 @@ class HexTabs extends HTMLElement
         border: 0.2rem outset black;
         padding: 0.3rem;
         border-radius: 0.5rem 0.5rem 0 0;
+        cursor: pointer;
       }
 
       .tab-tab[selected]

@@ -90,7 +90,11 @@ class HexFiles extends HTMLElement
         <div id="file-display">
         </div>
         <div class="file-code-controls">
+          <button id="code-file-new-btn">
+            New
+          </button>
           <div class="file-code-upload-controls">
+            Upload: 
             <input
               type="file"
               id="file-input"
@@ -100,9 +104,6 @@ class HexFiles extends HTMLElement
           <div class="file-code-other-controls">
             <button id="code-file-delete-btn">
               Delete
-            </button>
-            <button id="code-file-new-btn">
-              New
             </button>
           </div>
         </div>
@@ -158,10 +159,11 @@ class HexFiles extends HTMLElement
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-      }
-      
+        }
+        
       .file-row div
       {
+        cursor: pointer;
         margin: 0.12rem 0.5rem;
       }
 
@@ -183,6 +185,7 @@ class HexFiles extends HTMLElement
       .file-code-upload-controls
       {
         flex: 1;
+        margin: 0 0.5rem;
       }
     `;
 
@@ -207,7 +210,7 @@ class HexFiles extends HTMLElement
       "change",
       async () =>
       {
-        if (file_input.files?.length > 0 && confirm("Upload files?"))
+        if (file_input.files?.length > 0 && confirm("Upload?"))
         {
           let code_files = await mcp.store_and_upload_code_files(
             file_input.files
