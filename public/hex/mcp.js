@@ -70,10 +70,10 @@ export async function store_and_upload_code_files(files)
   return await api.upload_code_files(files);
 }
 
-export function store_and_upload_media_files(files)
+export async function store_and_upload_media_files(files)
 {
   Array.from(files).forEach(file => opfs.store_media_file(file));
-  api.upload_media_files(files);
+  return await api.upload_media_files(files);
 }
 
 // TODO: check: used?

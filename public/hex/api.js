@@ -117,6 +117,7 @@ export async function upload_media_files(files)
   {
     const resp_body = await response.json;
     console.log(resp_body);
+    return resp_body.uploaded;
   }
   else
   {

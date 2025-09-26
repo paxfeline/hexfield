@@ -51,6 +51,14 @@ class HexFiles extends HTMLElement
     this.file_display.appendChild(row);
   }
 
+  addMediaFile(media_file, ind)
+  {
+    const row = document.createElement("option");
+    row.innerHTML = media_file.split("/").pop();
+    row.setAttribute("value", media_file);
+    this.media_file_display.appendChild(row);
+  }
+
   loadFileList([code_files, media_files])
   {
     console.log("loading...", code_files, media_files);
@@ -65,7 +73,7 @@ class HexFiles extends HTMLElement
     }
 
     this.media_file_display.innerHTML = "";
-    //media_files.forEach(this.addCodeFile);
+    media_files.forEach(this.addMediaFile.bind(this));
   }
 
   connectedCallback()
@@ -122,9 +130,6 @@ class HexFiles extends HTMLElement
             id="media-file-input"
             multiple="multiple"
             accept=".png, .jpg, .jpeg, .gif, image/*">
-          <button id="media-upload-btn">
-            Upload
-          </button>
         </div>
       </div>
     `;
@@ -223,29 +228,42 @@ class HexFiles extends HTMLElement
     file_input.addEventListener(
       "change",
       async () =>
-        {
-          if (file_input.files?.length > 0 && confirm("Upload?"))
-            {
-              let code_files = await mcp.store_and_upload_code_files(
-                file_input.files
-              );
-              code_files.forEach(this.addCodeFile.bind(this));
-              file_input.value = null;
-            }
-          }
-        )
-        
-    let media_file_input = shadow.querySelector("#file-input");
-    shadow.querySelector("#media-upload-btn").addEventListener(
-      "click",
-      () =>
       {
-        mcp.store_and_upload_media_files(
-          shadow.querySelector("#media-file-input").files
-        );
-      }
-    )
+        if (file_input.files?.length > 0 && confirm("Upload?"))
+          {
+            let code_files = await mcp.store_and_upload_code_files(
+              file_input.files
+            );
+            code_files.forEach(this.addCodeFile.bind(this));
+            file_input.value = null;
+          }
+        }
+      )
+        
+    let media_file_input = shadow.querySelector("#media-file-input");
+    media_file_input.addEventListener(
+      "change",
+      async () =>
+      {
+        if (media_file_input.files?.length > 0 && confirm("Upload?"))
+          {
+            let media_files = await mcp.store_and_upload_media_files(
+              media_file_input.files
+            );
+            media_files.forEach(this.addMediaFile.bind(this));
+            media_file_input.value = null;
+          }
+        }
+      );
 
+    shadow.querySelector("#media-file-display").addEventListener(
+      "dblclick",
+      async () =>
+      {
+        console.log(this.#selectedIndex);
+      }
+    );
+    
     shadow.querySelector("#code-file-new-btn").addEventListener(
       "click",
       async () =>
