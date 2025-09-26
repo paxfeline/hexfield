@@ -96,9 +96,6 @@ class HexFiles extends HTMLElement
               id="file-input"
               multiple="multiple"
               accept=".html, .css, .js">
-            <button id="code-file-upload-btn">
-              Upload
-            </button>
           </div>
           <div class="file-code-other-controls">
             <button id="code-file-delete-btn">
@@ -205,14 +202,19 @@ class HexFiles extends HTMLElement
       this.loadFileList.bind(this)
     );
 
-    shadow.querySelector("#code-file-upload-btn").addEventListener(
-      "click",
+    let file_input = shadow.querySelector("#file-input")
+    file_input.addEventListener(
+      "change",
       async () =>
       {
-        let code_files = await mcp.store_and_upload_code_files(
-          shadow.querySelector("#file-input").files
-        );
-        code_files.forEach(this.addCodeFile.bind(this));
+        if (file_input.files?.length > 0 && confirm("Upload files?"))
+        {
+          let code_files = await mcp.store_and_upload_code_files(
+            file_input.files
+          );
+          code_files.forEach(this.addCodeFile.bind(this));
+          file_input.value = null;
+        }
       }
     )
 
