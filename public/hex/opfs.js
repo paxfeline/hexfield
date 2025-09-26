@@ -18,7 +18,7 @@ export async function store_media_file(file)
 export async function get_proj_dir(create = false)
 {
   const sp = util.search_params();
-  const userId = sp.get("project[owner]");
+  const userId = sp.get("project[owner_id]");
   const projectName = sp.get("project[name]");
 
   const opfsRoot = await navigator.storage.getDirectory();
