@@ -122,7 +122,7 @@ class HexFiles extends HTMLElement
       <div class="file-section">
         Media files:
         <div>
-          <select size=5 id="media-file-display"></select>
+          <select size=4 id="media-file-display"></select>
         </div>
         <div>
           <input

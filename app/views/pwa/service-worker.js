@@ -15,7 +15,7 @@ const getOPFSDirs = async (userId, projectName) =>
   const opfsRoot = await navigator.storage.getDirectory();
   const userDirectoryHandle = await opfsRoot.getDirectoryHandle(userId);
   const projectDir = await userDirectoryHandle?.getDirectoryHandle(projectName);
-  const mediaDir = await projectDir?.getDirectoryHandle("media");
+  const mediaDir = await projectDir?.getDirectoryHandle("media", { create: true });
   return [projectDir, mediaDir];
 }
 
@@ -38,18 +38,30 @@ const networkFirst = async ({ request, preloadResponsePromise, fallbackUrl }) =>
 
     console.log(error, request);
 
-    let m = request.url.match(/.+\/web\/([^/]+)\/([^/]+)/);
+    let m = request.url.match(/.+\/web\/([^/]+)\/([^/]+)\/([^/]+)(?:\/)?(.*)/);
     if (m)
     {
-      const [_, userId, projectName] = m;
+      const [_, userId, projectName, p1, p2] = m;
       const [projectDir, mediaDir] = await getOPFSDirs(userId, projectName);
       try
       {
-
+        let fileHandle;
+        if (p2)
+        {
+          console.log("should be 'media':", p1);
+          fileHandle = await mediaDir.getFileHandle(p2, { create: true, });
+        }
+        else
+        {
+          fileHandle = await projectDir.getFileHandle(p1, { create: true, });
+        }
+        const file = await fileHandle.getFile();
+        const data = await file.arrayBuffer();
+        return new Response(data);
       }
       catch (innerError)
       {
-
+        console.log(innerError);
       }
     }
 
