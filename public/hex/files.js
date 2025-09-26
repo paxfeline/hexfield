@@ -207,11 +207,12 @@ class HexFiles extends HTMLElement
 
     shadow.querySelector("#code-file-upload-btn").addEventListener(
       "click",
-      () =>
+      async () =>
       {
-        mcp.store_and_upload_code_files(
+        let code_files = await mcp.store_and_upload_code_files(
           shadow.querySelector("#file-input").files
         );
+        code_files.forEach(this.addCodeFile.bind(this));
       }
     )
 

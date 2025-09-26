@@ -6,6 +6,7 @@ export async function store_code_file(file)
 {
   let data = await file.arrayBuffer();
   store_code_file_data(file.name, data);
+  return data;
 }
 
 export async function store_media_file(file)

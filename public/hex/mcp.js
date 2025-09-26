@@ -58,10 +58,16 @@ export function remHexEvent(e, cb)
 
 // coordinate OPFS and Google Cloud storage
 
-export function store_and_upload_code_files(files)
+export async function store_and_upload_code_files(files)
 {
-  Array.from(files).forEach(file => opfs.store_code_file(file));
-  api.upload_code_files(files);
+  Array.from(files).forEach(
+    async file =>
+    {
+      let data = await opfs.store_code_file(file);
+      let text = new TextDecoder().decode(data);
+      file_data[file.name] = text;
+    })
+  return await api.upload_code_files(files);
 }
 
 export function store_and_upload_media_files(files)
