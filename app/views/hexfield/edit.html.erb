@@ -36,12 +36,12 @@ hex-tabs
 
 
 <div id="user-div">
-  <div>User: <%= @user.name %></div>
-  <div>
-    <% if @user.present? %>
-    <%= link_to "Sign out", "/users/sign_out", data: { turbo_method: :delete } %> 
-    <% end %>
-  </div>
+  <% if @user.present? %>
+    <div>User: <%= @user.name %></div>
+    <div>
+      <%= link_to "Sign out", "/users/sign_out", data: { turbo_method: :delete } %> 
+    </div>
+  <% end %>
 </div>
 
 </div>
