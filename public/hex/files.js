@@ -141,6 +141,7 @@ class HexFiles extends HTMLElement
       #root
       {
         display: flex;
+        gap: 1rem;
       }
       
       .file-section

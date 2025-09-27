@@ -99,6 +99,8 @@ class HexTabs extends HTMLElement
         flex: 1;
         /* min-height: 0%; -> moved to hex-tabs element */
         overflow: auto;
+        border: 0.2rem solid black;
+        border-top-width: 0;
       }
 
       #tab-bodies > *
@@ -115,10 +117,15 @@ class HexTabs extends HTMLElement
     // Attach the created elements to the shadow dom
     shadow.appendChild(style);
     shadow.appendChild(root);
+    
+    const tab_bodies = shadow.querySelector("#tab-bodies");
+    this.tab_bodies = tab_bodies;
+    tab_bodies.append(...this.children);
 
+    const tab_header = shadow.querySelector("#tab-header");
     if (!this.hasAttribute("no-tabs"))
     {
-      const tabs = Array.from(this.children).map(
+      const tabs = Array.from(tab_bodies.children).map(
         (el, ind) =>
         {
           const tab = document.createElement("div");
@@ -129,17 +136,39 @@ class HexTabs extends HTMLElement
         }
       );
       
-      const tab_header = shadow.querySelector("#tab-header");
       this.tab_header = tab_header;
       tab_header.append(...tabs);
     }
+    else
+    {
+      tab_header.style.display = "none";
+      tab_bodies.style.borderWidth = "0";
+    }
     
-    const tab_bodies = shadow.querySelector("#tab-bodies");
-    this.tab_bodies = tab_bodies;
-    tab_bodies.append(...this.children);
-
     if (tab_bodies.children.length > 0)
       this.selectedIndex = 0;
+
+    /////////
+    // Options for the observer (which mutations to observe)
+    const config = { attributes: false, childList: true, subtree: false };
+
+    // Callback function to execute when mutations are observed
+    const callback = (mutationList, observer) =>
+    {
+      for (const mutation of mutationList)
+      {
+        if (mutation.type === "childList")
+        {
+          console.log("A child node has been added or removed.");
+        }
+      }
+    };
+
+    // Create an observer instance linked to the callback function
+    const observer = new MutationObserver(callback);
+
+    // Start observing the target node for configured mutations
+    observer.observe(this, config);
   }
 }
 
