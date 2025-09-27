@@ -32,11 +32,13 @@
 #sidebar
 {
   width: 20%;
+  flex-shrink: 0;
 }
 
 #workspace
 {
   flex: 1;
+  overflow: hidden;
 }
 </style>
 
@@ -112,6 +114,8 @@ const view = new EditorView({
     html()
   ]
 })
+
+window.cm = view;
 
 mcp.register_html_editor(view);
 </script>
