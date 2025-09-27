@@ -23,7 +23,7 @@ class HexTabs extends HTMLElement
 
   get selectedTabTab()
   {
-    return this.tab_header.children[this.#selectedIndex];
+    return this.tab_header?.children[this.#selectedIndex];
   }
 
   set selectedIndex(i)
@@ -31,13 +31,13 @@ class HexTabs extends HTMLElement
     if (this.#selectedIndex !== null)
     {
       this.selectedTabBody.removeAttribute("selected");
-      this.selectedTabTab.removeAttribute("selected");
+      this.selectedTabTab?.removeAttribute("selected");
     }
     
     this.#selectedIndex = i;
     
     this.selectedTabBody.setAttribute("selected", "");
-    this.selectedTabTab.setAttribute("selected", "");
+    this.selectedTabTab?.setAttribute("selected", "");
   }
 
   connectedCallback()
@@ -52,8 +52,8 @@ class HexTabs extends HTMLElement
     root.part = "root"; // for CSS
 
     root.innerHTML = `
-      <div id="tab-header"></div>
-      <div id="tab-bodies"></div>
+      <div id="tab-header" part="header"></div>
+      <div id="tab-bodies" part="bodies"></div>
     `;
 
     // Create some CSS to apply to the shadow dom
@@ -116,24 +116,26 @@ class HexTabs extends HTMLElement
     shadow.appendChild(style);
     shadow.appendChild(root);
 
-    const tabs = Array.from(this.children).map(
-      (el, ind) =>
-      {
-        const tab = document.createElement("div");
-        tab.className = "tab-tab";
-        tab.innerHTML = el.getAttribute("tab");
-        tab.addEventListener("click", () => this.selectedIndex = ind);
-        return tab;
-      }
-    );
-
-    const tab_header = shadow.querySelector("#tab-header");
+    if (!this.hasAttribute("no-tabs"))
+    {
+      const tabs = Array.from(this.children).map(
+        (el, ind) =>
+        {
+          const tab = document.createElement("div");
+          tab.className = "tab-tab";
+          tab.innerHTML = el.getAttribute("tab");
+          tab.addEventListener("click", () => this.selectedIndex = ind);
+          return tab;
+        }
+      );
+      
+      const tab_header = shadow.querySelector("#tab-header");
+      this.tab_header = tab_header;
+      tab_header.append(...tabs);
+    }
+    
     const tab_bodies = shadow.querySelector("#tab-bodies");
-
-    this.tab_header = tab_header;
     this.tab_bodies = tab_bodies;
-
-    tab_header.append(...tabs);
     tab_bodies.append(...this.children);
 
     if (tab_bodies.children.length > 0)
