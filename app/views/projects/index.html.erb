@@ -9,6 +9,7 @@
     <%= render project %>
     <p>
       <%= link_to "Show this project", project %>
+      <%= link_to "Edit this project", edit_path("project[owner_id]" => project.owner_id, "project[name]" => project.name) %>
     </p>
   <% end %>
 </div>
