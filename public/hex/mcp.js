@@ -133,6 +133,11 @@ export async function create_code_file()
   }
 }
 
+export async function update_project()
+{
+  api.update_project();
+}
+
 // initial actions:
 
 // retrieve project info (file list) from backend.

@@ -8,8 +8,11 @@
   <% @projects.each do |project| %>
     <%= render project %>
     <p>
-      <%= link_to "Show this project", project %>
-      <%= link_to "Edit this project", edit_path("project[owner_id]" => project.owner_id, "project[name]" => project.name) %>
+      <%# link_to "Show this project", project %>
+      <%= link_to "Edit this project", edit_path(
+        "project[owner_id]" => project.owner_id,
+        "project[name]" => project.name,
+        "project[visibility]" => if project.visibility == 'vis_public' then 1 else 0 end) %>
     </p>
   <% end %>
 </div>

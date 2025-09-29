@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
-  before_action :set_project, only: %i[ show edit update destroy ]
-  before_action :set_visibility_enum, only: %i[ create update ]
+  before_action :set_project, only: %i[ show edit destroy ]
+  before_action :set_visibility_enum, only: %i[ create ]
 
   # GET /projects or /projects.json
   def index
@@ -42,10 +42,17 @@ class ProjectsController < ApplicationController
 
   # PATCH/PUT /projects/1 or /projects/1.json
   def update
+    puts params.inspect
+    @project = Project.find_by(name: params[:id])
+    params[:project][:owner_id] = current_user.id
+    params[:project][:name] = params[:id]
+    set_visibility_enum
+    puts params.inspect
     respond_to do |format|
       if @project.update(project_params)
-        format.html { redirect_to @project, notice: "Project was successfully updated." }
-        format.json { render :show, status: :ok, location: @project }
+        #format.html { redirect_to @project, notice: "Project was successfully updated." }
+        #format.json { render :show, status: :ok, location: @project }
+        return render json: { status: :ok, location: @project }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @project.errors, status: :unprocessable_entity }

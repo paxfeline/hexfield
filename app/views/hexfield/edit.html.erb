@@ -47,11 +47,18 @@
 <div id="header">
 
 <h1>Hexfield</h1>
-<%# if @user_signed_in %>
 
+<div id="vis-div" style="text-align: center; display: none">
+  Visibility:
+  <select id="vis-sel">
+    <option value="0">Private</option>
+    <option value="1">Public</option>
+  </select>
+</div>
 
 <div id="user-div">
-  <% if @user.present? %>
+  <%# if @user.present? %>
+  <% if @user_signed_in %>
     <div>User: <%= @user.name %></div>
     <div>
       <%= link_to "Sign out", "/users/sign_out", data: { turbo_method: :delete } %> 
@@ -115,7 +122,23 @@ const view = new EditorView({
   ]
 })
 
-window.cm = view;
+window.cm = view; // TODO: remove after debugging
 
 mcp.register_html_editor(view);
+
+const vis_sel = document.querySelector("#vis-sel");
+const params = new URLSearchParams(document.location.search);
+vis_sel.selectedIndex = params.get("project[visibility]");
+vis_sel.addEventListener(
+  "change",
+  () =>
+  {
+    const sp = new URLSearchParams(document.location.search);
+    sp.set("project[visibility]", vis_sel.selectedIndex);
+    window.history.replaceState(null, "", `edit?${sp}`);
+    mcp.update_project();
+  }
+);
+const vis_div = document.querySelector("#vis-div");
+vis_div.style.display = "initial";
 </script>
