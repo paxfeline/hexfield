@@ -40,6 +40,14 @@
   flex: 1;
   overflow: hidden;
 }
+
+#render
+{
+  width: 100%;
+  height: 100%;
+  border-width: 0;
+  display: block;
+}
 </style>
 
 <div id="main">
@@ -85,6 +93,30 @@
   </div>
   <div tab="Builder">
     TBD
+  </div>
+  <div tab="Render">
+    <iframe id="render"></iframe>
+    <script>
+      const render = document.querySelector("#render");
+      const scriptPar = document.currentScript.parentElement;
+      scriptPar.onshow =
+        () =>
+        {
+          render.contentWindow.location.reload();
+        };
+
+      // TODO: move to scriptPar and have tabs iterate and run
+      const parPar = scriptPar.parentElement.init =
+        mcp =>
+        {
+          mcp.regHexEvent(mcp.events.load_code_file_text,
+            file =>
+            {
+              render.contentWindow.location = `/web/${file}`;
+            }
+          );
+        };
+    </script>
   </div>
 </hex-tabs>
 

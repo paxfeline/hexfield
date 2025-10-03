@@ -38,6 +38,9 @@ class HexTabs extends HTMLElement
     
     this.selectedTabBody.setAttribute("selected", "");
     this.selectedTabTab?.setAttribute("selected", "");
+
+    console.log(this.selectedTabBody?.onshow);
+    this.selectedTabBody?.onshow?.();
   }
 
   connectedCallback()
@@ -144,6 +147,9 @@ class HexTabs extends HTMLElement
       tab_header.style.display = "none";
       tab_bodies.style.borderWidth = "0";
     }
+
+    // run init functions
+    this.init?.(mcp);
     
     if (tab_bodies.children.length > 0)
       this.selectedIndex = 0;
