@@ -111,13 +111,18 @@ class HexfieldController < ApplicationController
     project_name = params[:project]
     project = Project.find_by(name: project_name)
 
-    render plain: "Project is not public", status: :unauthorized and return unless project.vis_public?
+    userid = params[:user]
+
+    # puts "pgcf: #{current_user&.id} ? #{userid}"
+
+    if !project.vis_public? && current_user&.id != Integer(userid)
+      render plain: "Project is not public", status: :unauthorized and return
+    end
 
     bucket = get_bucket
 
     file_name = params[:file]
     frmt = params[:format]
-    userid = params[:user]
     file_path = "#{userid}/#{project_name}/#{file_name}#{".#{frmt}" if frmt}"
 
     file = bucket.file file_path
