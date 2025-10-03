@@ -1,7 +1,5 @@
 import * as util from "/hex/util.js";
 
-export const foo = "foo42";
-
 export async function store_code_file(file)
 {
   let data = await file.arrayBuffer();

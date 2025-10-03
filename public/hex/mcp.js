@@ -20,6 +20,7 @@ export const events = {};
   "connection_restored",
   "sw_msg",
   "load_code_file_text",
+  "update_file_data",
 ]
 .forEach(x => events[x] = Symbol(x));
 
@@ -66,8 +67,16 @@ export async function store_and_upload_code_files(files)
       let data = await opfs.store_code_file(file);
       let text = new TextDecoder().decode(data);
       file_data[file.name] = text;
-    })
-  return await api.upload_code_files(files);
+    });
+  const resp = await api.upload_code_files(files);
+  // this could be done more efficiently,
+  // but it's broken up to enable better error handling
+  Array.from(files).forEach(
+    async file =>
+    {
+      last_saved_data[file.name] = file_data[file.name];
+    });
+  return resp;
 }
 
 export async function store_and_upload_media_files(files)
@@ -94,8 +103,11 @@ export function register_html_editor(editor)
   regHexEvent(events.load_code_file_text,
     data =>
     {
-      console.log(data);
-      current_file_name = data.split("/").pop();;
+      // store any changes before switching
+      const code = html_editor.state.doc.toString();
+      file_data[current_file_name] = code;
+      //console.log(data);
+      current_file_name = data.split("/").pop();
       update_html_code_editor(file_data[current_file_name]);
     });
 }
@@ -119,6 +131,9 @@ export async function update_html_code_file()
   const file = await opfs.store_code_file_data(current_file_name, code);
   file_data[current_file_name] = code;
   await api.upload_code_files([file]);
+  last_saved_data[current_file_name] = code;
+  
+  fireEvent(events.update_file_data);
 }
 
 export async function create_code_file()
@@ -147,6 +162,7 @@ export const files = await api.get_project();
 // if we're offline, files could be null.
 // if it exists, load the files into the opfs.
 export const file_data = {};
+export const last_saved_data = {};
 if (files)
 {
   fireEvent(events.files_loaded, files);
@@ -155,7 +171,8 @@ if (files)
   for (const file of files[0])
   {
     const name = file.split("/").pop();
-    file_data[name] = await api.get_code_file(name);
-    await opfs.store_code_file_data(name, file_data[name]); // maybe skip await?
+    const data = await api.get_code_file(name);
+    file_data[name] = last_saved_data[name] = data;
+    await opfs.store_code_file_data(name, last_saved_data[name]); // maybe skip await?
   }
 }

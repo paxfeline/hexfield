@@ -39,8 +39,10 @@ class HexFiles extends HTMLElement
   addCodeFile(code_file, ind)
   {
     const row = this.file_row_template.cloneNode(true);
-    row.querySelector(".file-row-name").innerHTML = code_file.split("/").pop();
+    const file_name = code_file.split("/").pop();
+    row.querySelector(".file-row-name").innerHTML = file_name;
     row.setAttribute("value", code_file);
+    row.setAttribute("name", file_name);
     row.firstElementChild.addEventListener("click",
       () =>
       {
@@ -284,6 +286,26 @@ class HexFiles extends HTMLElement
       () =>
       {
         mcp.update_html_code_file();
+      }
+    )
+    
+    mcp.regHexEvent(mcp.events.update_file_data,
+      () =>
+      {
+        Array.from(this.file_display.children).forEach(
+          file_row =>
+          {
+            const file = file_row.getAttribute("name");
+            if (mcp.file_data[file] != mcp.last_saved_data[file])
+            {
+              file_row.style.border = "1px solid red";
+            }
+            else
+            {
+              file_row.style.border = "initial";
+            }
+          }
+        )
       }
     )
   }

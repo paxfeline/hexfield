@@ -111,6 +111,7 @@ const fixedHeightEditor = EditorView.theme({
 let root = document.querySelector("#workspace").shadowRoot;
 let body = document.querySelector("#workspace").shadowRoot.querySelector("#body");
 
+let deb_upd;
 const view = new EditorView({
   //doc: "Start document",
   parent: body,
@@ -118,9 +119,26 @@ const view = new EditorView({
   extensions: [
     basicSetup,
     fixedHeightEditor,
-    html()
+    html(),
+    EditorView.updateListener.of(
+      v =>
+      {
+        if (v.docChanged)
+        {
+          if (deb_upd) clearTimeout(deb_upd);
+          deb_upd = setTimeout(
+            () =>
+            {
+                const code = view.state.doc.toString();
+                mcp.file_data[mcp.current_file_name] = code;
+                mcp.fireEvent(mcp.events.update_file_data);
+            },
+            500 // delay
+          );
+        }
+      })
   ]
-})
+});
 
 window.cm = view; // TODO: remove after debugging
 
