@@ -96,6 +96,7 @@ export function install_sw(sw)
 }
 
 export let html_editor;
+export let current_file_url;
 export let current_file_name;
 export function register_html_editor(editor)
 {
@@ -107,6 +108,7 @@ export function register_html_editor(editor)
       const code = html_editor.state.doc.toString();
       file_data[current_file_name] = code;
       //console.log(data);
+      current_file_url = data;
       current_file_name = data.split("/").pop();
       update_html_code_editor(file_data[current_file_name]);
     });

@@ -115,6 +115,9 @@ class HexFiles extends HTMLElement
             <button id="code-file-save-btn">
               Save
             </button>
+            <button id="code-file-view-btn">
+              View
+            </button>
             <button id="code-file-delete-btn">
               Delete
             </button>
@@ -301,6 +304,14 @@ class HexFiles extends HTMLElement
       () =>
       {
         mcp.update_html_code_file();
+      }
+    )
+
+    shadow.querySelector("#code-file-view-btn").addEventListener(
+      "click",
+      () =>
+      {
+        open(`/web/${mcp.current_file_url}`);
       }
     )
     

@@ -38,7 +38,8 @@ const networkFirst = async ({ request, preloadResponsePromise, fallbackUrl }) =>
 
     console.log(error, request);
 
-    let m = request.url.match(/.+\/web\/([^/]+)\/([^/]+)\/([^/]+)(?:\/)?(.*)/);
+    //let m = request.url.match(/.+\/web\/([^/]+)\/([^/]+)\/([^/]+)(?:\/)?(.*)/);
+    let m = request.url.match(/https?:\/\/(?:[\w\d]+\.)?(?:[\w\d]+\.[\w\d]+)\/web\/([^/]+)\/([^/]+)\/([^/]+)(?:\/)?(.*)/);
     if (m)
     {
       const [_, userId, projectName, p1, p2] = m;
