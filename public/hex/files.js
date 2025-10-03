@@ -163,6 +163,7 @@ class HexFiles extends HTMLElement
       .file-row
       {
         display: flex;
+        position: relative;
       }
 
       .file-row.changed::after
