@@ -165,6 +165,20 @@ class HexFiles extends HTMLElement
         display: flex;
       }
 
+      .file-row.changed::after
+      {
+        content: '';
+        display: block;
+        width: 0.75rem;
+        height: 0.75rem;
+        background-color: red;
+        border-radius: 100%;
+        position: absolute;
+        right: 0.75rem;
+        top: calc(50% - 0.5rem);
+        border: 1px solid darkred;
+      }
+
       .file-row-name
       {
         flex: 1;
@@ -298,11 +312,11 @@ class HexFiles extends HTMLElement
             const file = file_row.getAttribute("name");
             if (mcp.file_data[file] != mcp.last_saved_data[file])
             {
-              file_row.style.border = "1px solid red";
+              file_row.classList.add("changed");
             }
             else
             {
-              file_row.style.border = "initial";
+              file_row.classList.remove("changed");
             }
           }
         )
