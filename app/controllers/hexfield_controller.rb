@@ -56,12 +56,12 @@ class HexfieldController < ApplicationController
       file_name = "#{userid}/#{project}/#{name}"
 
       ret.push file_name
-      
+
       file = bucket.create_file upfile.path, file_name
-      
+
       puts "Uploaded #{upfile.path} as #{file.name} in bucket hexfield"
     end
-    
+
     render json: { uploaded: ret }
   end
   

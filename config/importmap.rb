@@ -27,3 +27,6 @@ pin "@lezer/css", to: "@lezer--css.js" # @1.2.1
 pin "@lezer/html", to: "@lezer--html.js" # @1.3.10
 pin "@lezer/javascript", to: "@lezer--javascript.js" # @1.5.1
 pin "@lezer/lr", to: "@lezer--lr.js" # @1.4.2
+pin "parse5" # @8.0.0
+pin "entities/decode", to: "entities--decode.js" # @6.0.1
+pin "entities/escape", to: "entities--escape.js" # @6.0.1
