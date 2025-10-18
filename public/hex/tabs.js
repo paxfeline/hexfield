@@ -39,7 +39,7 @@ class HexTabs extends HTMLElement
     this.selectedTabBody.setAttribute("selected", "");
     this.selectedTabTab?.setAttribute("selected", "");
 
-    console.log(this.selectedTabBody?.onshow);
+    console.log("tab onshow cb?:", this.selectedTabBody?.onshow);
     this.selectedTabBody?.onshow?.();
   }
 

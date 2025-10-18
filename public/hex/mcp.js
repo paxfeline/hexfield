@@ -45,7 +45,7 @@ export function regHexEvent(e, cb)
 
   // catch up with previous events
   let fe = firedEvents[e];
-  console.log(fe);
+  console.log("firing stored event:", e, fe);
   if (fe)
     cb(fe)
 }

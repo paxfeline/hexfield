@@ -136,8 +136,7 @@ function hexOnLine()
 
 self.addEventListener("message", (event) => {
   console.log(`Message received: ${event.data}`);
-  if (event.data === "fetch timeout")
-    _hexOnLine = false;
-  if (event.data === "fetch success")
-    _hexOnLine = true;
+  
+  // TODO: do
+  // see https://developer.mozilla.org/en-US/docs/Web/API/Client/postMessage
 });
