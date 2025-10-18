@@ -1,0 +1,417 @@
+body
+{
+	font-family: monospace;
+}
+
+html
+{
+	--set-color: gray;
+	--property-dropzone-color: lightgray;
+	--attribute-dropzone-color: white;
+}
+
+.blue-set
+{
+	--set-color: lightblue;
+}
+
+.purple-set
+{
+	--set-color: mediumpurple;
+}
+
+.green-set
+{
+	--set-color: lightgreen;
+}
+
+.gold-set
+{
+	--set-color: gold;
+}
+
+.red-set
+{
+	--set-color: lightcoral;
+}
+
+.el 
+{
+	border: 1em solid var(--set-color);
+	border-width: 1em 0em 1em 1em;
+	overflow: hidden;
+	margin: 1em 0.25em;
+	border-radius: 1em;
+	
+	display: inline-block;
+	min-width: 12em;
+}
+
+.el:before
+{
+	content: attr(data-type);
+	background-color: var(--set-color);
+    padding-right: 1em;
+	display: block;
+	position: relative;
+	white-space: nowrap;
+}
+
+.el:not([data-self-closing]):before
+{
+    border-radius: 0 0 1em;
+}
+
+#code .el:not([data-self-closing]):before
+{
+    border-radius: initial;
+}
+
+#code .el:not([data-self-closing]) > details
+{
+    border-radius: 0 0 1em;
+}
+
+.el .el
+{
+    margin: 0 0.25em;
+}
+
+.el > details
+{
+	background-color: var(--set-color);
+	padding: 0.25em;
+}
+
+#code .el
+{
+	margin: 0 0.25em;
+}
+
+.hidden
+{
+	border-width: 0;
+	border-radius: initial;
+	margin: 0 !important;
+}
+
+.hidden:before
+{
+	content: none;
+}
+
+.text-content:before
+{
+	border-radius: initial !important;
+}
+
+#code .text-content > details
+{
+    border-radius: initial !important;
+}
+
+.el[data-type='[text]']:before
+{
+	content: none;
+}
+
+.builder-custom-el
+{
+	background-color: var(--set-color);
+}
+
+#builder-trash
+{
+	float: right;
+	width: 3em;
+	height: 3em;
+	margin: 1em;
+	border: 1em solid red;
+}
+
+#bank, #code
+{
+	/*width: calc(45% - 2em);*/
+	width: calc(30% - 2em);
+	max-height: 75vh;
+	overflow: scroll;
+	display: inline-block;
+	border: 1px solid black;
+	padding: 1em;
+	vertical-align: top;
+}
+
+#code
+{
+	width: calc(60% - 2em);
+	padding: 0 1em;
+}
+
+#render, #render-code
+{
+	border: 1px solid black;
+	min-height: 2em;
+	margin: 2em;
+	border-radius: 1em;
+}
+
+#render-title
+{
+	background-color: black;
+	color: white;
+}
+
+#render-title
+{
+	padding: 1em;
+	border-radius: 1em 1em 0 0;
+}
+
+#render-code
+{
+	padding: 1em;
+	border-radius: 1em;
+}
+
+#render-body
+{
+	display: block;
+	border-radius: 0 0 1em 1em;
+    width: 100%;
+    height: 80vh;
+    border-width: 0;
+}
+
+#render-title:before
+{
+	content: 'title: ';
+}
+
+.btn {
+	padding: 0.1em;
+	margin: 0.1em;
+}
+
+.dropzone
+{
+	height: 3em;
+}
+
+#code > .dropzone:only-child
+{
+	height: 20em;
+}
+
+.builder-element-group
+{
+	border: 0.5em solid blue;
+	border-radius: 1em;
+	padding: 0.5em;
+	margin-bottom: 1em;
+}
+
+/* file bank */
+
+.file-remove-btn
+{
+	display: inline-block;
+}
+
+#file-bank, #media-bank
+{
+    display: inline-block;
+    padding: 0.5em;
+    border: 0.25em solid black;
+    width: 40vw;
+    height: calc(20vh - 4em);
+    margin-bottom: 1em;
+    vertical-align: top;
+}
+
+#file-list, #media-list
+{
+	height: calc(100% - 2em);
+    overflow: auto;
+}
+
+#file-controls, media-controls
+{
+	margin-top: 0.5em;
+}
+
+.file-entry
+{
+	margin: 0.25em;
+	padding: 0.25em;
+}
+
+#upload-file-btn
+{
+    width: 10em;
+    color: transparent;
+}
+
+/* attributes */
+
+.builder-attr-name
+{
+    width: 5em;
+}
+
+.builder-attr-value
+{
+    width: 15em;
+}
+
+.attr
+{
+    background-color: white;
+    padding: 0.5em;
+    vertical-align: bottom;
+    position: relative;
+    border: .5em solid blue;
+	border-radius: 50%/1em;
+	width: max-content;
+	margin-bottom: 0.25em;
+}
+
+.attr-style-label
+{
+    padding-top: 1em;
+    display: inline-block;
+}
+
+.builder-attribute-dropzone
+{
+	background-color: var(--attribute-dropzone-color);
+	border-radius: 50%/1em;
+    padding: 0.5em;
+    display: inline-block;
+    position: relative;
+    height: 3.3em;
+	width: 100%;
+	vertical-align: middle;
+	margin-right: 1em;
+	box-sizing: border-box;
+}
+
+.builder-attribute-set
+{
+	display: inline-block;
+	vertical-align: middle;
+	width: 100%;
+	box-sizing: border-box;
+	background-color: var(--set-color);
+	padding: 0.5em 1em 0.5em 0;
+}
+
+#bank > .attr, #bank > .property
+{
+	margin-bottom: 1em;
+}
+
+#bank > .property
+{
+	margin: 1em 2em;
+}
+
+/* properties */
+
+.property
+{
+    background-color: white;
+    padding: 0.5em;
+    vertical-align: bottom;
+    position: relative;
+    margin: 0 1em 0.25em;
+    height: 1.5em;
+    border: .5em solid purple;
+	border-width: 0.45em 0;
+	border-radius: 0.25em;
+	width: max-content;
+}
+
+.property::before {
+    position: absolute;
+    left: -1.1em;
+    content: "";
+    width: 1.9em;
+    height: 1.9em;
+    top: 0;
+	border: .5em solid purple;
+	transform: scaleX(0.75) rotate(45deg) ;
+	border-width: 0 0 .5em .5em;
+	background-image: linear-gradient(45deg, white 0 40%, transparent 40% 100%);
+	border-radius: 0.25em;
+}
+
+.property::after {
+    position: absolute;
+    right: -1.1em;
+    content: "";
+    width: 1.9em;
+    height: 1.9em;
+    top: 0;
+	border: .5em solid purple;
+	transform: scaleX(0.75) rotate(45deg) ;
+	border-width: .5em .5em 0 0;
+	background-image: linear-gradient(45deg, transparent 0 60%, white 60% 100%);
+	border-radius: 0.25em;
+}
+
+.builder-property-name
+{
+	width: 5em;
+}
+
+.builder-property-value
+{
+	15em;
+}
+
+.builder-property-dropzone
+{
+	background-color: var(--property-dropzone-color);
+    padding: 0.5em;
+    display: inline-block;
+    position: relative;
+    margin: 0.25em 1em;
+    height: 1.5em;
+	width: 10em;
+	vertical-align: middle;
+}
+
+.builder-property-dropzone::before {
+    position: absolute;
+    left: -1em;
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 1.25em solid transparent;
+    border-right: 1em solid var(--property-dropzone-color);
+    border-bottom: 1.25em solid transparent;
+    top: 0;
+}
+
+.builder-property-dropzone::after {
+    position: absolute;
+    right: -1em;
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 1.25em solid transparent;
+    border-left: 1em solid var(--property-dropzone-color);
+    border-bottom: 1.25em solid transparent;
+    top: 0;
+}
+
+.builder-property-set
+{
+	display: inline-block;
+	vertical-align: top;
+}
+
+#bank input
+{
+	width: 5em;
+}

@@ -1,0 +1,253 @@
+<html>
+<head>
+<title>HTML Builder</title>
+<link rel="stylesheet" href="builder.css">
+<script src="builder-globals.js"></script>
+<script src="builder.js"></script>
+<script src="builder-trash.js"></script>
+<script src="builder-attributes.js"></script>
+<script src="builder-properties.js"></script>
+<script src="builder-files.js" defer></script>
+</head>
+<body>
+
+<div id="templates" hidden>
+
+<div class="file-entry" data-file-index="">
+<span class="file-name"></span>
+<button class="file-remove-btn" onclick="select_file(event)">Select</button>
+<button class="file-remove-btn">Delete</button>
+</div>
+
+<div class="media-entry" data-media-index="">
+<span class="media-name"></span>
+<img class="media-preview" width="50" height="50" src="">
+<button class="media-remove-btn">Delete</button>
+</div>
+
+<div class="builder-attribute-set">
+<div class="builder-attribute-container"></div>
+<div class="builder-attribute-dropzone" ondragenter="onAttributeDragEnter(event)" ondragleave="onAttributeDragLeave(event)" ondrop="drop_attribute_handler(event)" ondragover="dragover_attribute_handler(event)"></div>
+</div>
+
+<div class="builder-property-set">
+<div class="builder-property-container"></div>
+<div class="builder-property-dropzone" ondragenter="onPropertyDragEnter(event)" ondragleave="onPropertyDragLeave(event)" ondrop="drop_property_handler(event)" ondragover="dragover_property_handler(event)"></div>
+</div>
+
+</div>
+
+<div> <!-- just to keep these above the bank/code divs -->
+
+<div id="file-bank">
+<div id="file-list">
+<div class="file-entry" data-file-index="0" style="background-color: lightblue">
+<span class="file-name">index.html</span>
+<button class="file-remove-btn" onclick="select_file(event)">Select</button>
+<button class="file-remove-btn">Delete</button>
+</div>
+</div>
+<div id="file-controls">
+<button id="new-file-btn" onclick="create_new_file()">new file</button>
+Upload: <input type="file" accept=".html,.htm" multiple id="upload-file-btn" onchange="upload_file(event)">
+</div>
+</div>
+
+<div id="media-bank">
+<div id="media-list">
+</div>
+<div id="media-controls">
+Upload: <input type="file" accept="image/*" multiple id="upload-media-btn" onchange="upload_media(event)">
+</div>
+</div>
+
+<div style="display: inline-block">
+<button onclick="toggle_draggable(event)">fix blocks</button><br>
+<button id="builder-render-btn" class="builder-btn" onclick="renderCode(); render();">render!</button><br>
+<button id="builder-save-btn" class="builder-btn" onclick="save_code();">export</button>
+</div>
+
+</div>
+
+<div id="bank" ondragenter="onTrashDragEnter(event)" ondragleave="onTrashDragLeave(event)" ondrop="drop_trash_handler(event)" ondragover="dragover_trash_handler(event)">
+
+<div class="property" data-property-name="[custom]" draggable="true" ondragstart="dragstart_property_handler(event)">
+<input class="builder-property-name" onchange="update_value(event)">: <input class="builder-property-value" onchange="update_value(event)">
+</div>
+
+<div class="property" data-property-name="font-size" draggable="true" ondragstart="dragstart_property_handler(event)">
+font-size: <input class="builder-property-value" onchange="update_value(event)">
+</div>
+
+<div class="attr" data-attribute-name="[custom]" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+<input class="builder-attr-name" oninput="update_value(event)"> = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
+</div>
+
+<div class="attr" data-attribute-name="href" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+href = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
+</div>
+
+<div class="attr" data-attribute-name="src" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+src = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
+</div>
+
+<div class="attr" data-attribute-name="width" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+width = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
+</div>
+
+
+<div class="attr" data-attribute-name="style" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+<span class="attr-style-label">style = </span>
+<div class="builder-property-set">
+<div class="builder-property-container"></div>
+<div class="builder-property-dropzone" ondragenter="onPropertyDragEnter(event)" ondragleave="onPropertyDragLeave(event)" ondrop="drop_property_handler(event)" ondragover="dragover_property_handler(event)"></div>
+</div>
+</div>
+
+<div class="attr" data-attribute-name="style" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+<span class="attr-style-label">style = </span>
+<div class="builder-property-set">
+<div class="builder-property-container">
+<div class="property" data-property-name="font-size" draggable="true" ondragstart="dragstart_move_property_handler(event)">
+font-size: <input class="builder-property-value" onchange="update_value(event)">
+</div>
+</div>
+<div class="builder-property-dropzone" ondragenter="onPropertyDragEnter(event)" ondragleave="onPropertyDragLeave(event)" ondrop="drop_property_handler(event)" ondragover="dragover_property_handler(event)"></div>
+</div>
+</div>
+
+<div class="el blue-set" data-type="!DOCTYPE html" data-self-closing data-no-attributes draggable="true" ondragstart="dragstart_handler(event)"></div>
+
+<br>
+
+<div class="el blue-set" data-type="html" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el" data-type="[text]" data-no-attributes draggable="true" ondragstart="dragstart_handler(event)">
+<textarea onchange="renderCode(); render();"></textarea>
+</div>
+
+<details open class="builder-element-group">
+<summary>Document metadata</summary>
+
+<div class="el purple-set" data-type="head" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el purple-set text-content" data-type="title" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="el hidden" data-type="[text]">
+<textarea onchange="renderCode(); render();"></textarea>
+</div>
+</div>
+
+<div class="el purple-set" data-type="link" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
+</div>
+
+<div class="el purple-set text-content" data-type="style" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="el hidden" data-type="[text]">
+<textarea onchange="renderCode(); render();"></textarea>
+</div>
+</div>
+
+<div class="el purple-set text-content" data-type="script" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="el hidden" data-type="[text]">
+<textarea onchange="renderCode(); render();"></textarea>
+</div>
+</div>
+
+</details>
+
+<details open class="builder-element-group">
+<summary>Document content</summary>
+
+<div class="el green-set" data-type="body" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<!-- this is here (h1 below) because the clone function needs it empty -->
+
+<div class="el green-set" data-type="h1" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el green-set" data-type="h1" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+<div class="el green-set" data-type="[text]" data-no-attributes draggable="true" ondragstart="dragstart_handler(event)">
+<textarea onchange="renderCode(); render();"></textarea>
+</div>
+<div class="dropzone"></div>
+</div>
+
+<div class="el green-set" data-type="div" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el green-set" data-type="span" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el green-set" data-type="img" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
+</div>
+
+<div class="el green-set" data-type="p" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el green-set" data-type="nav" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+</details>
+
+<details open class="builder-element-group">
+<summary>Other elements</summary>
+
+<div class="el gold-set" data-type="a" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el gold-set" data-type="form" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="dropzone"></div>
+</div>
+
+<div class="el gold-set" data-type="input" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
+</div>
+
+<div class="el gold-set text-content" data-type="option" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="el hidden" data-type="[text]">
+<textarea onchange="renderCode(); render();"></textarea>
+</div>
+</div>
+
+<div class="el gold-set" data-type="br" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
+</div>
+
+</details>
+
+<div class="el red-set text-content" data-type="[custom]" draggable="true" ondragstart="dragstart_handler(event)">
+<div class="builder-custom-el">Type: <input class="builder-custom-type" onchange="renderCode(); render();"></div>
+<div class="dropzone"></div>
+</div>
+
+<div class="el red-set" data-type="[custom-empty]" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
+<div class="builder-custom-el">Type: <input class="builder-custom-type" onchange="renderCode(); render();"></div>
+</div>
+
+</div>
+
+<div id="code">
+<div class="dropzone" ondragleave="onDragLeave(event)" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></div>
+</div>
+
+
+<pre id="render-code">
+</pre>
+
+<div id="render">
+<div id="render-title"></div>
+<iframe id="render-body" onload="fix_urls(event)"></iframe>
+</div>
+
+</body>
+</html>
