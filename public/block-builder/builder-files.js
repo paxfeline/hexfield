@@ -1,135 +1,80 @@
-/*
-const builder_globals =
-	{
-		dragged: null,
-		file_sets: {
-			'default': ['index']
-		},
-		selected: 'default',
-		selectedFileIndex: 0,
-	};
-*/
-
-export function load_local_filesets()
-{
-	const file_data_str = localStorage.getItem('HEXFIELD-FILE-DATA');
-	
-	if (file_data_str)
-	{
-		const file_data = JSON.parse(file_data_str);
-	
-		builder_globals.file_data = file_data;
-		
-		// html files
-		const cur_file_set = builder_globals.cur_set;
-	
-		const file_list = document.querySelector('#file-list');
-		file_list.innerHTML = '';
-	
-		for (var i = 0; i < cur_file_set.length; i++)
-		{
-			
-			create_file_div( cur_file_set[i].name, i );
-		}
-		
-		// create object URL for all files in all sets
-		for (const file_set of Object.values(file_data.file_sets))
-		{
-			for (var i = 0; i < file_set.length; i++)
-			{
-				const file = file_set[i];
-				file.url = URL.createObjectURL(new Blob([file.content], {type: 'text/html'}));
-			}
-		}
-	
-		const sel_file = file_list.querySelector(`[data-file-index='${builder_globals.file_data.selectedFileIndex}']`);
-		sel_file.style.backgroundColor = "lightblue";
-		load_selected_code();
-		
-		// media
-		const media_set = builder_globals.cur_media;
-	
-		const media_list = document.querySelector('#media-list');
-		//media_list.innerHTML = '';
-	
-		for (var i = 0; i < media_set.length; i++)
-		{
-			create_media_div( media_set[i].name, i, media_set[i].url );
-		}
-		
-		// render selected file
-		render();
-	}
-}
-
-export function create_file_div(name, index)
-{
-	const templates = document.querySelector('#templates');
-	
-	const file_entry = templates.querySelector('.file-entry').cloneNode(true);
-	file_entry.setAttribute('data-file-index', index);
-	
-	file_entry.querySelector('.file-name').innerHTML = name;
-	
-	const file_list = document.querySelector('#file-list');
-	file_list.append(file_entry);
-}
-
-export function save_local_filesets()
-{
-	const file_data_str = JSON.stringify(builder_globals.file_data);
-	localStorage.setItem('HEXFIELD-FILE-DATA', file_data_str);
-}
-
-export function change_select(new_ind)
-{
-	const file_list = document.querySelector('#file-list');
-	
-	const cur_ind = builder_globals.file_data.selectedFileIndex;
-	
-	const cur_file = file_list.querySelector(`[data-file-index='${cur_ind}']`);
-	cur_file.style.backgroundColor = null;
-	
-	builder_globals.file_data.selectedFileIndex = new_ind;
-	
-	const new_file = file_list.querySelector(`[data-file-index='${new_ind}']`);
-	new_file.style.backgroundColor = "lightblue";
-	
-	load_selected_code();
-	
-	renderCode()
-	render();
-}
-
-export function load_selected_code()
-{
-	const file = builder_globals.cur_file;
-	
-	load_code( file.content );
-}
-
-export function replace_all(text, search, replace)
-{
-	return text.split(search).join(replace);
-}
+import { parse } from "parse5";
 
 export function load_code(code_str)
 {
-	//const re = /<(\/?)(!?[-_\w]+)((?:\s*\w+(?:=(["']\w))))>/g;
-	const re = /<(\/?)(!?[-_\w]+)(.*?)>/g;
+	/* Explanation of RegEx:
+		<						match opening <
+		(\/?) 			match a / if present (group 1)
+		([-\.\w]+)	match tag name (group 2)
+		(\s*)				match any space after the tag name (group 3) (capturing to enable exact re-creating of tag)
+		(						group 4: all attributes (and space)
+		(?:					non-capturing group: a single attribute, w/ any space after
+		[...]+			match attribute name (negated set based on specs)
+		(?:					non-capturing group: the value part of the attribute, incl. equals)
+		\s*=\s*			match = sign (with space allowed around it)
+		(?:					non-capturing group (needed to | value with or without quotation marks)
+		(["'])			match quotation mark (group 5)
+		.*?					match attribute value (zero-or-more instances of any character, non-greedy)
+		\5					match closing quotation mark
+		|						or (allowing values with or without quotes)
+		[...]+			match attribute value (negated set based on specs)
+		))?					match non-capturing group (the value part of the attribute...) if present
+		\s*					match any/all space after the attribute
+		)*					match non-capturing group (a single attribute w/ any space after), zero-or-more times
+		)						close of group 4 (everything after tag name and space, i.e. all attributes)
+		>						match closing >
+
+		WHY??
+			To properly handle a tag like: <img alt="<this is allowed>">
+
+			Thanks to:
+		  https://stackoverflow.com/questions/925994/what-characters-are-allowed-in-an-html-attribute-name
+			https://stackoverflow.com/questions/5320177/what-values-can-i-put-in-an-html-attribute-value
+
+			Sp'excerpt:
+			https://html.spec.whatwg.org/multipage/syntax.html#syntax-attributes
+
+			"Attributes have a name and a value. Attribute names must consist of one or more characters other than
+			controls, U+0020 SPACE, U+0022 ("), U+0027 ('), U+003E (>), U+002F (/), U+003D (=), and noncharacters.
+			In the HTML syntax, attribute names, even those for foreign elements, may be written with any mix of
+			ASCII lower and ASCII upper alphas.
+
+			"Attribute values are a mixture of text and character references, except with the additional restriction 
+			that the text cannot contain an ambiguous ampersand.
+			...
+			"Unquoted attribute value syntax
+
+			"The attribute name, followed by zero or more ASCII whitespace, followed by a single
+			U+003D EQUALS SIGN character, followed by zero or more ASCII whitespace, followed by
+			the attribute value, which, in addition to the requirements given above for attribute values,
+			must not contain any literal ASCII whitespace, any U+0022 QUOTATION MARK characters ("),
+			U+0027 APOSTROPHE characters ('), U+003D EQUALS SIGN characters (=),
+			U+003C LESS-THAN SIGN characters (<), U+003E GREATER-THAN SIGN characters (>), or
+			U+0060 GRAVE ACCENT characters (`), and must not be the empty string.
+			...
+			"[CHAR (" or ')]-quoted attribute value syntax
+
+    	"The attribute name, followed by zero or more ASCII whitespace, followed by
+			a single U+003D EQUALS SIGN character, followed by zero or more ASCII whitespace, followed by
+			a single [CHAR], followed by the attribute value, which, in addition to the requirements
+			given above for attribute values, must not contain any literal [CHAR], and finally
+			followed by a second single [CHAR]."
+	*/
+
+	const re = /<(\/?)([-\.\w]+)(\s*)((?:[^\s"'>\/=]+(?:\s*=\s*(?:(["']).*?\5|[^\s"'=<>`]+))?\s*)*)>/g;
 	code_str = code_str.replaceAll(re,
-		(match, p1, p2, p3) =>
+		(_, ending_tag, tag_name, space, attributes) =>
 		{
-			if  (p1 == '/')
+			if  (ending_tag == '/')
 				return `</div>`;
 			else
 			{
 				var tn;
-				if (builder_globals.empty_elements.includes(p2))
+				if (builder_globals.empty_elements.includes(tag_name))
 					tn = 'br';
 				else
 					tn = 'div';
-				return `<${tn} data-converting-type='${p2}'${p3}>`;
+				return `<${tn} data-converting-type='${tag_name}'${space+attributes}>`;
 			}
 		}); // "<$1div data-converting-type='$2'$3>");
 		
@@ -357,120 +302,3 @@ export function addAttributes(source, dest)
 		}
 	}
 }
-
-export function create_new_file()
-{
-	var name = prompt('Enter a file name');
-	
-	if (name)
-	{
-		if (!(name.slice(-5) == '.html' || name.slice(-4) == '.htm'))
-			name += '.html';
-	
-		const sel_ind = builder_globals.cur_set.length;
-		builder_globals.cur_set.push({name, content: ''});
-		
-		create_file_div(name, sel_ind);
-		change_select(sel_ind);
-	}
-}
-
-export function select_file(event)
-{
-	change_select( event.target.parentElement.getAttribute('data-file-index') );
-}
-
-export function upload_file(event)
-{
-	const fileList = event.target.files;
-	
-	for (let i = 0; i < fileList.length; i++)
-	{
-		const file = fileList[i];
-		const reader = new FileReader();
-		reader.onload = function(evt)
-		{
-			//console.log(evt.target.result);
-			
-			const sel_ind = builder_globals.cur_set.length;
-			builder_globals.cur_set.push({name: file.name, content: evt.target.result});
-		
-			create_file_div(file.name, sel_ind);
-			
-			if (i == fileList.length - 1)
-				change_select(sel_ind);
-		};
-		reader.readAsText(file);
-	}
-	
-	save_local_filesets()
-}
-
-export function create_media_div(name, index, url)
-{
-	const templates = document.querySelector('#templates');
-	
-	const file_entry = templates.querySelector('.media-entry').cloneNode(true);
-	file_entry.setAttribute('data-media-index', index);
-	
-	file_entry.querySelector('.media-name').innerHTML = name;
-	file_entry.querySelector('.media-preview').src = url;
-	
-	const file_list = document.querySelector('#media-list');
-	file_list.append(file_entry);
-}
-
-export function upload_media(event)
-{
-	const fileList = event.target.files;
-	
-	for (let i = 0; i < fileList.length; i++)
-	{
-		const file = fileList[i];
-		const reader = new FileReader();
-		reader.onload = function(evt)
-		{
-			//console.log(evt.target.result);
-			
-			const sel_ind = builder_globals.cur_media.length;
-			builder_globals.cur_media.push({name: file.name, url: evt.target.result});
-		
-			create_media_div(file.name, sel_ind, evt.target.result);
-		};
-		reader.readAsDataURL(file);
-	}
-	
-	save_local_filesets()
-}
-
-
-
-
-
-/* AT STARTUP, LOAD LOCAL FILE SETS */
-
-load_local_filesets();
-
-
-
-
-
-
-
-/*
-
-<div class="file-entry">
-<span class="file-name">index</span>
-</div>
-<button class="file-remove-btn">X</button>
-</div>
-
-
-<div id="file-bank">
-<div id="file-list"></div>
-<div id="file-controls">
-<button id="new-file-btn"></button>
-<button id="upload-file-btn"></button>
-</div>
-</div>
-*/
