@@ -21,6 +21,7 @@ export const events = {};
   "sw_msg",
   "load_code_file_text",
   "update_file_data",
+  "builder_built",
 ]
 .forEach(x => events[x] = Symbol(x));
 

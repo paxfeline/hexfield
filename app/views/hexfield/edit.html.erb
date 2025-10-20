@@ -6,6 +6,7 @@
   %>
   <script src="/hex/files.js" type="module"></script>
   <script src="/hex/tabs.js" type="module"></script>
+  <script src="/builder/builder-elements.js" type="module"></script>
 <% end %>
 
 <style>
@@ -77,20 +78,54 @@
 <div id="middle">
 
 <div id="sidebar">
-  <hex-tabs no-tabs>
+  <hex-tabs no-tabs id="sidebar-tabs">
     <hex-tabs>
       <div tab="One">One</div>
       <div tab="Two">Two</div>
     </hex-tabs>
+    <builder-bank></builder-bank>
   </hex-tabs>
 </div>
 
 <hex-tabs id="workspace">
   <div tab="Code">
     <div id="body"></div>
+    <script>
+      const tabs = document.querySelector("#sidebar-tabs");
+      let scriptPar = document.currentScript.parentElement;
+      scriptPar.onshow =
+        () =>
+        {
+          console.log("show this!");
+          tabs.selectedIndex = 0;
+        };
+
+      // TODO: move to scriptPar and have tabs iterate and run
+      let parPar = scriptPar.parentElement.init =
+        mcp =>
+        {
+          // anything?
+        };
+    </script>
   </div>
   <div tab="Builder">
     TBD
+    <script>
+      scriptPar = document.currentScript.parentElement;
+      scriptPar.onshow =
+        () =>
+        {
+          console.log("show this!");
+          tabs.selectedIndex = 1;
+        };
+
+      // TODO: move to scriptPar and have tabs iterate and run
+      parPar = scriptPar.parentElement.init =
+        mcp =>
+        {
+          // anything?
+        };
+    </script>
   </div>
   <div tab="Render">
     <style>
@@ -105,15 +140,16 @@
     <iframe id="render"></iframe>
     <script>
       const render = document.querySelector("#render");
-      const scriptPar = document.currentScript.parentElement;
+      scriptPar = document.currentScript.parentElement;
       scriptPar.onshow =
         () =>
         {
           render.contentWindow.location.reload();
+          tabs.selectedIndex = 0;
         };
 
       // TODO: move to scriptPar and have tabs iterate and run
-      const parPar = scriptPar.parentElement.init =
+      parPar = scriptPar.parentElement.init =
         mcp =>
         {
           mcp.regHexEvent(mcp.events.load_code_file_text,

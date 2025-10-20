@@ -1,4 +1,4 @@
-import { parse } from "parse5";
+import * as mcp from "/hex/mcp.js";
 
 export function load_code(code_str)
 {
@@ -6,7 +6,7 @@ export function load_code(code_str)
 		<						match opening <
 		(\/?) 			match a / if present (group 1)
 		([-\.\w]+)	match tag name (group 2)
-		(\s*)				match any space after the tag name (group 3) (capturing to enable exact re-creating of tag)
+		(\s+)				match any space after the tag name (group 3) (capturing to enable re-creating of tag)
 		(						group 4: all attributes (and space)
 		(?:					non-capturing group: a single attribute, w/ any space after
 		[...]+			match attribute name (negated set based on specs)
@@ -61,9 +61,10 @@ export function load_code(code_str)
 			followed by a second single [CHAR]."
 	*/
 
-	const re = /<(\/?)([-\.\w]+)(\s*)((?:[^\s"'>\/=]+(?:\s*=\s*(?:(["']).*?\5|[^\s"'=<>`]+))?\s*)*)>/g;
+	//const re = /<(\/?)([-\.\w]+)(\s+)((?:[^\s"'>\/=]+(?:\s*=\s*(?:(["']).*?\5|[^\s"'=<>`]+))?\s*)*)>/g;
+	const re = /<(\/?)([-\.\w]+)((?:\s+[^\t\s\/>"'=]+(?:\s*=\s*(?:(["']).*?\4|[^\t\s\/>"'=]+))?)*\s*)>/g;
 	code_str = code_str.replaceAll(re,
-		(_, ending_tag, tag_name, space, attributes) =>
+		(_, ending_tag, tag_name, attributes) =>
 		{
 			if  (ending_tag == '/')
 				return `</div>`;
@@ -74,23 +75,15 @@ export function load_code(code_str)
 					tn = 'br';
 				else
 					tn = 'div';
-				return `<${tn} data-converting-type='${tag_name}'${space+attributes}>`;
+				return `<${tn} data-converting-type='${tag_name}'${attributes}>`;
 			}
 		}); // "<$1div data-converting-type='$2'$3>");
 		
 	const div = document.createElement('div');
 	
-	/*
-	code_str = replace_all(code_str, '!DOCTYPE html', 'doctype');
-	code_str = replace_all(code_str, 'html', 'html-tag');
-	code_str = replace_all(code_str, 'head', 'head-tag');
-	code_str = replace_all(code_str, 'body', 'body-tag');
-	*/
-	
 	div.innerHTML = code_str;
-	
-	const code = document.querySelector('#code');
-	code.innerHTML = '';
+
+	mcp.fireEvent(mcp.events.builder_built, div.children);
 	
 	// better to use a template with a dropzone?
 	const botdz = document.createElement('div');
