@@ -1,5 +1,3 @@
-import * as mcp from "/hex/mcp.js";
-
 // Create a class for the element
 class BuilderElement extends HTMLElement
 {
@@ -65,6 +63,9 @@ class BuilderBank extends HTMLElement
   connectedCallback()
   {
     // Create a shadow root
+    // This can happen twice if element is moved
+    if (this.shadowRoot) return;
+    
     const shadow = this.attachShadow({ mode: "open" });
     this.shadow = shadow;
 
@@ -124,7 +125,9 @@ font-size: <input class="builder-property-value" onchange="update_value(event)">
 
 <br>
 
+<!--
 <builder-element set="blue" type="html"></builder-element>
+-->
 
 <div class="el blue-set" data-type="html" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="dropzone"></div>
