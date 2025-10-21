@@ -178,7 +178,7 @@ font-size: <input class="builder-property-value" onchange="update_value(event)">
 </div>
 
 <!-- this is here (h1 below) because the clone function needs it empty -->
-<!-- 2025-10-20: what does the above comment mean?? -->
+<!-- (see builder-files#addAttributes) -->
 
 <div class="el green-set" data-type="h1" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="dropzone"></div>
