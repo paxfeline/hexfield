@@ -64,6 +64,16 @@
     border-radius: 0 0 1em;
 }
 
+#code .el
+{
+	display: block;
+}
+
+#code .dropzone
+{
+	display: block;
+}
+
 #code .el:not([data-self-closing]):before
 {
     border-radius: initial;

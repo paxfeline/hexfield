@@ -3,7 +3,7 @@
 export function dragstart_handler(ev)
 {
 	console.log("dsh");
-	ev.dataTransfer.setData("application/hexfield-element", ev.target.outerHTML);
+	ev.dataTransfer.setData("application/hexfield-element", ev.target.parentElement.innerHTML);
 	ev.dataTransfer.dropEffect = "copy";
 	builder_globals.dragged = null;
 	
@@ -64,7 +64,7 @@ export function drop_handler(ev)
 	 //ev.target.parentElement.style.removeProperty('--set-color');
 	ev.target.parentElement.style.filter = '';
 
-	 ev.target.after( temp.firstElementChild );
+	 ev.target.after( ...temp.children );
 	 
 	 dropify(rent);
  
