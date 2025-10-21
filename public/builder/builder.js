@@ -35,8 +35,12 @@ export function dragstart_move_handler(ev)
 	ev.stopPropagation();
 }
 
-export function drop_handler(ev) {
+builder_globals.handlers.dragstartmove = dragstart_move_handler;
+
+export function drop_handler(ev)
+{
  if (!drop_ok(ev)) return;
+
  ev.preventDefault();
  // Get the id of the target and add the moved element to the target's DOM
  const data = ev.dataTransfer.getData("application/hexfield-element");
@@ -76,6 +80,8 @@ export function drop_handler(ev) {
 	 render();
 }
 
+builder_globals.handlers.drop = drop_handler;
+
 export function dragover_handler(ev)
 {
 	//console.log('doh', ev);
@@ -100,6 +106,8 @@ export function dragover_handler(ev)
 	ev.preventDefault();
 }
 
+builder_globals.handlers.dragover = dragover_handler;
+
 export function onDragLeave(event)
 {
 	event.target.style.background = '';
@@ -109,8 +117,12 @@ export function onDragLeave(event)
 	//event.target.parentElement.style.removeProperty('--set-color');
 }
 
+builder_globals.handlers.dragleave = onDragLeave;
+
 export function dropify(wut)
 	{
+		return; // TODO: 86
+
 		const zones = wut.querySelectorAll(".dropzone");
 		zones.forEach(
 			el =>
@@ -124,6 +136,8 @@ export function dropify(wut)
 
 export function trim_dropzones(el)
 {
+	return; // TODO: 86
+	
 	var trav = el;
 	while (trav)
 	{

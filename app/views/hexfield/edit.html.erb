@@ -9,7 +9,6 @@
   <script src="/builder/builder-elements.js" type="module"></script>
   <script src="/hex/files.js" type="module"></script>
   <script src="/hex/tabs.js" type="module"></script>
-<% end %>
 
 <style>
 
@@ -50,6 +49,9 @@
   overflow: hidden;
 }
 </style>
+
+<% end %>
+
 
 <div id="main">
 
@@ -111,7 +113,18 @@
     </script>
   </div>
   <div tab="Builder">
-    TBD
+
+  <link rel="stylesheet" href="/builder/builder.css">
+  
+    <div id="code">
+      <div
+        class="dropzone"
+        ondrop="builder_globals.handlers.drop(event)"
+        ondragover="builder_globals.handlers.dragover(event)"
+        ondragleave="builder_globals.handlers.dragleave(event)">
+        Drop code here
+      </div>
+    </div>
     <script>
       scriptPar = document.currentScript.parentElement;
       scriptPar.onshow =

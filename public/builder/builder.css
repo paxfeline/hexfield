@@ -3,7 +3,7 @@
 	display: block;
 }
 
-#root
+#builder-root
 {
 	font-family: monospace;
 	--property-dropzone-color: lightgray;

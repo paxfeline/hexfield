@@ -18,30 +18,36 @@ class BuilderElement extends HTMLElement
 
     // Create spans
     const root = document.createElement("div");
-    root.id = "root";
+    root.id = "builder-root";
 
     const block = document.createElement("div");
-
+    
     root.append(block);
-
+    
     const dz = document.createElement("div");
     dz.className = "dropzone";
-
+    dz.setAttribute("ondrop", "builder_globals.handlers.drop(event)");
+    dz.setAttribute("ondragover", "builder_globals.handlers.dragover(event)");
+    dz.setAttribute("ondragleave", "builder_globals.handlers.dragleave(event)");
+    
     root.append(dz);
-
+    
     let type = this.getAttribute("type");
+
+    if (type === '[custom]' || type === '[custom-empty]')
+      block.innerHTML = '<div class="builder-custom-el">Type: <input class="builder-custom-type"></div>';
 
     // empty tags won't have any content
     if (builder_globals.empty_elements.includes(type) || builder_globals.text_elements.includes(type))
     {
       // ...unless they contain a text node
       if (builder_globals.text_elements.includes(type))
-        block.innerHTML = `
+        block.innerHTML += `
           <textarea></textarea>
         `;
     }
     else
-      block.innerHTML = `
+      block.innerHTML += `
         <div class="dropzone"></div>
         <slot></slot>
       `;
@@ -60,9 +66,13 @@ class BuilderElement extends HTMLElement
     // <tag set="foo"> -> <div class="el foo-set">
     block.className = "el " + this.getAttribute("set") + "-set";
 
-    // used for embedded [text] nodes
+    // used for embedded [text] nodes (on the node)
     if (this.hasAttribute("hidden"))
       block.classList.add("hidden");
+
+    // used for embedded [text] nodes (on the parent)
+    if (builder_globals.text_elements.includes(type))
+      block.classList.add("text-content");
     
     // copy "type" attribute to "data-type":
     // <tag type="foo"> -> <div data-type="foo">
@@ -82,6 +92,97 @@ class BuilderElement extends HTMLElement
 }
 
 customElements.define("builder-element", BuilderElement);
+
+class BuilderAttribute extends HTMLElement
+{
+  constructor()
+  {
+    // Always call super first in constructor
+    super();
+  }
+
+  connectedCallback()
+  {
+    // Create a shadow root
+    // This can happen twice if element is moved
+    if (this.shadowRoot) return;
+    
+    const shadow = this.attachShadow({ mode: "open" });
+    this.shadow = shadow;
+
+    // Create spans
+    const root = document.createElement("div");
+    root.id = "root";
+
+    const block = document.createElement("div");
+    
+    root.append(block);
+    
+    const dz = document.createElement("div");
+    dz.className = "dropzone";
+    
+    root.append(dz);
+    
+    let type = this.getAttribute("type");
+
+    if (type === '[custom]' || type === '[custom-empty]')
+      block.innerHTML = '<div class="builder-custom-el">Type: <input class="builder-custom-type"></div>';
+
+    // empty tags won't have any content
+    if (builder_globals.empty_elements.includes(type) || builder_globals.text_elements.includes(type))
+    {
+      // ...unless they contain a text node
+      if (builder_globals.text_elements.includes(type))
+        block.innerHTML += `
+          <textarea></textarea>
+        `;
+    }
+    else
+      block.innerHTML += `
+        <div class="dropzone"></div>
+        <slot></slot>
+      `;
+
+    // ex:
+    //  <div class="el blue-set" data-type="html" draggable="true" ondragstart="dragstart_handler(event)">
+
+    block.draggable = "true";
+    // TODO: ensure necessary changes:
+    block.setAttribute("ondragstart", "builder_globals.handlers.dragstart(event)");
+
+    if (builder_globals.no_attributes.includes(type))
+      block.dataset.noAttributes = ""; // maybe not needed? maybe for CSS?
+    
+    // copy "set" attribute to class:
+    // <tag set="foo"> -> <div class="el foo-set">
+    block.className = "el " + this.getAttribute("set") + "-set";
+
+    // used for embedded [text] nodes (on the node)
+    if (this.hasAttribute("hidden"))
+      block.classList.add("hidden");
+
+    // used for embedded [text] nodes (on the parent)
+    if (builder_globals.text_elements.includes(type))
+      block.classList.add("text-content");
+    
+    // copy "type" attribute to "data-type":
+    // <tag type="foo"> -> <div data-type="foo">
+    block.dataset.type = type;
+    
+    // Create some CSS to apply to the shadow dom
+    const style = document.createElement("link");
+    style.href = "/builder/builder.css";
+    style.rel = "stylesheet";
+
+    // Attach the created elements to the shadow dom
+    shadow.appendChild(style);
+    shadow.appendChild(root);
+
+    
+  }
+}
+
+customElements.define("builder-attribute", BuilderAttribute);
 
 // Create a class for the element
 class BuilderBank extends HTMLElement
@@ -132,115 +233,78 @@ class BuilderBank extends HTMLElement
 </builder-element>
 </builder-element>
 
-<div class="el purple-set text-content" data-type="title" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="el hidden" data-type="[text]">
-<textarea></textarea>
-</div>
-</div>
+<builder-element set="purple" type="link"></builder-element>
 
-<div class="el purple-set" data-type="link" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
-</div>
-
-<div class="el purple-set text-content" data-type="style" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="el hidden" data-type="[text]">
+<builder-element set="purple" type="style">
+<builder-element type="[text]" hidden>
 <textarea></textarea>
-</div>
-</div>
+</builder-element>
+</builder-element>
 
-<div class="el purple-set text-content" data-type="script" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="el hidden" data-type="[text]">
+<builder-element set="purple" type="script">
+<builder-element type="[text]" hidden>
 <textarea></textarea>
-</div>
-</div>
+</builder-element>
+</builder-element>
 
 </details>
 
 <details open class="builder-element-group">
 <summary>Document content</summary>
 
-<div class="el green-set" data-type="body" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="dropzone"></div>
-</div>
+<builder-element set="green" type="body"></builder-element>
 
 <!-- this is here (h1 below) because the clone function needs it empty -->
 <!-- (see builder-files#addAttributes) -->
 
-<div class="el green-set" data-type="h1" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="dropzone"></div>
-</div>
+<builder-element set="green" type="h1"></builder-element>
 
-<div class="el green-set" data-type="h1" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="dropzone"></div>
-<div class="el green-set" data-type="[text]" data-no-attributes draggable="true" ondragstart="dragstart_handler(event)">
-<textarea onchange="renderCode(); render();"></textarea>
-</div>
-<div class="dropzone"></div>
-</div>
+<builder-element set="green" type="h1">
+<builder-element type="[text]">
+<textarea></textarea>
+</builder-element>
+</builder-element>
 
-<div class="el green-set" data-type="div" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="dropzone"></div>
-</div>
+<builder-element set="green" type="div"></builder-element>
 
-<div class="el green-set" data-type="span" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="dropzone"></div>
-</div>
+<builder-element set="green" type="span"></builder-element>
 
-<div class="el green-set" data-type="img" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
-</div>
+<builder-element set="green" type="img"></builder-element>
 
-<div class="el green-set" data-type="p" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="dropzone"></div>
-</div>
+<builder-element set="green" type="p"></builder-element>
 
-<div class="el green-set" data-type="nav" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="dropzone"></div>
-</div>
+<builder-element set="green" type="nav"></builder-element>
 
 </details>
 
 <details open class="builder-element-group">
 <summary>Other elements</summary>
 
-<div class="el gold-set" data-type="a" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="dropzone"></div>
-</div>
+<builder-element set="gold" type="a"></builder-element>
 
-<div class="el gold-set" data-type="form" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="dropzone"></div>
-</div>
+<builder-element set="gold" type="form"></builder-element>
 
-<div class="el gold-set" data-type="input" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
-</div>
+<builder-element set="gold" type="input"></builder-element>
 
-<div class="el gold-set text-content" data-type="option" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="el hidden" data-type="[text]">
-<textarea onchange="renderCode(); render();"></textarea>
-</div>
-</div>
+<builder-element set="gold" type="option">
+<builder-element type="[text]">
+<textarea></textarea>
+</builder-element>
+</builder-element>
 
-<div class="el gold-set" data-type="br" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
-</div>
+<builder-element set="gold" type="br"></builder-element>
 
 </details>
 
-<div class="el red-set text-content" data-type="[custom]" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="builder-custom-el">Type: <input class="builder-custom-type" onchange="renderCode(); render();"></div>
-<div class="dropzone"></div>
-</div>
+<builder-element set="red" type="[custom]">
+</builder-element>
 
-<div class="el red-set" data-type="[custom-empty]" data-self-closing draggable="true" ondragstart="dragstart_handler(event)">
-<div class="builder-custom-el">Type: <input class="builder-custom-type" onchange="renderCode(); render();"></div>
-</div>
+<builder-element set="red" type="[custom-empty]">
+</builder-element>
 
 </div>
 
-<div class="property" data-property-name="[custom]" draggable="true" ondragstart="dragstart_property_handler(event)">
-<input class="builder-property-name" onchange="update_value(event)">: <input class="builder-property-value" onchange="update_value(event)">
-</div>
-
-<div class="property" data-property-name="font-size" draggable="true" ondragstart="dragstart_property_handler(event)">
-font-size: <input class="builder-property-value" onchange="update_value(event)">
-</div>
+<builder-attribute type="[custom]"></builder-attribute>
 
 <div class="attr" data-attribute-name="[custom]" draggable="true" ondragstart="dragstart_attribute_handler(event)">
 <input class="builder-attr-name" oninput="update_value(event)"> = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
@@ -258,13 +322,20 @@ src = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quo
 width = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
 </div>
 
-
 <div class="attr" data-attribute-name="style" draggable="true" ondragstart="dragstart_attribute_handler(event)">
 <span class="attr-style-label">style = </span>
 <div class="builder-property-set">
 <div class="builder-property-container"></div>
 <div class="builder-property-dropzone" ondragenter="onPropertyDragEnter(event)" ondragleave="onPropertyDragLeave(event)" ondrop="drop_property_handler(event)" ondragover="dragover_property_handler(event)"></div>
 </div>
+</div>
+
+<div class="property" data-property-name="[custom]" draggable="true" ondragstart="dragstart_property_handler(event)">
+<input class="builder-property-name" onchange="update_value(event)">: <input class="builder-property-value" onchange="update_value(event)">
+</div>
+
+<div class="property" data-property-name="font-size" draggable="true" ondragstart="dragstart_property_handler(event)">
+font-size: <input class="builder-property-value" onchange="update_value(event)">
 </div>
     `;
 
