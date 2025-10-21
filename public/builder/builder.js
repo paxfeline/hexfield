@@ -3,7 +3,6 @@
 export function dragstart_handler(ev)
 {
 	console.log("dsh");
-	// Add the target element's id to the data transfer object
 	ev.dataTransfer.setData("application/hexfield-element", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "copy";
 	builder_globals.dragged = null;
@@ -61,13 +60,11 @@ export function drop_handler(ev)
 		//temp.firstElementChild.prepend(attribute_set);
 	}
  
-	 const dz = document.createElement('div');
-	 dz.setAttribute('class', 'dropzone');
- 
 	 //--//ev.target.parentElement.style.borderColor = '';
 	 //ev.target.parentElement.style.removeProperty('--set-color');
 	ev.target.parentElement.style.filter = '';
-	 ev.target.replaceWith( dz.cloneNode(), temp.firstElementChild, dz.cloneNode() );
+
+	 ev.target.after( temp.firstElementChild );
 	 
 	 dropify(rent);
  
