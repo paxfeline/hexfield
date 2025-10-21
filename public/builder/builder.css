@@ -1,13 +1,9 @@
-body
+#root
 {
 	font-family: monospace;
-}
-
-html
-{
-	--set-color: gray;
 	--property-dropzone-color: lightgray;
 	--attribute-dropzone-color: white;
+	/*--set-color: gray;*/
 }
 
 .blue-set
@@ -37,7 +33,7 @@ html
 
 .el 
 {
-	border: 1em solid var(--set-color);
+	border: 1em solid var(--set-color, gray);
 	border-width: 1em 0em 1em 1em;
 	overflow: hidden;
 	margin: 1em 0.25em;
@@ -50,7 +46,7 @@ html
 .el:before
 {
 	content: attr(data-type);
-	background-color: var(--set-color);
+	background-color: var(--set-color, gray);
     padding-right: 1em;
 	display: block;
 	position: relative;
@@ -79,7 +75,7 @@ html
 
 .el > details
 {
-	background-color: var(--set-color);
+	background-color: var(--set-color, gray);
 	padding: 0.25em;
 }
 
@@ -117,7 +113,7 @@ html
 
 .builder-custom-el
 {
-	background-color: var(--set-color);
+	background-color: var(--set-color, gray);
 }
 
 #builder-trash
@@ -260,7 +256,7 @@ html
 
 .builder-attr-value
 {
-    width: 15em;
+    width: 5em;
 }
 
 .attr
@@ -301,7 +297,7 @@ html
 	vertical-align: middle;
 	width: 100%;
 	box-sizing: border-box;
-	background-color: var(--set-color);
+	background-color: var(--set-color, gray);
 	padding: 0.5em 1em 0.5em 0;
 }
 
@@ -366,7 +362,7 @@ html
 
 .builder-property-value
 {
-	width: 15em;
+	width: 5em;
 }
 
 .builder-property-dropzone

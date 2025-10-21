@@ -10,6 +10,9 @@ class BuilderElement extends HTMLElement
   connectedCallback()
   {
     // Create a shadow root
+    // This can happen twice if element is moved
+    if (this.shadowRoot) return;
+    
     const shadow = this.attachShadow({ mode: "open" });
     this.shadow = shadow;
 
@@ -26,11 +29,12 @@ class BuilderElement extends HTMLElement
     //  <div class="el blue-set" data-type="html" draggable="true" ondragstart="dragstart_handler(event)">
 
     root.draggable = "true";
-    root.ondragstart = "builder_globals.handlers.dragstart(event)"; // TODO: ensure necessary changes
+    // TODO: ensure necessary changes:
+    root.setAttribute("ondragstart", "builder_globals.handlers.dragstart(event)");
 
     // copy "set" attribute to class:
     // <tag set="foo"> -> <div class="el foo-set">
-    root.className = "el " + this.getAttribute("set"); + "-set";
+    root.className = "el " + this.getAttribute("set") + "-set";
     
     // copy "type" attribute to "data-type":
     // <tag type="foo"> -> <div data-type="foo">
@@ -39,7 +43,7 @@ class BuilderElement extends HTMLElement
     // Create some CSS to apply to the shadow dom
     const style = document.createElement("link");
     style.href = "/builder/builder.css";
-    style.ref = "stylesheet";
+    style.rel = "stylesheet";
 
     // Attach the created elements to the shadow dom
     shadow.appendChild(style);
@@ -63,6 +67,7 @@ class BuilderBank extends HTMLElement
   connectedCallback()
   {
     // Create a shadow root
+    // TODO: fix others to allow movement?
     // This can happen twice if element is moved
     if (this.shadowRoot) return;
     
@@ -125,9 +130,7 @@ font-size: <input class="builder-property-value" onchange="update_value(event)">
 
 <br>
 
-<!--
 <builder-element set="blue" type="html"></builder-element>
--->
 
 <div class="el blue-set" data-type="html" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="dropzone"></div>
@@ -250,7 +253,7 @@ font-size: <input class="builder-property-value" onchange="update_value(event)">
     // Create some CSS to apply to the shadow dom
     const style = document.createElement("link");
     style.href = "/builder/builder.css";
-    style.ref = "stylesheet";
+    style.rel = "stylesheet";
 
     // Attach the created elements to the shadow dom
     shadow.appendChild(style);
