@@ -199,6 +199,13 @@
 	height: 3em;
 }
 
+/* TODO: make sure works for bank and other: */
+
+.el + .dropzone
+{
+	display: none;
+}
+
 #code > .dropzone:only-child
 {
 	height: 20em;

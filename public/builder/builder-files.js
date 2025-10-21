@@ -216,7 +216,9 @@ export function load_element(el)
 export function addAttributes(source, dest)
 {
 	//console.log("aa", source);
-	if (!dest.hasAttribute("data-no-attributes"))
+	//if (!dest.hasAttribute("data-no-attributes"))
+	// chaning to not rely on these attributes
+	if (!builder_globals.no_attributes.includes(dest.dataset.type))
 	{
 		/*
 <div class="builder-attribute-set">

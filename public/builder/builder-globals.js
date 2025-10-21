@@ -12,8 +12,10 @@ export const builder_globals =
 		known_elements: ['!DOCTYPE html', 'html', 'head', 'body', 'link', 'body', 'h1', 'div', 'span', 'img', 'p', 'nav', 'form', 'input', 'option', 'br', 'a', ],
 		known_attributes: ['src', 'href', 'width', 'style', ],
 		known_properties: ['font-size', ],
-		empty_elements: ['[custom-empty]', '[text]', '!DOCTYPE', 'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr', ],
+		empty_elements: ['[custom-empty]', '[text]', '!DOCTYPE html', 'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr', ],
+		no_attributes: ['!DOCTYPE html', '[text]'],
 		dragged: null,
+        handlers: [], // filled in by other .js files
 	};
 
 window.builder_globals = builder_globals;

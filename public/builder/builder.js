@@ -1,3 +1,4 @@
+// TODO: undo module-ness?
 
 export function dragstart_handler(ev)
 {
@@ -10,6 +11,7 @@ export function dragstart_handler(ev)
 	ev.stopPropagation();
 }
 
+builder_globals.handlers.dragstart = dragstart_handler;
 
  // TODO: in this handler, set the value attribute explicitly so that it's copied
 export function dragstart_move_handler(ev)
@@ -46,7 +48,8 @@ export function drop_handler(ev) {
 	 temp.innerHTML = data;
 	 temp.firstElementChild.setAttribute("ondragstart", "dragstart_move_handler(event)");
 
-	if ( !builder_globals.dragged && !temp.firstElementChild.hasAttribute("data-no-attributes") ) 
+	//if ( !builder_globals.dragged && !temp.firstElementChild.hasAttribute("data-no-attributes") ) 
+	if ( !builder_globals.dragged && !builder_globals.no_attributes.includes(temp.firstElementChild.dataset.type) )
 	{
 		const templates = document.querySelector('#templates');
 		const attribute_set = templates.querySelector('.builder-attribute-set').cloneNode(true);
