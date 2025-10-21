@@ -55,10 +55,10 @@ export function drop_handler(ev)
 	//if ( !builder_globals.dragged && !temp.firstElementChild.hasAttribute("data-no-attributes") ) 
 	if ( !builder_globals.dragged && !builder_globals.no_attributes.includes(temp.firstElementChild.dataset.type) )
 	{
-		const templates = document.querySelector('#templates');
-		const attribute_set = templates.querySelector('.builder-attribute-set').cloneNode(true);
+		//const templates = document.querySelector('#templates');
+		//const attribute_set = templates.querySelector('.builder-attribute-set').cloneNode(true);
 		
-		temp.firstElementChild.prepend(attribute_set);
+		//temp.firstElementChild.prepend(attribute_set);
 	}
  
 	 const dz = document.createElement('div');
@@ -74,10 +74,11 @@ export function drop_handler(ev)
 	 if (builder_globals.dragged && !ev.shiftKey)
 		builder_globals.dragged.remove();
  
-	 trim_dropzones(document.querySelector("#code").firstElementChild);
+	 // no longer used
+	 //trim_dropzones(document.querySelector("#code").firstElementChild);
 	 
-	 renderCode();
-	 render();
+	 //renderCode();
+	 //render();
 }
 
 builder_globals.handlers.drop = drop_handler;
@@ -137,7 +138,7 @@ export function dropify(wut)
 export function trim_dropzones(el)
 {
 	return; // TODO: 86
-	
+
 	var trav = el;
 	while (trav)
 	{

@@ -48,7 +48,10 @@ class BuilderElement extends HTMLElement
     }
     else
       block.innerHTML += `
-        <div class="dropzone"></div>
+        <div class="dropzone"
+          ondrop="builder_globals.handlers.drop(event)"
+          ondragover="builder_globals.handlers.dragover(event)"
+          ondragleave="builder_globals.handlers.dragleave(event)"></div>
         <slot></slot>
       `;
 
@@ -112,16 +115,13 @@ class BuilderAttribute extends HTMLElement
 
     // Create spans
     const root = document.createElement("div");
-    root.id = "root";
+    root.id = "builder-root";
 
     const block = document.createElement("div");
     
     root.append(block);
+
     
-    const dz = document.createElement("div");
-    dz.className = "dropzone";
-    
-    root.append(dz);
     
     let type = this.getAttribute("type");
 
