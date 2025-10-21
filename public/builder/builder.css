@@ -1,9 +1,15 @@
+:host
+{
+	display: block;
+}
+
 #root
 {
 	font-family: monospace;
 	--property-dropzone-color: lightgray;
 	--attribute-dropzone-color: white;
 	/*--set-color: gray;*/
+	width: min-content;
 }
 
 .blue-set

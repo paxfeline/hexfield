@@ -20,10 +20,19 @@ class BuilderElement extends HTMLElement
     const root = document.createElement("div");
     root.id = "root";
 
-    root.innerHTML = `
-    <slot></slot>
-    <div class="dropzone"></div>
-    `;
+    let type = this.getAttribute("type");
+    if (builder_globals.empty_elements.includes(type))
+    {
+      if (builder_globals.text_elements.includes(type))
+        root.innerHTML = `
+          <textarea></textarea>
+        `;
+    }
+    else
+      root.innerHTML = `
+        <slot></slot>
+        <div class="dropzone"></div>
+      `;
 
     // ex:
     //  <div class="el blue-set" data-type="html" draggable="true" ondragstart="dragstart_handler(event)">
@@ -32,13 +41,16 @@ class BuilderElement extends HTMLElement
     // TODO: ensure necessary changes:
     root.setAttribute("ondragstart", "builder_globals.handlers.dragstart(event)");
 
+    if (this.hasAttribute("no-attributes"))
+      root.dataset.noAttributes = "";
+
     // copy "set" attribute to class:
     // <tag set="foo"> -> <div class="el foo-set">
     root.className = "el " + this.getAttribute("set") + "-set";
     
     // copy "type" attribute to "data-type":
     // <tag type="foo"> -> <div data-type="foo">
-    root.dataset.type = this.getAttribute("type");
+    root.dataset.type = type;
     
     // Create some CSS to apply to the shadow dom
     const style = document.createElement("link");
@@ -114,30 +126,18 @@ width = &quot;<input class="builder-attr-value" oninput="update_value(event)">&q
 </div>
 </div>
 
-<div class="attr" data-attribute-name="style" draggable="true" ondragstart="dragstart_attribute_handler(event)">
-<span class="attr-style-label">style = </span>
-<div class="builder-property-set">
-<div class="builder-property-container">
-<div class="property" data-property-name="font-size" draggable="true" ondragstart="dragstart_move_property_handler(event)">
-font-size: <input class="builder-property-value" onchange="update_value(event)">
-</div>
-</div>
-<div class="builder-property-dropzone" ondragenter="onPropertyDragEnter(event)" ondragleave="onPropertyDragLeave(event)" ondrop="drop_property_handler(event)" ondragover="dragover_property_handler(event)"></div>
-</div>
-</div>
-
 <div class="el blue-set" data-type="!DOCTYPE html" data-self-closing data-no-attributes draggable="true" ondragstart="dragstart_handler(event)"></div>
 
 <br>
 
 <builder-element set="blue" type="html"></builder-element>
 
-<div class="el blue-set" data-type="html" draggable="true" ondragstart="dragstart_handler(event)">
-<div class="dropzone"></div>
-</div>
+<builder-element type="[text]" no-attributes>
+<textarea onchange=""></textarea>
+</builder-element>
 
 <div class="el" data-type="[text]" data-no-attributes draggable="true" ondragstart="dragstart_handler(event)">
-<textarea onchange="renderCode(); render();"></textarea>
+<textarea onchange=""></textarea>
 </div>
 
 <details open class="builder-element-group">
@@ -149,7 +149,7 @@ font-size: <input class="builder-property-value" onchange="update_value(event)">
 
 <div class="el purple-set text-content" data-type="title" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="el hidden" data-type="[text]">
-<textarea onchange="renderCode(); render();"></textarea>
+<textarea onchange=""></textarea>
 </div>
 </div>
 
@@ -158,13 +158,13 @@ font-size: <input class="builder-property-value" onchange="update_value(event)">
 
 <div class="el purple-set text-content" data-type="style" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="el hidden" data-type="[text]">
-<textarea onchange="renderCode(); render();"></textarea>
+<textarea></textarea>
 </div>
 </div>
 
 <div class="el purple-set text-content" data-type="script" draggable="true" ondragstart="dragstart_handler(event)">
 <div class="el hidden" data-type="[text]">
-<textarea onchange="renderCode(); render();"></textarea>
+<textarea></textarea>
 </div>
 </div>
 
