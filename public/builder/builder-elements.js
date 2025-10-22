@@ -343,6 +343,9 @@ font-size: <input class="builder-property-value" onchange="update_value(event)">
     const style = document.createElement("link");
     style.href = "/builder/builder.css";
     style.rel = "stylesheet";
+    
+    const style2 = document.createElement("style");
+    style2.innerText = ":host { display: block; }";
 
     // Attach the created elements to the shadow dom
     shadow.appendChild(style);

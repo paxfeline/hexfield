@@ -63,6 +63,12 @@ class HexTabs extends HTMLElement
     const style = document.createElement("style");
 
     style.textContent = `
+      :host
+      {
+        display: block;
+        height: 100%;
+      }
+
       #root
       {
         height: 100%;
@@ -104,6 +110,7 @@ class HexTabs extends HTMLElement
         overflow: auto;
         border: 0.2rem solid black;
         border-top-width: 0;
+        height: 100%;
       }
 
       #tab-bodies > *

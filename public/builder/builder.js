@@ -63,6 +63,7 @@ export function drop_handler(ev)
 	 //--//ev.target.parentElement.style.borderColor = '';
 	 //ev.target.parentElement.style.removeProperty('--set-color');
 	ev.target.parentElement.style.filter = '';
+	ev.target.style.background = '';
 
 	 ev.target.after( ...temp.children );
 	 
