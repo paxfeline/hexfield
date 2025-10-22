@@ -205,13 +205,11 @@ class BuilderBank extends HTMLElement
 
     // Create spans
     const root = document.createElement("div");
-    root.id = "root";
+    root.id = "builder-root";
 
     //<div id="bank" ondragenter="onTrashDragEnter(event)" ondragleave="onTrashDragLeave(event)" ondrop="drop_trash_handler(event)" ondragover="dragover_trash_handler(event)">
     
     root.innerHTML = `
-
-
 <builder-element set="blue" type="!DOCTYPE html"></builder-element>
 
 <br>
@@ -349,6 +347,7 @@ font-size: <input class="builder-property-value" onchange="update_value(event)">
 
     // Attach the created elements to the shadow dom
     shadow.appendChild(style);
+    shadow.appendChild(style2);
     shadow.appendChild(root);
 
     
