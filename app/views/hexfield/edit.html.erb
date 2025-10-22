@@ -39,7 +39,8 @@
 
 #sidebar
 {
-  width: min-content;
+  /*width: min-content;*/
+  min-width: 20%;
   flex-shrink: 0;
 }
 
@@ -87,7 +88,7 @@
       <div tab="One">One</div>
       <div tab="Two">Two</div>
     </hex-tabs>
-    <builder-bank style="height: 100%; overflow-y: scroll;"></builder-bank>
+    <builder-bank style="width: 100%; height: 100%; overflow-y: scroll;"></builder-bank>
   </hex-tabs>
 </div>
 
@@ -112,7 +113,7 @@
         };
     </script>
   </div>
-  <div tab="Builder">
+  <div tab="Builder" style="height: 100%;">
 
   <link rel="stylesheet" href="/builder/builder.css">
   
