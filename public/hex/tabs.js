@@ -120,7 +120,7 @@ class HexTabs extends HTMLElement
 
       #tab-bodies > *[selected]
       {
-        display: initial;
+        display: revert-layer;
       }
     `;
 
