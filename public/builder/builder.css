@@ -168,9 +168,11 @@
 #render, #render-code
 {
 	border: 1px solid black;
+	/*
 	min-height: 2em;
 	margin: 2em;
 	border-radius: 1em;
+	*/
 }
 
 #render-title
