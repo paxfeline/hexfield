@@ -169,6 +169,8 @@ export const last_saved_data = {};
 if (files)
 {
   fireEvent(events.files_loaded, files);
+
+  console.log("mcp, loading files", files);
   
   // files[0] = code files
   for (const file of files[0])

@@ -43,11 +43,31 @@ class HexTabs extends HTMLElement
     this.selectedTabBody?.onshow?.();
   }
 
+  static observedAttributes = ["disabled"];
+
+  attributeChangedCallback(name, oldValue, newValue)
+  {
+    console.log(
+      `Tabs: Attribute ${name} has changed from ${oldValue} to ${newValue}.`,
+    );
+
+    if (name == "disabled")
+    {
+      const tabs_fieldset = this.shadowRoot.querySelector("#tabs-fieldset");
+
+      if (newValue === null)
+        tabs_fieldset.removeAttribute("disabled");
+      else
+        tabs_fieldset.setAttribute("disabled", "");
+
+    }
+  }
+
   connectedCallback()
   {
     // Create a shadow root
     const shadow = this.attachShadow({ mode: "open" });
-    this.shadow = shadow;
+    this.shadow = shadow; // redundant? shadowRoot? TODO: remove
 
     // Create spans
     const root = document.createElement("div");
@@ -55,7 +75,9 @@ class HexTabs extends HTMLElement
     root.part = "root"; // for CSS
 
     root.innerHTML = `
-      <div id="tab-header" part="header"></div>
+      <fieldset id="tabs-fieldset" style="border: none; padding: 0;">
+        <div id="tab-header" part="header"></div>
+      </fieldset>
       <div id="tab-bodies" part="bodies"></div>
     `;
 
@@ -95,6 +117,7 @@ class HexTabs extends HTMLElement
         padding: 0.3rem;
         border-radius: 0.5rem 0.5rem 0 0;
         cursor: pointer;
+        background-color: white;
       }
 
       .tab-tab[selected]
@@ -138,7 +161,7 @@ class HexTabs extends HTMLElement
       const tabs = Array.from(tab_bodies.children).map(
         (el, ind) =>
         {
-          const tab = document.createElement("div");
+          const tab = document.createElement("button");
           tab.className = "tab-tab";
           tab.innerHTML = el.getAttribute("tab");
           tab.addEventListener("click", () => this.selectedIndex = ind);
