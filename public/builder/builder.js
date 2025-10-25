@@ -172,12 +172,12 @@ export function trim_dropzones(el)
 // If it is, return false = not ok.
 export function drop_ok(event)
 {
+	console.log("DOK?", builder_globals.moving, builder_globals.dragged, event.target);
 	console.log("DOK?",
 		event.dataTransfer.getData("application/hexfield-element") != null,
-		event.shiftKey,
 		builder_globals.moving,
-		builder_globals.dragged.previousElementSibling != event.target,
-		builder_globals.dragged.nextElementSibling != event.target,
+		builder_globals.bank.contains(builder_globals.dragged),
+		builder_globals.dragged.contains(event.target),
 		// altogether again:
 		"VERDICT:",
 		event.dataTransfer.getData("application/hexfield-element")
@@ -185,31 +185,35 @@ export function drop_ok(event)
 					// shift to duplicate, so it can be dropped anywhere
 					(event.shiftKey
 					// or it's coming from the bank, so drop anywhere
-					|| !builder_globals.moving
+					|| (!builder_globals.moving
+						&& !builder_globals.bank.contains(builder_globals.dragged))
 					// or it's being repositioned,
 					|| (builder_globals.moving
 						// but not to within itself (checks that dragged is not one of its own ancestors),
-						&& !check_in_tree(builder_globals.dragged, event.target.parentElement)
+						// && !check_in_tree(builder_globals.dragged, event.target.parentElement)
+						&& !builder_globals.dragged.contains(event.target)
 						// and not directly above or below itself
 						&& builder_globals.dragged.previousElementSibling != event.target
-						&& builder_globals.dragged.nextElementSibling != event.target))
-	);
+						&& builder_globals.dragged.nextElementSibling != event.target)));
 	// baseline: return true if dataTransfer object has hexfield data
 	return event.dataTransfer.getData("application/hexfield-element")
 				&&
 					// shift to duplicate, so it can be dropped anywhere
 					(event.shiftKey
 					// or it's coming from the bank, so drop anywhere
-					|| !builder_globals.moving
+					|| (!builder_globals.moving
+						&& !builder_globals.bank.contains(builder_globals.dragged))
 					// or it's being repositioned,
 					|| (builder_globals.moving
 						// but not to within itself (checks that dragged is not one of its own ancestors),
-						&& !check_in_tree(builder_globals.dragged, event.target.parentElement)
+						// && !check_in_tree(builder_globals.dragged, event.target.parentElement)
+						&& !builder_globals.dragged.contains(event.target)
 						// and not directly above or below itself
 						&& builder_globals.dragged.previousElementSibling != event.target
 						&& builder_globals.dragged.nextElementSibling != event.target));
 }
 
+// TODO: get rid of this! yay!
 export function check_in_tree(el, check)
 {
 	console.log("CIT@", el, check);

@@ -4,13 +4,34 @@
 	width: min-content;
 }
 
-#builder-root
+/* TODO: maybe: could make this a class */
+#builder-element, #builder-bank
 {
 	font-family: monospace;
 	--property-dropzone-color: lightgray;
 	--attribute-dropzone-color: white;
-	/*--set-color: gray;*/
+}
+
+builder-element
+{
+	margin: auto;
+}
+
+#builder-element
+{
 	width: min-content;
+}
+
+#builder-bank
+{
+	width: 100%;
+}
+
+/* TODO: maybe: split this into different CSS files for different elements */
+/* disable drops in bank dropzones */
+#builder-bank builder-element::part(dropzone)
+{
+	pointer-events: none;
 }
 
 .blue-set
@@ -142,9 +163,10 @@
 	border: 1em solid red;
 }
 
+/*
 #bank, #code
 {
-	/*width: calc(45% - 2em);
+	width: calc(45% - 2em);
 	width: calc(30% - 2em);
 	max-height: 75vh;
 	overflow: scroll;
@@ -152,8 +174,8 @@
 	border: 1px solid black;
 	padding: 1em;
 	vertical-align: top;
-	*/
 }
+*/
 
 #code
 {
@@ -332,12 +354,12 @@
 	padding: 0.5em 1em 0.5em 0;
 }
 
-#bank > .attr, #bank > .property
+#builder-bank > .attr, #builder-bank > .property
 {
 	margin-bottom: 1em;
 }
 
-#bank > .property
+#builder-bank > .property
 {
 	margin: 1em 2em;
 }
@@ -438,7 +460,7 @@
 	vertical-align: top;
 }
 
-#bank input
+#builder-bank input
 {
 	width: 5em;
 }

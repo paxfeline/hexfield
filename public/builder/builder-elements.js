@@ -17,7 +17,7 @@ class BuilderElement extends HTMLElement
 
     // Create spans
     const root = document.createElement("div");
-    root.id = "builder-root";
+    root.id = "builder-element";
 
     const block = document.createElement("div");
     
@@ -28,6 +28,8 @@ class BuilderElement extends HTMLElement
     dz.setAttribute("ondrop", "builder_globals.handlers.drop(event)");
     dz.setAttribute("ondragover", "builder_globals.handlers.dragover(event)");
     dz.setAttribute("ondragleave", "builder_globals.handlers.dragleave(event)");
+
+    dz.part = "dropzone";
     
     root.append(dz);
     
@@ -50,7 +52,8 @@ class BuilderElement extends HTMLElement
         <div class="dropzone"
           ondrop="builder_globals.handlers.drop(event)"
           ondragover="builder_globals.handlers.dragover(event)"
-          ondragleave="builder_globals.handlers.dragleave(event)"></div>
+          ondragleave="builder_globals.handlers.dragleave(event)"
+          part="dropzone"></div>
         <slot></slot>
       `;
 
@@ -203,7 +206,10 @@ class BuilderBank extends HTMLElement
 
     // Create spans
     const root = document.createElement("div");
-    root.id = "builder-root";
+    root.id = "builder-bank";
+
+    // store global variable to be used to test drop okness etc.
+    builder_globals.bank = root;
 
     //<div id="bank" ondragenter="onTrashDragEnter(event)" ondragleave="onTrashDragLeave(event)" ondrop="drop_trash_handler(event)" ondragover="dragover_trash_handler(event)">
     
