@@ -166,7 +166,7 @@ export const files = await api.get_project();
 // if it exists, load the files into the opfs.
 export const file_data = {};
 export const last_saved_data = {};
-if (files)
+if (files && files[0])
 {
   fireEvent(events.files_loaded, files);
 

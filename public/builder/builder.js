@@ -2,10 +2,12 @@
 
 export function dragstart_handler(ev)
 {
-	console.log("dsh");
+	console.log("dsh", ev);
 	ev.dataTransfer.setData("application/hexfield-element", ev.target.parentElement.innerHTML);
 	ev.dataTransfer.dropEffect = "copy";
-	builder_globals.dragged = null;
+	// builder_globals.dragged = null; // changing so that dragged has a value
+		builder_globals.dragged = ev.target;
+	builder_globals.moving = false; // i.e. not copying; used instead of dragged = null
 	
 	ev.stopPropagation();
 }
@@ -26,10 +28,13 @@ export function dragstart_move_handler(ev)
 		inp.setAttribute('value', inp.value);
 	
 	console.log('start', ev.target, tas);
-	//ev.target.firstElementChild.innerHTML = ev.target.firstElementChild.value;
-	ev.dataTransfer.setData("application/hexfield-element", ev.target.outerHTML);
+
+	const block_n_dz = ev.target.outerHTML + ev.target.nextElementSibling.outerHTML;
+
+	ev.dataTransfer.setData("application/hexfield-element", block_n_dz);
 	ev.dataTransfer.dropEffect = "move";
 	builder_globals.dragged = ev.target;
+	builder_globals.moving = true; // used now instead of dragged having a value
 	
 	ev.stopPropagation();
 }
@@ -43,13 +48,13 @@ export function drop_handler(ev)
  ev.preventDefault();
  // Get the id of the target and add the moved element to the target's DOM
  const data = ev.dataTransfer.getData("application/hexfield-element");
- const rent = ev.target.parentElement;
  //ev.target.style.backgroundColor = '';
  const temp = document.createElement("div");
 
 
 	 temp.innerHTML = data;
-	 temp.firstElementChild.setAttribute("ondragstart", "dragstart_move_handler(event)");
+	 //temp.firstElementChild.setAttribute("ondragstart", "dragstart_move_handler(event)");
+	 temp.firstElementChild.setAttribute("ondragstart", "builder_globals.handlers.dragstartmove(event)");
 
 	//if ( !builder_globals.dragged && !temp.firstElementChild.hasAttribute("data-no-attributes") ) 
 	if ( !builder_globals.dragged && !builder_globals.no_attributes.includes(temp.firstElementChild.dataset.type) )
@@ -64,13 +69,17 @@ export function drop_handler(ev)
 	 //ev.target.parentElement.style.removeProperty('--set-color');
 	ev.target.parentElement.style.filter = '';
 	ev.target.style.background = '';
-
-	 ev.target.after( ...temp.children );
-	 
-	 dropify(rent);
  
-	 if (builder_globals.dragged && !ev.shiftKey)
-		builder_globals.dragged.remove();
+	ev.target.after( ...temp.children );
+	
+	 if (builder_globals.moving && !ev.shiftKey)
+	 {
+		// remove trailing dropzone (importantly, this only happens if 'dragged' is null)
+		 builder_globals.dragged.nextElementSibling.remove();
+		 // remove transporter original
+		 builder_globals.dragged.remove();
+	 }
+
  
 	 // no longer used
 	 //trim_dropzones(document.querySelector("#code").firstElementChild);
@@ -88,7 +97,7 @@ export function dragover_handler(ev)
 	if (ev.dataTransfer.getData("application/hexfield-element")
 		&& drop_ok(ev))
 	{
-		if (builder_globals.dragged && !ev.shiftKey)
+		if (builder_globals.moving && !ev.shiftKey)
 			ev.dataTransfer.dropEffect = "move";
 		else
 			ev.dataTransfer.dropEffect = "copy";
@@ -158,24 +167,56 @@ export function trim_dropzones(el)
 }
 
 
-
+// TODO: !!!!!
+// Update to check that dz is not an ancestor of the bank.
+// If it is, return false = not ok.
 export function drop_ok(event)
 {
-	return event.dataTransfer.getData("application/hexfield-element")
-				&&(event.shiftKey
-					|| !builder_globals.dragged
-					|| (builder_globals.dragged
-						//&& builder_globals.dragged != event.target.parentElement // replaced with line below
+	console.log("DOK?",
+		event.dataTransfer.getData("application/hexfield-element") != null,
+		event.shiftKey,
+		builder_globals.moving,
+		builder_globals.dragged.previousElementSibling != event.target,
+		builder_globals.dragged.nextElementSibling != event.target,
+		// altogether again:
+		"VERDICT:",
+		event.dataTransfer.getData("application/hexfield-element")
+				&&
+					// shift to duplicate, so it can be dropped anywhere
+					(event.shiftKey
+					// or it's coming from the bank, so drop anywhere
+					|| !builder_globals.moving
+					// or it's being repositioned,
+					|| (builder_globals.moving
+						// but not to within itself (checks that dragged is not one of its own ancestors),
 						&& !check_in_tree(builder_globals.dragged, event.target.parentElement)
+						// and not directly above or below itself
+						&& builder_globals.dragged.previousElementSibling != event.target
+						&& builder_globals.dragged.nextElementSibling != event.target))
+	);
+	// baseline: return true if dataTransfer object has hexfield data
+	return event.dataTransfer.getData("application/hexfield-element")
+				&&
+					// shift to duplicate, so it can be dropped anywhere
+					(event.shiftKey
+					// or it's coming from the bank, so drop anywhere
+					|| !builder_globals.moving
+					// or it's being repositioned,
+					|| (builder_globals.moving
+						// but not to within itself (checks that dragged is not one of its own ancestors),
+						&& !check_in_tree(builder_globals.dragged, event.target.parentElement)
+						// and not directly above or below itself
 						&& builder_globals.dragged.previousElementSibling != event.target
 						&& builder_globals.dragged.nextElementSibling != event.target));
 }
 
 export function check_in_tree(el, check)
 {
+	console.log("CIT@", el, check);
 	var cur = check;
 	while (cur)
 	{
+		console.log("CIT:", cur, el);
 		if (el == cur)
 			return true;
 		cur = cur.parentElement;

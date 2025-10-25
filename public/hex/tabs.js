@@ -67,7 +67,6 @@ class HexTabs extends HTMLElement
   {
     // Create a shadow root
     const shadow = this.attachShadow({ mode: "open" });
-    this.shadow = shadow; // redundant? shadowRoot? TODO: remove
 
     // Create spans
     const root = document.createElement("div");

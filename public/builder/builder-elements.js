@@ -14,7 +14,6 @@ class BuilderElement extends HTMLElement
     if (this.shadowRoot) return;
     
     const shadow = this.attachShadow({ mode: "open" });
-    this.shadow = shadow;
 
     // Create spans
     const root = document.createElement("div");
@@ -46,7 +45,7 @@ class BuilderElement extends HTMLElement
           <textarea></textarea>
         `;
     }
-    else
+    else // not empty
       block.innerHTML += `
         <div class="dropzone"
           ondrop="builder_globals.handlers.drop(event)"
@@ -58,6 +57,7 @@ class BuilderElement extends HTMLElement
     // ex:
     //  <div class="el blue-set" data-type="html" draggable="true" ondragstart="dragstart_handler(event)">
 
+    // attribute set automatically
     block.draggable = "true";
     // TODO: ensure necessary changes:
     block.setAttribute("ondragstart", "builder_globals.handlers.dragstart(event)");
@@ -111,7 +111,6 @@ class BuilderAttribute extends HTMLElement
     if (this.shadowRoot) return;
     
     const shadow = this.attachShadow({ mode: "open" });
-    this.shadow = shadow;
 
     // Create spans
     const root = document.createElement("div");
@@ -201,7 +200,6 @@ class BuilderBank extends HTMLElement
     if (this.shadowRoot) return;
     
     const shadow = this.attachShadow({ mode: "open" });
-    this.shadow = shadow;
 
     // Create spans
     const root = document.createElement("div");
