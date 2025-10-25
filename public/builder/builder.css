@@ -5,7 +5,10 @@
 }
 
 /* TODO: maybe: could make this a class */
-#builder-element, #builder-bank
+#builder-element,
+#builder-attribute,
+#builder-bank,
+#code
 {
 	font-family: monospace;
 	--property-dropzone-color: lightgray;
@@ -32,6 +35,11 @@ builder-element
 #builder-bank builder-element::part(dropzone)
 {
 	pointer-events: none;
+}
+
+#builder-bank builder-element::part(attributes)
+{
+	display: none;
 }
 
 .blue-set

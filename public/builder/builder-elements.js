@@ -38,6 +38,16 @@ class BuilderElement extends HTMLElement
     if (type === '[custom]' || type === '[custom-empty]')
       block.innerHTML = '<div class="builder-custom-el">Type: <input class="builder-custom-type"></div>';
 
+    if (!builder_globals.text_elements.includes(type))
+    {
+      block.innerHTML += `
+        <div class="builder-attribute-set" part="attributes">
+        <div class="builder-attribute-container"></div>
+        <div class="builder-attribute-dropzone" ondragenter="onAttributeDragEnter(event)" ondragleave="onAttributeDragLeave(event)" ondrop="drop_attribute_handler(event)" ondragover="dragover_attribute_handler(event)"></div>
+        </div>
+      `
+    }
+
     // empty tags won't have any content
     if (builder_globals.empty_elements.includes(type) || builder_globals.text_elements.includes(type))
     {
@@ -117,7 +127,7 @@ class BuilderAttribute extends HTMLElement
 
     // Create spans
     const root = document.createElement("div");
-    root.id = "builder-root";
+    root.id = "builder-attribute";
 
     const block = document.createElement("div");
     
@@ -208,8 +218,6 @@ class BuilderBank extends HTMLElement
     const root = document.createElement("div");
     root.id = "builder-bank";
 
-    // store global variable to be used to test drop okness etc.
-    builder_globals.bank = root;
 
     //<div id="bank" ondragenter="onTrashDragEnter(event)" ondragleave="onTrashDragLeave(event)" ondrop="drop_trash_handler(event)" ondragover="dragover_trash_handler(event)">
     

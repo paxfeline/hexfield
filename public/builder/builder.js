@@ -176,7 +176,6 @@ export function drop_ok(event)
 	console.log("DOK?",
 		event.dataTransfer.getData("application/hexfield-element") != null,
 		builder_globals.moving,
-		builder_globals.bank.contains(builder_globals.dragged),
 		builder_globals.dragged.contains(event.target),
 		// altogether again:
 		"VERDICT:",
@@ -185,8 +184,7 @@ export function drop_ok(event)
 					// shift to duplicate, so it can be dropped anywhere
 					(event.shiftKey
 					// or it's coming from the bank, so drop anywhere
-					|| (!builder_globals.moving
-						&& !builder_globals.bank.contains(builder_globals.dragged))
+					|| !builder_globals.moving
 					// or it's being repositioned,
 					|| (builder_globals.moving
 						// but not to within itself (checks that dragged is not one of its own ancestors),
@@ -201,8 +199,8 @@ export function drop_ok(event)
 					// shift to duplicate, so it can be dropped anywhere
 					(event.shiftKey
 					// or it's coming from the bank, so drop anywhere
-					|| (!builder_globals.moving
-						&& !builder_globals.bank.contains(builder_globals.dragged))
+					// (CSS disallows it inside builder-bank, pointer-events: none)
+					|| !builder_globals.moving
 					// or it's being repositioned,
 					|| (builder_globals.moving
 						// but not to within itself (checks that dragged is not one of its own ancestors),
