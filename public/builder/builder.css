@@ -15,14 +15,18 @@
 	--attribute-dropzone-color: white;
 }
 
-builder-element
+
+builder-element,
+builder-attribute
 {
-	margin: auto;
+	width: 100%;
 }
 
-#builder-element
+#builder-element,
+#builder-attribute
 {
 	width: min-content;
+	margin: auto;
 }
 
 #builder-bank
@@ -89,6 +93,7 @@ builder-element
 	white-space: nowrap;
 }
 
+/*
 .el:not([data-self-closing]):before
 {
     border-radius: 0 0 1em;
@@ -98,6 +103,7 @@ builder-element
 {
 	display: block;
 }
+*/
 
 #code .dropzone
 {

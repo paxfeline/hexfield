@@ -42,8 +42,13 @@ class BuilderElement extends HTMLElement
     {
       block.innerHTML += `
         <div class="builder-attribute-set" part="attributes">
-        <div class="builder-attribute-container"></div>
-        <div class="builder-attribute-dropzone" ondragenter="onAttributeDragEnter(event)" ondragleave="onAttributeDragLeave(event)" ondrop="drop_attribute_handler(event)" ondragover="dragover_attribute_handler(event)"></div>
+          <div class="builder-attribute-container"></div>
+          <div
+            class="builder-attribute-dropzone"
+            ondragleave="builder_globals.handlers.dragleave_attribute(event)"
+            ondrop="builder_globals.handlers.drop_attribute(event)"
+            ondragover="builder_globals.handlers.dragover_attribute(event)">
+          </div>
         </div>
       `
     }
@@ -129,57 +134,55 @@ class BuilderAttribute extends HTMLElement
     const root = document.createElement("div");
     root.id = "builder-attribute";
 
-    const block = document.createElement("div");
-    
-    root.append(block);
+    // <div class="attr" data-attribute-name="[custom]" draggable="true" ondragstart="dragstart_attribute_handler(event)">
+    // <input class="builder-attr-name" oninput="update_value(event)"> = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
+    // </div>
 
-    
-    
+    const attr = document.createElement("div");
+    root.append(attr);
+
     let type = this.getAttribute("type");
 
-    if (type === '[custom]' || type === '[custom-empty]')
-      block.innerHTML = '<div class="builder-custom-el">Type: <input class="builder-custom-type"></div>';
-
-    // empty tags won't have any content
-    if (builder_globals.empty_elements.includes(type) || builder_globals.text_elements.includes(type))
+    if (type === 'style')
     {
-      // ...unless they contain a text node
-      if (builder_globals.text_elements.includes(type))
-        block.innerHTML += `
-          <textarea></textarea>
-        `;
+      attr.innerHTML += `
+        <span class="attr-style-label">style = </span>
+        <div class="builder-property-set">
+          <div class="builder-property-container"></div>
+          <div
+            class="builder-property-dropzone"
+            ondragenter="onPropertyDragEnter(event)"
+            ondragleave="onPropertyDragLeave(event)"
+            ondrop="drop_property_handler(event)"
+            ondragover="dragover_property_handler(event)">
+          </div>
+        </div>
+      `;
     }
     else
-      block.innerHTML += `
-        <div class="dropzone"></div>
-        <slot></slot>
-      `;
+    {
+      if (type === '[custom]' || type === '[custom-empty]')
+        attr.innerHTML = '<input class="builder-attr-name" oninput="update_value(event)">';
+      else
+        attr.innerHTML = type;
+
+      attr.innerHTML += ' = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;';
+    }
 
     // ex:
     //  <div class="el blue-set" data-type="html" draggable="true" ondragstart="dragstart_handler(event)">
 
-    block.draggable = "true";
+    attr.draggable = "true";
     // TODO: ensure necessary changes:
-    block.setAttribute("ondragstart", "builder_globals.handlers.dragstart(event)");
-
-    if (builder_globals.no_attributes.includes(type))
-      block.dataset.noAttributes = ""; // maybe not needed? maybe for CSS?
+    attr.setAttribute("ondragstart", "builder_globals.handlers.dragstart_attribute(event)");
     
     // copy "set" attribute to class:
     // <tag set="foo"> -> <div class="el foo-set">
-    block.className = "el " + this.getAttribute("set") + "-set";
+    attr.className = "attr";
 
-    // used for embedded [text] nodes (on the node)
-    if (this.hasAttribute("hidden"))
-      block.classList.add("hidden");
-
-    // used for embedded [text] nodes (on the parent)
-    if (builder_globals.text_elements.includes(type))
-      block.classList.add("text-content");
-    
     // copy "type" attribute to "data-type":
     // <tag type="foo"> -> <div data-type="foo">
-    block.dataset.type = type;
+    attr.dataset.type = type;
     
     // Create some CSS to apply to the shadow dom
     const style = document.createElement("link");
@@ -238,23 +241,14 @@ class BuilderBank extends HTMLElement
 <builder-element set="purple" type="head"></builder-element>
 
 <builder-element set="purple" type="title">
-<builder-element type="[text]" hidden>
-<textarea></textarea>
-</builder-element>
 </builder-element>
 
 <builder-element set="purple" type="link"></builder-element>
 
 <builder-element set="purple" type="style">
-<builder-element type="[text]" hidden>
-<textarea></textarea>
-</builder-element>
 </builder-element>
 
 <builder-element set="purple" type="script">
-<builder-element type="[text]" hidden>
-<textarea></textarea>
-</builder-element>
 </builder-element>
 
 </details>
@@ -266,14 +260,9 @@ class BuilderBank extends HTMLElement
 
 <!-- this is here (h1 below) because the clone function needs it empty -->
 <!-- (see builder-files#addAttributes) -->
+<!-- ...all no longer application -->
 
 <builder-element set="green" type="h1"></builder-element>
-
-<builder-element set="green" type="h1">
-<builder-element type="[text]">
-<textarea></textarea>
-</builder-element>
-</builder-element>
 
 <builder-element set="green" type="div"></builder-element>
 
@@ -297,9 +286,6 @@ class BuilderBank extends HTMLElement
 <builder-element set="gold" type="input"></builder-element>
 
 <builder-element set="gold" type="option">
-<builder-element type="[text]">
-<textarea></textarea>
-</builder-element>
 </builder-element>
 
 <builder-element set="gold" type="br"></builder-element>
@@ -316,29 +302,13 @@ class BuilderBank extends HTMLElement
 
 <builder-attribute type="[custom]"></builder-attribute>
 
-<div class="attr" data-attribute-name="[custom]" draggable="true" ondragstart="dragstart_attribute_handler(event)">
-<input class="builder-attr-name" oninput="update_value(event)"> = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
-</div>
+<builder-attribute type="href"></builder-attribute>
 
-<div class="attr" data-attribute-name="href" draggable="true" ondragstart="dragstart_attribute_handler(event)">
-href = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
-</div>
+<builder-attribute type="src"></builder-attribute>
 
-<div class="attr" data-attribute-name="src" draggable="true" ondragstart="dragstart_attribute_handler(event)">
-src = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
-</div>
+<builder-attribute type="width"></builder-attribute>
 
-<div class="attr" data-attribute-name="width" draggable="true" ondragstart="dragstart_attribute_handler(event)">
-width = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;
-</div>
-
-<div class="attr" data-attribute-name="style" draggable="true" ondragstart="dragstart_attribute_handler(event)">
-<span class="attr-style-label">style = </span>
-<div class="builder-property-set">
-<div class="builder-property-container"></div>
-<div class="builder-property-dropzone" ondragenter="onPropertyDragEnter(event)" ondragleave="onPropertyDragLeave(event)" ondrop="drop_property_handler(event)" ondragover="dragover_property_handler(event)"></div>
-</div>
-</div>
+<builder-attribute type="style"></builder-attribute>
 
 <div class="property" data-property-name="[custom]" draggable="true" ondragstart="dragstart_property_handler(event)">
 <input class="builder-property-name" onchange="update_value(event)">: <input class="builder-property-value" onchange="update_value(event)">

@@ -7,6 +7,8 @@ export function dragstart_attribute_handler(ev)
 	builder_globals.dragged_attribute = null;
 }
 
+builder_globals.handlers.dragstart_attribute = dragstart_attribute_handler;
+
 export function dragstart_move_attribute_handler(ev)
 {
 
@@ -30,6 +32,8 @@ export function dragstart_move_attribute_handler(ev)
 	ev.stopPropagation();
 }
 
+builder_globals.handlers.dragstart_move_attribute = dragstart_move_attribute_handler;
+
 export function drop_attribute_handler(ev) {
 
  if (!drop_attribute_ok(ev)) return;
@@ -41,7 +45,7 @@ export function drop_attribute_handler(ev) {
 
 
 	 temp.innerHTML = data;
-	 temp.firstElementChild.setAttribute("ondragstart", "dragstart_move_attribute_handler(event)");
+	 temp.firstElementChild.setAttribute("ondragstart", "builder_globals.handlers.dragstart_move_attribute(event)");
  
 	ev.target.parentElement.parentElement.style.filter = '';
 	// TODO: check, why was it working?
@@ -56,11 +60,13 @@ export function drop_attribute_handler(ev) {
 	 
 	 builder_globals.dragged_attribute = null;
 	 
-	 renderCode();
-	 render();
+	//  renderCode();
+	//  render();
  
 	 ev.preventDefault();
 }
+
+builder_globals.handlers.drop_attribute = drop_attribute_handler;
 
 export function dragover_attribute_handler(ev)
 {
@@ -84,6 +90,7 @@ export function dragover_attribute_handler(ev)
 	ev.preventDefault();
 }
 
+builder_globals.handlers.dragover_attribute = dragover_attribute_handler;
 
 export function onAttributeDragLeave(event)
 {
@@ -91,10 +98,7 @@ export function onAttributeDragLeave(event)
 	event.target.style.removeProperty('--attribute-dropzone-color');
 }
 
-export function onAttributeDragEnter(event)
-{
-}
-
+builder_globals.handlers.dragleave_attribute = onAttributeDragLeave;
 
 export function drop_attribute_ok(event)
 {
