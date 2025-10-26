@@ -106,10 +106,25 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(enableNavigationPreload());
 });
 
+// TODO: ongoing: ensure this list is correct
 self.addEventListener('install', (event) => {
   event.waitUntil(
     addResourcesToCache([
       './edit',
+      './hex/api.js',
+      './hex/files.js',
+      './hex/mcp.js',
+      './hex/opfs.js',
+      './hex/tabs.js',
+      './hex/util.js',
+      './builder/builder-attributes.js',
+      './builder/builder-elements.js',
+      './builder/builder-files.js',
+      './builder/builder-globals.js',
+      './builder/builder-properties.js',
+      './builder/builder-trash.js',
+      './builder/builder.css',
+      './builder/builder.js',
     ])
   );
 });

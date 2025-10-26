@@ -478,3 +478,8 @@ builder-attribute
 {
 	width: 5em;
 }
+
+.builder-custom-type
+{
+	margin-right: 1em;
+}
