@@ -22,6 +22,7 @@ export function load_code(code_str)
 		\s*					match any/all space after the attribute
 		)*					match non-capturing group (a single attribute w/ any space after), zero-or-more times
 		)						close of group 4 (everything after tag name and space, i.e. all attributes)
+		\/?					consume possible XML-style trailing slash (self-closing tag)
 		>						match closing >
 
 		WHY??
@@ -68,11 +69,11 @@ export function load_code(code_str)
 	// I have to parse JS too???
 
 	//const re = /<(\/?)([-\.\w]+)(\s+)((?:[^\s"'>\/=]+(?:\s*=\s*(?:(["']).*?\5|[^\s"'=<>`]+))?\s*)*)>/g;
-	const re = /<(\/?)([-\.\w]+)((?:\s+[^\t\s\/>"'=]+(?:\s*=\s*(?:(["']).*?\4|[^\t\s\/>"'=]+))?)*\s*)>/g;
+	const re = /<(\/?)([-\.\w]+)((?:\s+[^\t\s\/>"'=]+(?:\s*=\s*(?:(["']).*?\4|[^\t\s\/>"'=]+))?)*\s*)\/?>/g;
 	code_str = code_str.replaceAll(re,
 		(_, ending_tag, tag_name, attributes) =>
 		{
-			console.log("converting:", ending_tag, tag_name, attributes);
+			//console.log("converting:", ending_tag, tag_name, attributes);
 			if  (ending_tag == '/')
 				return `</div>`;
 			else
@@ -91,6 +92,8 @@ export function load_code(code_str)
 	div.innerHTML = code_str;
 
 	//mcp.fireEvent(mcp.events.builder_built, div.children); // wut?
+
+	const code = document.createElement("div");
 	
 	// better to use a template with a dropzone?
 	const botdz = document.createElement('div');
@@ -112,22 +115,24 @@ export function load_code(code_str)
 			code.append(botdz);
 		}
 	}
-	
-	dropify(code);
+
+	return code;
 }
+
+builder_globals.load_code = load_code;
 
 export function load_element(el)
 {
 	var type;
 	if (el.getAttribute)
 	{
-		type = el.getAttribute('data-converting-type'); //.tagName.toLowerCase();
+		type = el.getAttribute('data-converting-type');
 	}
 	
-	if (type == "!DOCTYPE") type = "!DOCTYPE html"; // I am sorry for this if statement :/
+	if (type == "!DOCTYPE") type = "!DOCTYPE html";
 	
 	// TODO change document to the bank div
-	const templ = document.querySelector(`[data-type='${type}']`);
+	//const templ = document.querySelector(`[data-type='${type}']`);
 	var ne;
 	
 	if (el.nodeType == 3) // text node
@@ -135,25 +140,31 @@ export function load_element(el)
 		// if empty text node, return null to skip
 		const txt = el.textContent.trim();
 		
-		if ( !txt ) return null;
+		if ( txt === '' ) return null;
 		
 		// TODO change document to the bank div
-		const txt_templ = document.querySelector(`[data-type='[text]']`);
-		ne = txt_templ.cloneNode(true);
+		//const txt_templ = document.querySelector(`[data-type='[text]']`);
+		//ne = txt_templ.cloneNode(true);
+		ne = document.createElement("div");
+		ne.dataset.type = '[text]';
 	
 		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
-		const ta = ne.querySelector('textarea');
+		const ta = document.createElement('textarea');
+		ne.append(ta);
 		ta.innerHTML = txt;
 		// this line is apparently necessary, even though it shouldn't be
 		ta.value = ta.innerHTML;
 	}
 	else if (builder_globals.text_elements.includes(type))
 	{
-		ne = templ.cloneNode(true);
+		//ne = templ.cloneNode(true);
+		ne = document.createElement("div");
+		ne.dataset.type = type;
 		addAttributes(el, ne);
 		
 		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
-		const ta = ne.querySelector('textarea');
+		const ta = document.createElement('textarea');
+		ne.append(ta);
 		el.innerHTML = el.innerHTML.trim();
 		ta.innerHTML = el.innerHTML;
 		// this line might be necessary, even though it shouldn't be
@@ -161,7 +172,9 @@ export function load_element(el)
 	}
 	else if (builder_globals.known_elements.includes(type))
 	{
-		ne = templ.cloneNode(true);
+		//ne = templ.cloneNode(true);
+		ne = document.createElement("div");
+		ne.dataset.type = type;
 		addAttributes(el, ne);
 		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
 	
@@ -184,8 +197,10 @@ export function load_element(el)
 		// TODO change document to the bank div
 		var check_empty = builder_globals.empty_elements.includes(type);
 		
-		const custom_templ = document.querySelector(`[data-type="${check_empty ? '[custom-empty]' : '[custom]'}"]`);
-		ne = custom_templ.cloneNode(true);
+		//const custom_templ = document.querySelector(`[data-type="${check_empty ? '[custom-empty]' : '[custom]'}"]`);
+		//ne = custom_templ.cloneNode(true);
+		ne = document.createElement("div");
+		ne.dataset.type = check_empty ? '[custom-empty]' : '[custom]';
 		addAttributes(el, ne);
 		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
 		
@@ -220,21 +235,23 @@ export function addAttributes(source, dest)
 	// chaning to not rely on these attributes
 	if (!builder_globals.no_attributes.includes(dest.dataset.type))
 	{
-		/*
-<div class="builder-attribute-set">
-<div class="builder-attribute-container"></div>
-<div class="builder-attribute-dropzone" ondragenter="onAttributeDragEnter(event)" ondragleave="onAttributeDragLeave(event)" ondrop="drop_attribute_handler(event)" ondragover="dragover_attribute_handler(event)"></div>
-</div>
-		*/
-		
-		
-		const templates = document.querySelector('#templates');
+		//const templates = document.querySelector('#templates');
 	
-		const wrapper = templates.querySelector('.builder-attribute-set').cloneNode(true);
-		dest.prepend(wrapper);
+		//const wrapper = templates.querySelector('.builder-attribute-set').cloneNode(true);
+		//dest.prepend(wrapper);
 		
-		const listContainer = wrapper.firstElementChild; // simpler but more brittle than querySelector('.builder-attribute-container').cloneNode(true);
+		//const listContainer = wrapper.firstElementChild; // simpler but more brittle than querySelector('.builder-attribute-container').cloneNode(true);
 		
+		const wrapper = document.createElement("div");
+		wrapper.innerHTML = `
+			<div class="builder-attribute-set">
+			<div class="builder-attribute-container"></div>
+			<div class="builder-attribute-dropzone" ondragenter="onAttributeDragEnter(event)" ondragleave="onAttributeDragLeave(event)" ondrop="drop_attribute_handler(event)" ondragover="dragover_attribute_handler(event)"></div>
+			</div>
+		`;
+
+		const listContainer = wrapper.querySelector('.builder-attribute-container');
+
 		for (var i = 0; i < source.attributes.length; i++)
 		{
 			const attr = source.attributes[i];
@@ -244,16 +261,13 @@ export function addAttributes(source, dest)
 			if (builder_globals.known_attributes.includes(attr.name))
 			{
 				// TODO change document to the bank div (or make templates)
-				const new_attr = document.querySelector(`[data-attribute-name='${attr.name}']`).cloneNode(true);
-				
+				//const new_attr = document.querySelector(`[data-attribute-name='${attr.name}']`).cloneNode(true);
+				const new_attr = document.createElement('div');
+				new_attr.dataset.attributeName = attr.name;
+
 				if (attr.name == 'style')
 				{
 					const prop_list = new_attr.querySelector('.builder-property-container');
-					
-					// /([\w-]+):\s*([^;]+);?/gm
-					
-					
-					
 					
 					////////////
 					
@@ -270,10 +284,13 @@ export function addAttributes(source, dest)
 						const name = cssdiv.style[css_i];
 						const value = cssdiv.style.getPropertyValue(name);
 						
-						const templ_name = builder_globals.known_properties.includes(name) ? name : '[custom]';
-						const new_prop = document.querySelector(`[data-property-name='${templ_name}']`).cloneNode(true);
+						const prop_name = builder_globals.known_properties.includes(name) ? name : '[custom]';
+						// const new_prop = document.querySelector(`[data-property-name='${templ_name}']`).cloneNode(true);
+						const new_prop = document.createElement('div');
+						new_prop.dataset.propertyName = prop_name;
 						
-						if (templ_name == '[custom]')
+						// TODO: change to using attributes (on new_prop) rather than going into shadowRoot?
+						if (prop_name == '[custom]')
 							new_prop.querySelector('.builder-property-name').value = name;
 						
 						new_prop.querySelector('.builder-property-value').value = value;
@@ -288,7 +305,9 @@ export function addAttributes(source, dest)
 			}
 			else
 			{
-				const new_attr = document.querySelector(`[data-attribute-name='[custom]']`).cloneNode(true);
+				//const new_attr = document.querySelector(`[data-attribute-name='[custom]']`).cloneNode(true);
+				const new_attr = document.createElement('builder-attribute');
+				new_attr.setAttribute('type', '[custom]');
 				new_attr.querySelector('.builder-attr-name').value = attr.name;
 				new_attr.querySelector('.builder-attr-value').value = attr.value;
 				

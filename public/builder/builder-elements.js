@@ -318,7 +318,7 @@ class BuilderBank extends HTMLElement
 <builder-element set="green" type="body"></builder-element>
 
 <!-- this is here (h1 below) because the clone function needs it empty -->
-<!-- (see builder-files#addAttributes) -->
+<!-- (see builder-parser#addAttributes) -->
 <!-- ...all no longer application -->
 
 <builder-element set="green" type="h1"></builder-element>

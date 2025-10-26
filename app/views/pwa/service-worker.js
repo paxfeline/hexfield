@@ -121,7 +121,7 @@ self.addEventListener('install', (event) => {
       './hex/util.js',
       './builder/builder-attributes.js',
       './builder/builder-elements.js',
-      './builder/builder-files.js',
+      './builder/builder-parser.js',
       './builder/builder-globals.js',
       './builder/builder-properties.js',
       './builder/builder-trash.js',
