@@ -3,21 +3,7 @@ export function update_value(event)
 	event.target.setAttribute('value', event.target.value);
 }
 
-
-
-/*
-	if (event.target.builder_input_timer)
-		clearTimeout(event.target.builder_input_timer);
-		
-	event.target.builder_input_timer = setTimeout(
-		() =>
-		{
-			renderCode()
-			render();
-		}, 100);
-	
-}
-*/
+builder_globals.handlers.update_value = update_value;
 
 export function dragstart_property_handler(ev)
 {
@@ -29,6 +15,8 @@ export function dragstart_property_handler(ev)
 	
 	ev.stopPropagation();
 }
+
+builder_globals.handlers.dragstart_property = dragstart_property_handler;
 
 export function dragstart_move_property_handler(ev)
 {
@@ -50,6 +38,8 @@ export function dragstart_move_property_handler(ev)
 	ev.stopPropagation();
 }
 
+builder_globals.handlers.dragstart_move_property = dragstart_move_property_handler;
+
 export function drop_property_handler(ev)
 {
 	console.log('dph', ev);
@@ -63,7 +53,7 @@ export function drop_property_handler(ev)
 
 
 	temp.innerHTML = data;
-	temp.firstElementChild.setAttribute("ondragstart", "dragstart_move_property_handler(event)");
+	temp.firstElementChild.setAttribute("ondragstart", "builder_globals.handlers.dragstart_move_property(event)");
  
 	ev.target.parentElement.style.filter = '';
 	ev.target.style.removeProperty('--property-dropzone-color');
@@ -75,14 +65,13 @@ export function drop_property_handler(ev)
 		builder_globals.dragged_property.remove();
 	 
 	 builder_globals.dragged_property = null;
-	 
-	renderCode();
-	render();
 }
+
+builder_globals.handlers.drop_property = drop_property_handler;
 
 export function dragover_property_handler(ev) {
 	if (ev.dataTransfer.getData("application/hexfield-property")
-		&& drop_property_ok(event))
+		&& drop_property_ok(ev))
 	{
 		if (builder_globals.dragged_property && !ev.shiftKey)
 			ev.dataTransfer.dropEffect = "move";
@@ -101,6 +90,7 @@ export function dragover_property_handler(ev) {
 	ev.preventDefault();
 }
 
+builder_globals.handlers.dragover_property = dragover_property_handler;
 
 export function onPropertyDragLeave(ev)
 {
@@ -108,10 +98,15 @@ export function onPropertyDragLeave(ev)
 	ev.target.style.removeProperty('--property-dropzone-color');
 }
 
+builder_globals.handlers.dragleave_property = onPropertyDragLeave;
+
 export function onPropertyDragEnter(event)
 {
 }
 
+builder_globals.handlers.dragenter_property = onPropertyDragEnter;
+
+// TODO: 86
 
 export function drop_property_ok(event)
 {

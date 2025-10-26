@@ -151,17 +151,17 @@ class BuilderAttribute extends HTMLElement
           <div class="builder-property-container"></div>
           <div
             class="builder-property-dropzone"
-            ondragenter="onPropertyDragEnter(event)"
-            ondragleave="onPropertyDragLeave(event)"
-            ondrop="drop_property_handler(event)"
-            ondragover="dragover_property_handler(event)">
+            ondragenter="builder_globals.handlers.dragenter_property(event)"
+            ondragleave="builder_globals.handlers.dragleave_property(event)"
+            ondrop="builder_globals.handlers.drop_property(event)"
+            ondragover="builder_globals.handlers.dragover_property(event)"
           </div>
         </div>
       `;
     }
     else
     {
-      if (type === '[custom]' || type === '[custom-empty]')
+      if (type === '[custom]')
         attr.innerHTML = '<input class="builder-attr-name" oninput="update_value(event)">';
       else
         attr.innerHTML = type;
@@ -169,20 +169,16 @@ class BuilderAttribute extends HTMLElement
       attr.innerHTML += ' = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;';
     }
 
-    // ex:
-    //  <div class="el blue-set" data-type="html" draggable="true" ondragstart="dragstart_handler(event)">
-
     attr.draggable = "true";
     // TODO: ensure necessary changes:
     attr.setAttribute("ondragstart", "builder_globals.handlers.dragstart_attribute(event)");
     
-    // copy "set" attribute to class:
-    // <tag set="foo"> -> <div class="el foo-set">
+    // set class
     attr.className = "attr";
 
-    // copy "type" attribute to "data-type":
+    // copy "type" attribute to "data-attribute-name":
     // <tag type="foo"> -> <div data-type="foo">
-    attr.dataset.type = type;
+    attr.dataset.attributeName = type;
     
     // Create some CSS to apply to the shadow dom
     const style = document.createElement("link");
@@ -198,6 +194,69 @@ class BuilderAttribute extends HTMLElement
 }
 
 customElements.define("builder-attribute", BuilderAttribute);
+
+
+class BuilderProperty extends HTMLElement
+{
+  constructor()
+  {
+    // Always call super first in constructor
+    super();
+  }
+
+  connectedCallback()
+  {
+    // Create a shadow root
+    // This can happen twice if element is moved
+    if (this.shadowRoot) return;
+    
+    const shadow = this.attachShadow({ mode: "open" });
+
+    // Create spans
+    const root = document.createElement("div");
+    root.id = "builder-property";
+
+    // <div class="property" data-property-name="[custom]" draggable="true" ondragstart="dragstart_property_handler(event)">
+    // <input class="builder-property-name" onchange="update_value(event)">: <input class="builder-property-value" onchange="update_value(event)">
+    // </div>
+
+    const prop = document.createElement("div");
+    root.append(prop);
+
+    let type = this.getAttribute("type");
+
+    if (type === '[custom]')
+      prop.innerHTML = '<input class="builder-property-name" onchange="update_value(event)">';
+    else
+      prop.innerHTML = type;
+
+    prop.innerHTML += ' : <input class="builder-property-value" onchange="update_value(event)">';
+
+    prop.draggable = "true";
+    // TODO: ensure necessary changes:
+    prop.setAttribute("ondragstart", "builder_globals.handlers.dragstart_property(event)");
+    
+    // set class
+    prop.className = "property";
+
+    // copy "type" attribute to "data-type":
+    // <tag type="foo"> -> <div data-property-name="foo">
+    prop.dataset.propertyName = type;
+    
+    // Create some CSS to apply to the shadow dom
+    const style = document.createElement("link");
+    style.href = "/builder/builder.css";
+    style.rel = "stylesheet";
+
+    // Attach the created elements to the shadow dom
+    shadow.appendChild(style);
+    shadow.appendChild(root);
+
+    
+  }
+}
+
+customElements.define("builder-property", BuilderProperty);
 
 // Create a class for the element
 class BuilderBank extends HTMLElement
@@ -310,13 +369,9 @@ class BuilderBank extends HTMLElement
 
 <builder-attribute type="style"></builder-attribute>
 
-<div class="property" data-property-name="[custom]" draggable="true" ondragstart="dragstart_property_handler(event)">
-<input class="builder-property-name" onchange="update_value(event)">: <input class="builder-property-value" onchange="update_value(event)">
-</div>
+<builder-property type="[custom]"></builder-property>
 
-<div class="property" data-property-name="font-size" draggable="true" ondragstart="dragstart_property_handler(event)">
-font-size: <input class="builder-property-value" onchange="update_value(event)">
-</div>
+<builder-property type="font-size"></builder-property>
     `;
 
     // Create some CSS to apply to the shadow dom
