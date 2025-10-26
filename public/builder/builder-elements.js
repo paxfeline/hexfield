@@ -38,7 +38,7 @@ class BuilderElement extends HTMLElement
     if (type === '[custom]' || type === '[custom-empty]')
       block.innerHTML = '<div class="builder-custom-el">Type: <input class="builder-custom-type"></div>';
 
-    if (!builder_globals.text_elements.includes(type))
+    if (!builder_globals.text_elements.includes(type) && !builder_globals.no_attributes.includes(type))
     {
       block.innerHTML += `
         <div class="builder-attribute-set" part="attributes">

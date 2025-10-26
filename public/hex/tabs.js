@@ -51,6 +51,9 @@ class HexTabs extends HTMLElement
       `Tabs: Attribute ${name} has changed from ${oldValue} to ${newValue}.`,
     );
 
+    // maybe not connected yet?
+    if (!this.shadowRoot) return;
+
     if (name == "disabled")
     {
       const tabs_fieldset = this.shadowRoot.querySelector("#tabs-fieldset");
@@ -74,7 +77,8 @@ class HexTabs extends HTMLElement
     root.part = "root"; // for CSS
 
     root.innerHTML = `
-      <fieldset id="tabs-fieldset" style="border: none; padding: 0;">
+      <fieldset id="tabs-fieldset" style="border: none; padding: 0; margin: 0;"
+        ${this.hasAttribute("disabled") ? "disabled" : ""}>
         <div id="tab-header" part="header"></div>
       </fieldset>
       <div id="tab-bodies" part="bodies"></div>
@@ -100,6 +104,14 @@ class HexTabs extends HTMLElement
       #tab-header
       {
         display: flex;
+      }
+
+      #tab-header::before
+      {
+        width: 1rem;
+        border: 0rem solid black;
+        border-width: 0 0 0.2rem 0;
+        content: '';
       }
 
       #tab-header::after
