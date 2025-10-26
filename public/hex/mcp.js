@@ -16,11 +16,13 @@ import * as opfs from "/hex/opfs.js";
 export const events = {};
 [
   "files_loaded",
+  "update_file_data",
+  "file_created",
+  "file_deleted",
   "connection_lost",
   "connection_restored",
   "sw_msg",
   "load_code_file_text",
-  "update_file_data",
   "builder_built",
 ]
 .forEach(x => events[x] = Symbol(x));
@@ -168,8 +170,6 @@ export const file_data = {};
 export const last_saved_data = {};
 if (files && files[0])
 {
-  fireEvent(events.files_loaded, files);
-
   console.log("mcp, loading files", files);
   
   // files[0] = code files
@@ -180,4 +180,6 @@ if (files && files[0])
     file_data[name] = last_saved_data[name] = data;
     await opfs.store_code_file_data(name, last_saved_data[name]); // maybe skip await?
   }
+  
+  fireEvent(events.files_loaded, files);
 }

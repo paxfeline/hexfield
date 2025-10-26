@@ -33,7 +33,7 @@ class HexFiles extends HTMLElement
 
   loadSelectedFile(file)
   {
-    mcp.fireEvent(mcp.events.load_code_file_text, file)
+    mcp.fireEvent(mcp.events.load_code_file_text, file);
   }
 
   addCodeFile(code_file, ind)
@@ -49,7 +49,7 @@ class HexFiles extends HTMLElement
         this.selectedIndex = ind;
         this.loadSelectedFile(code_file);
       }
-    )
+    );
     this.file_display.appendChild(row);
   }
 
@@ -58,6 +58,12 @@ class HexFiles extends HTMLElement
     const row = document.createElement("option");
     row.innerHTML = media_file.split("/").pop();
     row.setAttribute("value", media_file);
+    row.firstElementChild.addEventListener("dblclick",
+      () =>
+      {
+        console.log("dbl clicked media", media_file, this);
+      }
+    )
     this.media_file_display.appendChild(row);
   }
 
@@ -291,7 +297,10 @@ class HexFiles extends HTMLElement
         let path = await mcp.create_code_file();
         if (path)
         {
-          this.addCodeFile(path, this.file_display.children.length)
+          console.log("adding new file to files", path, mcp.files[0]);
+          mcp.files[0].push(path);
+          mcp.fireEvent(events.file_created);
+          this.addCodeFile(path, this.file_display.children.length);
           this.selectedIndex = this.file_display.children.length - 1;
           this.loadSelectedFile(path);
         }

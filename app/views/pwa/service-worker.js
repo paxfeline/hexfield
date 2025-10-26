@@ -23,6 +23,7 @@ const networkFirst = async ({ request, preloadResponsePromise, fallbackUrl }) =>
   // First try to get the resource from the network
   try
   {
+    console.log("attemping network fetch", request);
     const responseFromNetwork = await fetch(request, {signal: AbortSignal.timeout(5000)});
     _hexOnLine = true;
     // response may be used only once
@@ -33,13 +34,14 @@ const networkFirst = async ({ request, preloadResponsePromise, fallbackUrl }) =>
   }
   catch (error)
   {
+    console.log(error, request);
+
     if (error.name === "TimeoutError")
       _hexOnLine = false;
 
-    console.log(error, request);
-
     //let m = request.url.match(/.+\/web\/([^/]+)\/([^/]+)\/([^/]+)(?:\/)?(.*)/);
     let m = request.url.match(/https?:\/\/(?:[\w\d]+\.)?(?:[\w\d]+\.[\w\d]+)\/web\/([^/]+)\/([^/]+)\/([^/]+)(?:\/)?(.*)/);
+    console.log("checking url", m, request.url);
     if (m)
     {
       const [_, userId, projectName, p1, p2] = m;

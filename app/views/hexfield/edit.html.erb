@@ -251,4 +251,17 @@ vis_sel.addEventListener(
 );
 const vis_div = document.querySelector("#vis-div");
 vis_div.style.display = "initial";
+
+// update workspace tabs disabled-or-not status
+const update_tabs =
+  () =>
+  {
+    console.log("setting disabled", mcp.files[0]);
+    if (mcp.files[0].length > 0)
+      document.querySelector("#workspace").removeAttribute("disabled");
+    else
+      document.querySelector("#workspace").setAttribute("disabled", "");
+  };
+mcp.regHexEvent(mcp.events.files_loaded, update_tabs);
+mcp.regHexEvent(mcp.events.file_created, update_tabs);
 </script>
