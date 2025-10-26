@@ -61,11 +61,18 @@ export function load_code(code_str)
 			followed by a second single [CHAR]."
 	*/
 
+	// TODO: for this parsing, take into account <script> (and other?) tags/elements.
+	// So that if an HTML tag appears inside JavaScript code (e.g. in a string),
+	// it will be ignored.
+	// Arrrg but if a script element contains a string with the closing script tag...
+	// I have to parse JS too???
+
 	//const re = /<(\/?)([-\.\w]+)(\s+)((?:[^\s"'>\/=]+(?:\s*=\s*(?:(["']).*?\5|[^\s"'=<>`]+))?\s*)*)>/g;
 	const re = /<(\/?)([-\.\w]+)((?:\s+[^\t\s\/>"'=]+(?:\s*=\s*(?:(["']).*?\4|[^\t\s\/>"'=]+))?)*\s*)>/g;
 	code_str = code_str.replaceAll(re,
 		(_, ending_tag, tag_name, attributes) =>
 		{
+			console.log("converting:", ending_tag, tag_name, attributes);
 			if  (ending_tag == '/')
 				return `</div>`;
 			else
@@ -83,7 +90,7 @@ export function load_code(code_str)
 	
 	div.innerHTML = code_str;
 
-	mcp.fireEvent(mcp.events.builder_built, div.children);
+	//mcp.fireEvent(mcp.events.builder_built, div.children); // wut?
 	
 	// better to use a template with a dropzone?
 	const botdz = document.createElement('div');
@@ -116,13 +123,6 @@ export function load_element(el)
 	{
 		type = el.getAttribute('data-converting-type'); //.tagName.toLowerCase();
 	}
-	
-	/*
-	if (type == 'doctype') type = '!DOCTYPE html';
-	if (type == 'html-tag') type = 'html';
-	if (type == 'head-tag') type = 'head';
-	if (type == 'body-tag') type = 'body';
-	*/
 	
 	if (type == "!DOCTYPE") type = "!DOCTYPE html"; // I am sorry for this if statement :/
 	
