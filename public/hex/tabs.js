@@ -206,9 +206,6 @@ class HexTabs extends HTMLElement
       tab_header.style.display = "none";
       tab_bodies.style.borderWidth = "0";
     }
-
-    // run init functions
-    this.init?.(mcp);
     
     if (tab_bodies.assignedElements().length > 0)
       this.selectedIndex = 0;

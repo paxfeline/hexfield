@@ -58,7 +58,7 @@ class HexFiles extends HTMLElement
     const row = document.createElement("option");
     row.innerHTML = media_file.split("/").pop();
     row.setAttribute("value", media_file);
-    row.firstElementChild.addEventListener("dblclick",
+    row.addEventListener("dblclick",
       () =>
       {
         console.log("dbl clicked media", media_file, this);

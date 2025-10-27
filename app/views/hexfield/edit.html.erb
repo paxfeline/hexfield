@@ -107,13 +107,6 @@
           console.log("show this!");
           tabs.selectedIndex = 0;
         };
-
-      // TODO: move to scriptPar and have tabs iterate and run
-      let parPar = scriptPar.parentElement.init =
-        mcp =>
-        {
-          // anything?
-        };
     </script>
   </div>
   <div tab="Builder" style="height: 100%;">
@@ -135,13 +128,6 @@
         {
           console.log("show this!");
           tabs.selectedIndex = 1;
-        };
-
-      // TODO: move to scriptPar and have tabs iterate and run
-      parPar = scriptPar.parentElement.init =
-        mcp =>
-        {
-          // anything?
         };
     </script>
   </div>
@@ -165,18 +151,6 @@
           render.contentWindow.location.reload();
           tabs.selectedIndex = 0;
         };
-
-      // TODO: move to scriptPar and have tabs iterate and run
-      parPar = scriptPar.parentElement.init =
-        mcp =>
-        {
-          mcp.regHexEvent(mcp.events.load_code_file_text,
-            file =>
-            {
-              render.contentWindow.location = `/web/${file}`;
-            }
-          );
-        };
     </script>
   </div>
 </hex-tabs>
@@ -194,6 +168,8 @@
 import * as mcp from "/hex/mcp.js";
 import {html} from "@codemirror/lang-html"
 import {EditorView, basicSetup} from "codemirror"
+
+/* Code Miror stuff */
 
 const fixedHeightEditor = EditorView.theme({
   "&": {height: "100%"},
@@ -227,6 +203,8 @@ const view = new EditorView({
                 const code = view.state.doc.toString();
                 mcp.file_data[mcp.current_file_name] = code;
                 mcp.fireEvent(mcp.events.update_file_data);
+                let bout = builder_globals.load_code(code);
+                document.querySelector("#code").innerHTML = bout.innerHTML;
             },
             500 // delay
           );
@@ -238,6 +216,15 @@ const view = new EditorView({
 window.cm = view; // TODO: remove after debugging
 
 mcp.register_html_editor(view);
+
+mcp.regHexEvent(mcp.events.load_code_file_text,
+  file =>
+  {
+    render.contentWindow.location = `/web/${file}`;
+  }
+);
+
+/* Project Visibility control */
 
 const vis_sel = document.querySelector("#vis-sel");
 const params = new URLSearchParams(document.location.search);
@@ -254,6 +241,8 @@ vis_sel.addEventListener(
 );
 const vis_div = document.querySelector("#vis-div");
 vis_div.style.display = "initial";
+
+/* Main Tabs enabled? */
 
 // update workspace tabs disabled-or-not status
 const update_tabs =

@@ -74,13 +74,13 @@ export function load_code(code_str)
 	code_str = code_str.replaceAll(re,
 		(_, ending_tag, tag_name, attributes) =>
 		{
-			//console.log("converting:", ending_tag, tag_name, attributes);
+			console.log("converting:", ending_tag, tag_name, attributes);
 			if  (ending_tag == '/')
 				return `</div>`;
 			else
 			{
 				var tn;
-				if (builder_globals.empty_elements.includes(tag_name))
+				if (builder_globals.empty_elements.includes(tag_name.toLowerCase()))
 					tn = 'br';
 				else
 					tn = 'div';
@@ -121,7 +121,7 @@ export function load_element(el)
 	if (el.getAttribute)
 		type = el.getAttribute('data-converting-type');
 	
-	if (type == "!DOCTYPE") type = "!DOCTYPE html";
+	if (type?.toLowerCase() === "!doctype") type = "!doctype html";
 	
 	// TODO change document to the bank div
 	//const templ = document.querySelector(`[data-type='${type}']`);
@@ -247,25 +247,24 @@ export function addAttributes(source, dest)
 						const new_prop = builder_globals.factories.property(prop_name);
 						
 						if (prop_name == '[custom]')
-							new_prop.querySelector('.builder-property-name').value = name;
+							new_prop.querySelector('.builder-property-name').defaultValue = name;
 						
-						new_prop.querySelector('.builder-property-value').value = value;
+						new_prop.querySelector('.builder-property-value').defaultValue = value;
 						
 						prop_list.append(new_prop);
 					}
 				}
 				else
-					new_attr.querySelector('.builder-attr-value').value = attr.value;
+					new_attr.querySelector('.builder-attr-value').defaultValue = attr.value;
 				
 				listContainer.append(new_attr);
 			}
 			else
 			{
 				//const new_attr = document.querySelector(`[data-attribute-name='[custom]']`).cloneNode(true);
-				const new_attr = document.createElement('builder-attribute');
-				new_attr.setAttribute('type', '[custom]');
-				new_attr.querySelector('.builder-attr-name').value = attr.name;
-				new_attr.querySelector('.builder-attr-value').value = attr.value;
+				const new_attr = builder_globals.factories.attribute('[custom]');
+				new_attr.querySelector('.builder-attr-name').defaultValue = attr.name;
+				new_attr.querySelector('.builder-attr-value').defaultValue = attr.value;
 				
 				listContainer.append(new_attr);
 			}

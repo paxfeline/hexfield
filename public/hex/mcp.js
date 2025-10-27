@@ -139,8 +139,6 @@ export async function update_html_code_file()
   last_saved_data[current_file_name] = code;
   
   fireEvent(events.update_file_data);
-
-  builder_globals.load_code(code);
 }
 
 export async function create_code_file()
