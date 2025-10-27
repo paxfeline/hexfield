@@ -15,6 +15,8 @@ builder_globals.factories.dropzone = builder_create_dropzone;
 
 export const builder_create_element = type =>
 {
+  type = type.toLowerCase();
+
   const cont = document.createElement("div");
   
   const block = document.createElement("div");
@@ -84,6 +86,8 @@ builder_globals.factories.element = builder_create_element;
 
 export const builder_create_attribute = (type) =>
 {
+  type = type.toLowerCase();
+  
   const attr = document.createElement("div");
 
   attr.draggable = "true";
@@ -130,6 +134,8 @@ builder_globals.factories.attribute = builder_create_attribute;
 
 export const builder_create_property = type =>
 {
+  type = type.toLowerCase();
+  
   const prop = document.createElement("div");
 
   prop.draggable = "true";
