@@ -5,6 +5,8 @@ export function dragstart_attribute_handler(ev)
 	ev.dataTransfer.setData("application/hexfield-attribute", ev.target.outerHTML);
 	ev.dataTransfer.dropEffect = "copy";
 	builder_globals.dragged_attribute = null;
+
+	ev.stopPropagation();
 }
 
 builder_globals.handlers.dragstart_attribute = dragstart_attribute_handler;

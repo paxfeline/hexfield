@@ -1,7 +1,7 @@
 :host
 {
 	display: block;
-	width: min-content;
+	width: fir-content;
 }
 
 /* I wish I could think of a nicer way to do this.
@@ -34,7 +34,7 @@ builder-property
 #builder-attribute,
 #builder-property
 {
-	width: min-content;
+	width: fir-content;
 	margin: auto;
 }
 

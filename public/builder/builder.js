@@ -94,8 +94,7 @@ export function dragover_handler(ev)
 {
 	//console.log('doh', ev);
 	
-	if (ev.dataTransfer.getData("application/hexfield-element")
-		&& drop_ok(ev))
+	if (drop_ok(ev))
 	{
 		if (builder_globals.moving && !ev.shiftKey)
 			ev.dataTransfer.dropEffect = "move";
@@ -174,7 +173,7 @@ export function drop_ok(event)
 {
 	console.log("DOK?", builder_globals.moving, builder_globals.dragged, event.target);
 	console.log("DOK?",
-		event.dataTransfer.getData("application/hexfield-element") != null,
+		event.dataTransfer.getData("application/hexfield-element"),
 		builder_globals.moving,
 		builder_globals.dragged.contains(event.target),
 		// altogether again:
