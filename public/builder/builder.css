@@ -49,27 +49,48 @@ builder-property
 	display: none;
 }
 
-.blue-set
+.blue-set, /* these names no longer used. TODO: remove */
+.el[data-type="!DOCTYPE html"],
+.el[data-type="html"]
 {
 	--set-color: lightblue;
 }
 
-.purple-set
+.purple-set,
+.el[data-type="head"],
+.el[data-type="title"],
+.el[data-type="link"],
+.el[data-type="style"],
+.el[data-type="script"]
 {
 	--set-color: mediumpurple;
 }
 
-.green-set
+.green-set,
+.el[data-type="body"],
+.el[data-type="h1"],
+.el[data-type="div"],
+.el[data-type="span"],
+.el[data-type="img"],
+.el[data-type="p"],
+.el[data-type="nav"],
+.el[data-type="br"]
 {
 	--set-color: lightgreen;
 }
 
-.gold-set
+.gold-set,
+.el[data-type="a"],
+.el[data-type="form"],
+.el[data-type="input"],
+.el[data-type="option"]
 {
 	--set-color: gold;
 }
 
-.red-set
+.red-set,
+.el[data-type="[custom]"],
+.el[data-type="[custom-empty]"]
 {
 	--set-color: lightcoral;
 }

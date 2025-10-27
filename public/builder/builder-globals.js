@@ -15,7 +15,8 @@ export const builder_globals =
 		empty_elements: ['[custom-empty]', '[text]', '!DOCTYPE html', 'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr', ],
 		no_attributes: ['!DOCTYPE html', '[text]'],
 		dragged: null,
-        handlers: [], // filled in by other .js files
+        handlers: {}, // filled in by other .js files
+        factories: {}, // ibid.
 	};
 
 window.builder_globals = builder_globals;

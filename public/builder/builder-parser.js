@@ -1,3 +1,4 @@
+import { builder_create_dropzone } from "./builder-elements";
 import * as mcp from "/hex/mcp.js";
 
 export function load_code(code_str)
@@ -5,23 +6,23 @@ export function load_code(code_str)
 	/* Explanation of RegEx:
 		<						match opening <
 		(\/?) 			match a / if present (group 1)
-		([-\.\w]+)	match tag name (group 2)
-		(\s+)				match any space after the tag name (group 3) (capturing to enable re-creating of tag)
-		(						group 4: all attributes (and space)
-		(?:					non-capturing group: a single attribute, w/ any space after
-		[...]+			match attribute name (negated set based on specs)
-		(?:					non-capturing group: the value part of the attribute, incl. equals)
-		\s*=\s*			match = sign (with space allowed around it)
-		(?:					non-capturing group (needed to | value with or without quotation marks)
-		(["'])			match quotation mark (group 5)
-		.*?					match attribute value (zero-or-more instances of any character, non-greedy)
-		\5					match closing quotation mark
-		|						or (allowing values with or without quotes)
-		[...]+			match attribute value (negated set based on specs)
-		))?					match non-capturing group (the value part of the attribute...) if present
-		\s*					match any/all space after the attribute
-		)*					match non-capturing group (a single attribute w/ any space after), zero-or-more times
-		)						close of group 4 (everything after tag name and space, i.e. all attributes)
+		(!?					match a possible ! (for !DOCTYPE) at start of tag name (group 2 pt. 1)
+		[-\.\w]+)		match tag name (group 2 pt. 2)
+		(\s+				match any space after the tag name (group 3 begins)
+		(?:						non-capturing group: a single attribute, w/ any space after
+		[...]+					match attribute name (negated set based on specs)
+		(?:							non-capturing group: the value part of the attribute, incl. equals)
+		\s*=\s*						match = sign (with space allowed around it)
+		(?:								non-capturing group (needed to | value with or without quotation marks)
+		(["'])							match quotation mark (group 4)
+		.*?									match attribute value (any # of instances of any character, non-greedy)
+		\4									match closing quotation mark
+		|										or (allowing values with or without quotes)
+		[...]+							match attribute value (negated set based on specs)
+		))?							match non-capturing group (the value part of the attribute...) if present
+		\s*							match any/all space after the attribute
+		)*						match non-capturing group (a single attribute w/ any space after), any # of times
+		)						close of group 3 (everything after tag name and space, i.e. all attributes)
 		\/?					consume possible XML-style trailing slash (self-closing tag)
 		>						match closing >
 
@@ -69,7 +70,7 @@ export function load_code(code_str)
 	// I have to parse JS too???
 
 	//const re = /<(\/?)([-\.\w]+)(\s+)((?:[^\s"'>\/=]+(?:\s*=\s*(?:(["']).*?\5|[^\s"'=<>`]+))?\s*)*)>/g;
-	const re = /<(\/?)([-\.\w]+)((?:\s+[^\t\s\/>"'=]+(?:\s*=\s*(?:(["']).*?\4|[^\t\s\/>"'=]+))?)*\s*)\/?>/g;
+	const re = /<(\/?)(!?[-\.\w]+)((?:\s+[^\t\s\/>"'=]+(?:\s*=\s*(?:(["']).*?\4|[^\t\s\/>"'=]+))?)*\s*)\/?>/g;
 	code_str = code_str.replaceAll(re,
 		(_, ending_tag, tag_name, attributes) =>
 		{
@@ -96,8 +97,7 @@ export function load_code(code_str)
 	const code = document.createElement("div");
 	
 	// better to use a template with a dropzone?
-	const botdz = document.createElement('div');
-	botdz.setAttribute('class', 'dropzone');
+	const botdz = builder_create_dropzone();
 	code.append(botdz);
 	
 	// TODO get/add doctype
@@ -108,11 +108,7 @@ export function load_code(code_str)
 		
 		if (loaded)
 		{
-			code.append(loaded);
-		
-			const botdz = document.createElement('div');
-			botdz.setAttribute('class', 'dropzone');
-			code.append(botdz);
+			code.append(...loaded);
 		}
 	}
 
@@ -123,7 +119,7 @@ builder_globals.load_code = load_code;
 
 export function load_element(el)
 {
-	var type;
+	let type;
 	if (el.getAttribute)
 	{
 		type = el.getAttribute('data-converting-type');
@@ -133,7 +129,7 @@ export function load_element(el)
 	
 	// TODO change document to the bank div
 	//const templ = document.querySelector(`[data-type='${type}']`);
-	var ne;
+	let ne, dz;
 	
 	if (el.nodeType == 3) // text node
 	{
@@ -145,51 +141,40 @@ export function load_element(el)
 		// TODO change document to the bank div
 		//const txt_templ = document.querySelector(`[data-type='[text]']`);
 		//ne = txt_templ.cloneNode(true);
-		ne = document.createElement("div");
-		ne.dataset.type = '[text]';
-	
-		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
-		const ta = document.createElement('textarea');
-		ne.append(ta);
+		[ne, dz] = builder_globals.factories.element('[text]').children;
+		
+		let ta = ne.firstElementChild;
 		ta.innerHTML = txt;
 		// this line is apparently necessary, even though it shouldn't be
+		// TODO: check ^
 		ta.value = ta.innerHTML;
 	}
 	else if (builder_globals.text_elements.includes(type))
 	{
 		//ne = templ.cloneNode(true);
-		ne = document.createElement("div");
-		ne.dataset.type = type;
+		[ne, dz] = builder_globals.factories.element(type).children;
 		addAttributes(el, ne);
 		
-		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
-		const ta = document.createElement('textarea');
-		ne.append(ta);
-		el.innerHTML = el.innerHTML.trim();
-		ta.innerHTML = el.innerHTML;
+		const ta = ne.firstElementChild;
+		// TODO: check this line I commentded out if shit goes south
+		//el.innerHTML = el.innerHTML.trim();
+		ta.innerHTML = el.innerHTML.trim();
 		// this line might be necessary, even though it shouldn't be
+		// TODO: again, check ^:
 		ta.value = ta.innerHTML;
 	}
 	else if (builder_globals.known_elements.includes(type))
 	{
 		//ne = templ.cloneNode(true);
-		ne = document.createElement("div");
-		ne.dataset.type = type;
+		[ne, dz] = builder_globals.factories.element(type).children;
 		addAttributes(el, ne);
-		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
 	
 		for (const chel of el.childNodes)
 		{
 			const loaded = load_element(chel);
 		
 			if (loaded)
-			{
-				ne.append(loaded);
-			
-				const botdz = document.createElement('div');
-				botdz.setAttribute('class', 'dropzone');
-				ne.append(botdz);
-			}
+				ne.append(...loaded);
 		}
 	}
 	else if (el.nodeType == 1)
@@ -199,10 +184,8 @@ export function load_element(el)
 		
 		//const custom_templ = document.querySelector(`[data-type="${check_empty ? '[custom-empty]' : '[custom]'}"]`);
 		//ne = custom_templ.cloneNode(true);
-		ne = document.createElement("div");
-		ne.dataset.type = check_empty ? '[custom-empty]' : '[custom]';
+		[ne, dz] = builder_globals.factories.element(check_empty ? '[custom-empty]' : '[custom]').children;
 		addAttributes(el, ne);
-		ne.setAttribute("ondragstart", "dragstart_move_handler(event)");
 		
 		ne.querySelector('.builder-custom-type').setAttribute('value', type);
 		
@@ -213,19 +196,12 @@ export function load_element(el)
 				const loaded = load_element(chel);
 		
 				if (loaded)
-				{
-					ne.append(loaded);
-			
-					const botdz = document.createElement('div');
-					botdz.setAttribute('class', 'dropzone');
-					ne.append(botdz);
-				}
+					ne.append(...loaded);
 			}
 		}
 	}
 
-	
-	return ne;
+	return [ne, dz];
 }
 
 export function addAttributes(source, dest)
@@ -241,16 +217,8 @@ export function addAttributes(source, dest)
 		//dest.prepend(wrapper);
 		
 		//const listContainer = wrapper.firstElementChild; // simpler but more brittle than querySelector('.builder-attribute-container').cloneNode(true);
-		
-		const wrapper = document.createElement("div");
-		wrapper.innerHTML = `
-			<div class="builder-attribute-set">
-			<div class="builder-attribute-container"></div>
-			<div class="builder-attribute-dropzone" ondragenter="onAttributeDragEnter(event)" ondragleave="onAttributeDragLeave(event)" ondrop="drop_attribute_handler(event)" ondragover="dragover_attribute_handler(event)"></div>
-			</div>
-		`;
 
-		const listContainer = wrapper.querySelector('.builder-attribute-container');
+		const listContainer = dest.querySelector('.builder-attribute-container');
 
 		for (var i = 0; i < source.attributes.length; i++)
 		{
@@ -262,21 +230,15 @@ export function addAttributes(source, dest)
 			{
 				// TODO change document to the bank div (or make templates)
 				//const new_attr = document.querySelector(`[data-attribute-name='${attr.name}']`).cloneNode(true);
-				const new_attr = document.createElement('div');
-				new_attr.dataset.attributeName = attr.name;
+				const new_attr = builder_globals.factories.attribute(attr.name);
 
 				if (attr.name == 'style')
 				{
 					const prop_list = new_attr.querySelector('.builder-property-container');
 					
-					////////////
-					
 					const cssdiv = document.createElement('div');
 					cssdiv.style.cssText = attr.value;
-					
-					/*const cssdoc = document.implementation.createHTMLDocument();
-					cssdoc.body.append(cssdiv);*/
-			
+								
 					console.log('r s', cssdiv.style);
 					
 					for (var css_i = 0; css_i < cssdiv.style.length; css_i++)
@@ -286,10 +248,8 @@ export function addAttributes(source, dest)
 						
 						const prop_name = builder_globals.known_properties.includes(name) ? name : '[custom]';
 						// const new_prop = document.querySelector(`[data-property-name='${templ_name}']`).cloneNode(true);
-						const new_prop = document.createElement('div');
-						new_prop.dataset.propertyName = prop_name;
+						const new_prop = builder_globals.factories.property(prop_name);
 						
-						// TODO: change to using attributes (on new_prop) rather than going into shadowRoot?
 						if (prop_name == '[custom]')
 							new_prop.querySelector('.builder-property-name').value = name;
 						
