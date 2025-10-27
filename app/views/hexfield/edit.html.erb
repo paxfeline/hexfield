@@ -201,14 +201,23 @@ const fixedHeightEditor = EditorView.theme({
 });
 
 //body = document.querySelector("hex-tabs").shadowRoot.querySelector("#root");
-let root = document.querySelector("#workspace").shadowRoot;
-let body = document.querySelector("#workspace").shadowRoot.querySelector("#body");
+let body = document.querySelector("#body");
 
 let deb_upd;
+
 const view = new EditorView({
-  //doc: "Start document",
+  doc: "Start document",
   parent: body,
-  root: root,
+  root: document,
+  extensions: [
+    basicSetup,
+    html()
+  ]
+})
+
+/*
+const view = new EditorView({
+  parent: body,
   extensions: [
     basicSetup,
     fixedHeightEditor,
@@ -232,6 +241,7 @@ const view = new EditorView({
       })
   ]
 });
+*/
 
 window.cm = view; // TODO: remove after debugging
 

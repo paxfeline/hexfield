@@ -18,7 +18,7 @@ class HexTabs extends HTMLElement
 
   get selectedTabBody()
   {
-    return this.tab_bodies.children[this.#selectedIndex];
+    return this.tab_bodies.assignedElements()[this.#selectedIndex];
   }
 
   get selectedTabTab()
@@ -30,13 +30,13 @@ class HexTabs extends HTMLElement
   {
     if (this.#selectedIndex !== null)
     {
-      this.selectedTabBody.removeAttribute("selected");
+      this.selectedTabBody.setAttribute("hidden", "");
       this.selectedTabTab?.removeAttribute("selected");
     }
     
     this.#selectedIndex = i;
     
-    this.selectedTabBody.setAttribute("selected", "");
+    this.selectedTabBody.removeAttribute("hidden");
     this.selectedTabTab?.setAttribute("selected", "");
 
     console.log("tab onshow cb?:", this.selectedTabBody?.onshow);
@@ -81,7 +81,7 @@ class HexTabs extends HTMLElement
         ${this.hasAttribute("disabled") ? "disabled" : ""}>
         <div id="tab-header" part="header"></div>
       </fieldset>
-      <div id="tab-bodies" part="bodies"></div>
+      <slot id="tab-bodies" part="bodies"></slot>
     `;
 
     // Create some CSS to apply to the shadow dom
@@ -145,6 +145,7 @@ class HexTabs extends HTMLElement
         border: 0.2rem solid black;
         border-top-width: 0;
         height: 100%;
+        display: block; /* slot default = contents */
       }
 
       #tab-bodies > *
@@ -164,12 +165,17 @@ class HexTabs extends HTMLElement
     
     const tab_bodies = shadow.querySelector("#tab-bodies");
     this.tab_bodies = tab_bodies;
-    tab_bodies.append(...this.children);
+    //tab_bodies.append(...this.children);
+    tab_bodies.assignedElements().map(el => 
+    {
+      console.log("hiding tab", el);
+      el.setAttribute("hidden", "");
+    });
 
     const tab_header = shadow.querySelector("#tab-header");
     if (!this.hasAttribute("no-tabs"))
     {
-      const tabs = Array.from(tab_bodies.children).map(
+      const tabs = Array.from(tab_bodies.assignedElements()).map(
         (el, ind) =>
         {
           const tab = document.createElement("button");
@@ -192,7 +198,7 @@ class HexTabs extends HTMLElement
     // run init functions
     this.init?.(mcp);
     
-    if (tab_bodies.children.length > 0)
+    if (tab_bodies.assignedElements().length > 0)
       this.selectedIndex = 0;
   }
 }
