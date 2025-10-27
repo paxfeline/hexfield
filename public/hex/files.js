@@ -299,7 +299,11 @@ class HexFiles extends HTMLElement
         {
           console.log("adding new file to files", path, mcp.files[0]);
           mcp.files[0].push(path);
-          mcp.fireEvent(events.file_created);
+          // not needed because file_data[name] will initially be null...
+          // and then any changes will be flagged?:
+          //const name = path.split("/").pop();
+          //file_data[name] = last_saved_data[name] = "";
+          mcp.fireEvent(mcp.events.file_created);
           this.addCodeFile(path, this.file_display.children.length);
           this.selectedIndex = this.file_display.children.length - 1;
           this.loadSelectedFile(path);

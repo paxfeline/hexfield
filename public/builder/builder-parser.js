@@ -1,4 +1,4 @@
-import { builder_create_dropzone } from "./builder-elements";
+import { builder_create_dropzone } from "./builder-elements.js";
 import * as mcp from "/hex/mcp.js";
 
 export function load_code(code_str)
@@ -107,9 +107,7 @@ export function load_code(code_str)
 		const loaded = load_element(el);
 		
 		if (loaded)
-		{
 			code.append(...loaded);
-		}
 	}
 
 	return code;
@@ -121,9 +119,7 @@ export function load_element(el)
 {
 	let type;
 	if (el.getAttribute)
-	{
 		type = el.getAttribute('data-converting-type');
-	}
 	
 	if (type == "!DOCTYPE") type = "!DOCTYPE html";
 	

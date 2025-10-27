@@ -15,14 +15,14 @@ import * as opfs from "/hex/opfs.js";
 
 export const events = {};
 [
-  "files_loaded",
-  "update_file_data",
-  "file_created",
+  "files_loaded",             // initial files loaded
+  "update_file_data",         // a file has been modified
+  "load_code_file_text",      // load code file into code editor
+  "file_created",             // a file has been created
   "file_deleted",
   "connection_lost",
   "connection_restored",
   "sw_msg",
-  "load_code_file_text",
   "builder_built",
 ]
 .forEach(x => events[x] = Symbol(x));
