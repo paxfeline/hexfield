@@ -4,6 +4,12 @@
 	width: min-content;
 }
 
+/* I wish I could think of a nicer way to do this.
+	It's necessary because, without it, the #root rule above
+	overrides the "element attribute style" for "hidden" */
+
+:host([hidden]) { display: none; }
+
 /* TODO: maybe: could make this a class */
 #builder-element,
 #builder-attribute,

@@ -274,6 +274,28 @@ class BuilderBank extends HTMLElement
     super();
   }
 
+  static observedAttributes = ["hidden"];
+
+  attributeChangedCallback(name, oldValue, newValue)
+  {
+    console.log(
+      `Tabs: Attribute ${name} has changed from ${oldValue} to ${newValue}.`,
+    );
+
+    // maybe not connected yet?
+    if (!this.shadowRoot) return;
+
+    console.log("ACC!", this.shadowRoot.children);
+
+    if (name === "hidden")
+    {
+      if (newValue === null)
+        this.shadowRoot.querySelector("#builder-bank").removeAttribute("hidden");
+      else
+        this.shadowRoot.querySelector("#builder-bank").setAttribute("hidden", "");
+    }
+  }
+
   connectedCallback()
   {
     // Create a shadow root
@@ -287,6 +309,8 @@ class BuilderBank extends HTMLElement
     const root = document.createElement("div");
     root.id = "builder-bank";
 
+    if (this.hasAttribute("hidden"))
+      root.setAttribute("hidden", "");
 
     //<div id="bank" ondragenter="onTrashDragEnter(event)" ondragleave="onTrashDragLeave(event)" ondrop="drop_trash_handler(event)" ondragover="dragover_trash_handler(event)">
     

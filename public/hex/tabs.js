@@ -43,7 +43,7 @@ class HexTabs extends HTMLElement
     this.selectedTabBody?.onshow?.();
   }
 
-  static observedAttributes = ["disabled"];
+  static observedAttributes = ["disabled", "hidden"];
 
   attributeChangedCallback(name, oldValue, newValue)
   {
@@ -62,7 +62,13 @@ class HexTabs extends HTMLElement
         tabs_fieldset.removeAttribute("disabled");
       else
         tabs_fieldset.setAttribute("disabled", "");
-
+    }
+    else if (name === "hidden")
+    {
+      if (newValue === null)
+        this.shadowRoot.querySelector("#root").removeAttribute("hidden");
+      else
+        this.shadowRoot.querySelector("#root").setAttribute("hidden", "");
     }
   }
 
@@ -93,6 +99,12 @@ class HexTabs extends HTMLElement
         display: block;
         height: 100%;
       }
+
+      /* I wish I could think of a nicer way to do this.
+        It's necessary because, without it, the #root rule above
+        overrides the "element attribute style" for "hidden" */
+
+      :host([hidden]) { display: none; }
 
       #root
       {

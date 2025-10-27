@@ -203,21 +203,14 @@ const fixedHeightEditor = EditorView.theme({
 //body = document.querySelector("hex-tabs").shadowRoot.querySelector("#root");
 let body = document.querySelector("#body");
 
-let deb_upd;
+let deb_upd; // debounce editor update callback
 
+// the root parameter is necessary below
+// I think because the element "seems" to be in a custom element,
+// but is not in its shadowRoot.
 const view = new EditorView({
-  doc: "Start document",
   parent: body,
   root: document,
-  extensions: [
-    basicSetup,
-    html()
-  ]
-})
-
-/*
-const view = new EditorView({
-  parent: body,
   extensions: [
     basicSetup,
     fixedHeightEditor,
@@ -241,7 +234,6 @@ const view = new EditorView({
       })
   ]
 });
-*/
 
 window.cm = view; // TODO: remove after debugging
 
