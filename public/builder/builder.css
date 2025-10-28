@@ -61,7 +61,7 @@ builder-property
 }
 
 .blue-set, /* these names no longer used. TODO: remove */
-.el[data-type="!DOCTYPE html"],
+.el[data-type="!doctype html"],
 .el[data-type="html"]
 {
 	--set-color: lightblue;
