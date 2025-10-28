@@ -97,20 +97,29 @@
 </div>
 
 <hex-tabs id="workspace" disabled>
-  <div tab="Code">
+  <div tab="Text">
     <div id="body"></div>
     <script>
       const tabs = document.querySelector("#sidebar-tabs");
       let scriptPar = document.currentScript.parentElement;
       scriptPar.onshow =
-        () =>
+        mcp =>
         {
-          console.log("show this!");
+          console.log("show code!");
           tabs.selectedIndex = 0;
+          if (builder_globals.blocks_visited)
+          {
+            const code = builder_globals.render_code();
+            // TODO: maybe: move this next line into mcp.update_html_code_editor
+            mcp.file_data[mcp.current_file_name] = code;
+            mcp.update_html_code_editor(code);
+
+            builder_globals.blocks_visited = false;
+          }
         };
     </script>
   </div>
-  <div tab="Builder" style="height: 100%;">
+  <div tab="Blocks" style="height: 100%;">
     <link rel="stylesheet" href="/builder/builder.css">
     <div id="code">
       <div
@@ -123,14 +132,20 @@
     <script>
       scriptPar = document.currentScript.parentElement;
       scriptPar.onshow =
-        () =>
+        mcp =>
         {
-          console.log("show this!");
+          console.log("show blocks!");
           tabs.selectedIndex = 1;
+
+          const code = mcp.file_data[mcp.current_file_name];
+          let bout = builder_globals.load_code(code);
+          document.querySelector("#code").innerHTML = bout.innerHTML;
+
+          builder_globals.blocks_visited = true;
         };
     </script>
   </div>
-  <div tab="Render" style="height: 100%;">
+  <div tab="Preview" style="height: 100%;">
     <style>
 #render
 {
@@ -147,6 +162,7 @@
       scriptPar.onshow =
         () =>
         {
+          console.log("refresh preview");
           render.contentWindow.location.reload();
           tabs.selectedIndex = 0;
         };
@@ -205,8 +221,6 @@ const view = new EditorView({
                 const code = view.state.doc.toString();
                 mcp.file_data[mcp.current_file_name] = code;
                 mcp.fireEvent(mcp.events.update_file_data);
-                let bout = builder_globals.load_code(code);
-                document.querySelector("#code").innerHTML = bout.innerHTML;
             },
             500 // delay
           );

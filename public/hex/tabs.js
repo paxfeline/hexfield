@@ -40,7 +40,7 @@ class HexTabs extends HTMLElement
     this.selectedTabTab?.setAttribute("selected", "");
 
     console.log("tab onshow cb?:", this.selectedTabBody?.onshow);
-    this.selectedTabBody?.onshow?.();
+    this.selectedTabBody?.onshow?.(mcp);
   }
 
   static observedAttributes = ["disabled", "hidden"];
