@@ -165,8 +165,10 @@
 
 <script type="module">
 import * as mcp from "/hex/mcp.js";
+import {minimalSetup} from "codemirror"
+import {EditorView, keymap} from "@codemirror/view"
 import {html} from "@codemirror/lang-html"
-import {EditorView, minimalSetup} from "codemirror"
+import {indentWithTab} from "@codemirror/commands"
 
 /* Code Miror stuff */
 
@@ -188,6 +190,7 @@ const view = new EditorView({
   root: document,
   extensions: [
     minimalSetup,
+    keymap.of([indentWithTab]),
     fixedHeightEditor,
     html({autoCloseTags: false}),
     EditorView.updateListener.of(
