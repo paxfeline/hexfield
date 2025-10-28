@@ -2,44 +2,43 @@
 
 export function dragstart_handler(ev)
 {
-	console.log("dsh", ev);
-	ev.dataTransfer.setData("application/hexfield-element", ev.target.parentElement.innerHTML);
-	ev.dataTransfer.dropEffect = "copy";
-	// builder_globals.dragged = null; // changing so that dragged has a value
+	const code = document.querySelector("#code");
+	if (code.contains(ev.target))
+	{
+		console.log("dsmh");
+		// add any text area values to their elements as attributes
+		const tas = ev.target.querySelectorAll("textarea");
+		tas.forEach(ta => ta.innerHTML = ta.value);
+		
+		// for custom elements, copy input too
+		const inp = ev.target.querySelector("input.builder-custom-type");
+		if (inp)
+			inp.setAttribute('value', inp.value);
+		
+		console.log('start', ev.target, tas);
+
+		const block_n_dz = ev.target.outerHTML + ev.target.nextElementSibling.outerHTML;
+
+		ev.dataTransfer.setData("application/hexfield-element", block_n_dz);
+		ev.dataTransfer.dropEffect = "move";
 		builder_globals.dragged = ev.target;
-	builder_globals.moving = false; // i.e. not copying; used instead of dragged = null
+		builder_globals.moving = true; // used now instead of dragged having a value
+	}
+	else
+	{
+		console.log("dsh", ev);
+		ev.dataTransfer.setData("application/hexfield-element", ev.target.parentElement.innerHTML);
+		ev.dataTransfer.dropEffect = "copy";
+		// builder_globals.dragged = null; // changing so that dragged has a value
+			builder_globals.dragged = ev.target;
+		builder_globals.moving = false; // i.e. not copying; used instead of dragged = null
+	}
 	
 	ev.stopPropagation();
 }
 
 builder_globals.handlers.dragstart = dragstart_handler;
 
- // TODO: in this handler, set the value attribute explicitly so that it's copied
-export function dragstart_move_handler(ev)
-{
-	console.log("dsmh");
-	// add any text area values to their elements as attributes
-	const tas = ev.target.querySelectorAll("textarea");
-	tas.forEach(ta => ta.innerHTML = ta.value);
-	
-	// for custom elements, copy input too
-	const inp = ev.target.querySelector("input.builder-custom-type");
-	if (inp)
-		inp.setAttribute('value', inp.value);
-	
-	console.log('start', ev.target, tas);
-
-	const block_n_dz = ev.target.outerHTML + ev.target.nextElementSibling.outerHTML;
-
-	ev.dataTransfer.setData("application/hexfield-element", block_n_dz);
-	ev.dataTransfer.dropEffect = "move";
-	builder_globals.dragged = ev.target;
-	builder_globals.moving = true; // used now instead of dragged having a value
-	
-	ev.stopPropagation();
-}
-
-builder_globals.handlers.dragstartmove = dragstart_move_handler;
 
 export function drop_handler(ev)
 {
@@ -54,7 +53,7 @@ export function drop_handler(ev)
 
 	 temp.innerHTML = data;
 	 //temp.firstElementChild.setAttribute("ondragstart", "dragstart_move_handler(event)");
-	 temp.firstElementChild.setAttribute("ondragstart", "builder_globals.handlers.dragstartmove(event)");
+	 //temp.firstElementChild.setAttribute("ondragstart", "builder_globals.handlers.dragstartmove(event)");
 
 	//if ( !builder_globals.dragged && !temp.firstElementChild.hasAttribute("data-no-attributes") ) 
 	if ( !builder_globals.dragged && !builder_globals.no_attributes.includes(temp.firstElementChild.dataset.type) )

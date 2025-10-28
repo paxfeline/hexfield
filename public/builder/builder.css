@@ -1,7 +1,7 @@
 :host
 {
 	display: block;
-	width: fir-content;
+	width: fit-content;
 }
 
 /* I wish I could think of a nicer way to do this.
@@ -30,11 +30,16 @@ builder-property
 	width: 100%;
 }
 
+/*
 #builder-element,
 #builder-attribute,
 #builder-property
+*/
+.el,
+.attr,
+.property
 {
-	width: fir-content;
+	width: fit-content;
 	margin: auto;
 }
 

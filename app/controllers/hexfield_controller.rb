@@ -144,7 +144,9 @@ class HexfieldController < ApplicationController
     project_name = params[:project]
     project = Project.find_by(name: project_name)
 
-    render plain: "Project is not public", status: :unauthorized and return unless project.vis_public?
+    if !project.vis_public? && current_user&.id != Integer(userid)
+      render plain: "Project is not public", status: :unauthorized and return
+    end
 
     bucket = get_bucket
 

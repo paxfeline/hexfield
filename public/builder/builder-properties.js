@@ -7,38 +7,37 @@ builder_globals.handlers.update_value = update_value;
 
 export function dragstart_property_handler(ev)
 {
-	console.log('dsp');
-	// Add the target element's id to the data transfer object
-	ev.dataTransfer.setData("application/hexfield-property", ev.target.outerHTML);
-	ev.dataTransfer.dropEffect = "copy";
-	builder_globals.dragged_property = null;
+	const code = document.querySelector("#code");
+	if (code.contains(ev.target))
+	{
+		// add any text area values to their elements as attributes
+		const tas = ev.target.querySelectorAll("textarea");
+		tas.forEach(ta => ta.innerHTML = ta.value);
+		
+		// for custom elements, copy input too
+		const inp = ev.target.querySelector("input.builder-custom-type");
+		if (inp)
+			inp.setAttribute('value', inp.value);
+		
+		console.log('start p m', ev.target, tas);
+		//ev.target.firstElementChild.innerHTML = ev.target.firstElementChild.value;
+		ev.dataTransfer.setData("application/hexfield-property", ev.target.outerHTML);
+		ev.dataTransfer.dropEffect = "move";
+		builder_globals.dragged_property = ev.target;
+	}
+	else
+	{
+		console.log('dsp');
+		// Add the target element's id to the data transfer object
+		ev.dataTransfer.setData("application/hexfield-property", ev.target.outerHTML);
+		ev.dataTransfer.dropEffect = "copy";
+		builder_globals.dragged_property = null;
+	}
 	
 	ev.stopPropagation();
 }
 
 builder_globals.handlers.dragstart_property = dragstart_property_handler;
-
-export function dragstart_move_property_handler(ev)
-{
-	// add any text area values to their elements as attributes
-	const tas = ev.target.querySelectorAll("textarea");
-	tas.forEach(ta => ta.innerHTML = ta.value);
-	
-	// for custom elements, copy input too
-	const inp = ev.target.querySelector("input.builder-custom-type");
-	if (inp)
-		inp.setAttribute('value', inp.value);
-	
-	console.log('start p m', ev.target, tas);
-	//ev.target.firstElementChild.innerHTML = ev.target.firstElementChild.value;
-	ev.dataTransfer.setData("application/hexfield-property", ev.target.outerHTML);
-	ev.dataTransfer.dropEffect = "move";
-	builder_globals.dragged_property = ev.target;
-	
-	ev.stopPropagation();
-}
-
-builder_globals.handlers.dragstart_move_property = dragstart_move_property_handler;
 
 export function drop_property_handler(ev)
 {
@@ -53,7 +52,7 @@ export function drop_property_handler(ev)
 
 
 	temp.innerHTML = data;
-	temp.firstElementChild.setAttribute("ondragstart", "builder_globals.handlers.dragstart_move_property(event)");
+	//temp.firstElementChild.setAttribute("ondragstart", "builder_globals.handlers.dragstart_move_property(event)");
  
 	ev.target.parentElement.style.filter = '';
 	ev.target.style.removeProperty('--property-dropzone-color');
