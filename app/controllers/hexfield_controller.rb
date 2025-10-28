@@ -115,7 +115,7 @@ class HexfieldController < ApplicationController
 
     # puts "pgcf: #{current_user&.id} ? #{userid}"
 
-    if !project.vis_public? && current_user&.id != Integer(userid)
+    if !project.vis_public? && current_user != project.owner
       render plain: "Project is not public", status: :unauthorized and return
     end
 
@@ -144,7 +144,7 @@ class HexfieldController < ApplicationController
     project_name = params[:project]
     project = Project.find_by(name: project_name)
 
-    if !project.vis_public? && current_user&.id != Integer(userid)
+    if !project.vis_public? && current_user != project.owner
       render plain: "Project is not public", status: :unauthorized and return
     end
 
