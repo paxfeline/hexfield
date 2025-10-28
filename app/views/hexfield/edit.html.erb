@@ -166,7 +166,7 @@
 <script type="module">
 import * as mcp from "/hex/mcp.js";
 import {html} from "@codemirror/lang-html"
-import {EditorView, basicSetup} from "codemirror"
+import {EditorView, minmalSetup} from "codemirror"
 
 /* Code Miror stuff */
 
@@ -187,7 +187,7 @@ const view = new EditorView({
   parent: body,
   root: document,
   extensions: [
-    basicSetup,
+    minmalSetup,
     fixedHeightEditor,
     html(),
     EditorView.updateListener.of(
