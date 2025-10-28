@@ -174,7 +174,7 @@ export function drop_ok(event)
 	console.log("DOK?",
 		event.dataTransfer.getData("application/hexfield-element"),
 		builder_globals.moving,
-		builder_globals.dragged.contains(event.target),
+		builder_globals.dragged?.contains(event.target),
 		// altogether again:
 		"VERDICT:",
 		event.dataTransfer.getData("application/hexfield-element")
@@ -187,10 +187,10 @@ export function drop_ok(event)
 					|| (builder_globals.moving
 						// but not to within itself (checks that dragged is not one of its own ancestors),
 						// && !check_in_tree(builder_globals.dragged, event.target.parentElement)
-						&& !builder_globals.dragged.contains(event.target)
+						&& !builder_globals.dragged?.contains(event.target)
 						// and not directly above or below itself
-						&& builder_globals.dragged.previousElementSibling != event.target
-						&& builder_globals.dragged.nextElementSibling != event.target)));
+						&& builder_globals?.dragged.previousElementSibling != event.target
+						&& builder_globals?.dragged.nextElementSibling != event.target)));
 	// baseline: return true if dataTransfer object has hexfield data
 	return event.dataTransfer.getData("application/hexfield-element")
 				&&
@@ -203,10 +203,10 @@ export function drop_ok(event)
 					|| (builder_globals.moving
 						// but not to within itself (checks that dragged is not one of its own ancestors),
 						// && !check_in_tree(builder_globals.dragged, event.target.parentElement)
-						&& !builder_globals.dragged.contains(event.target)
+						&& !builder_globals.dragged?.contains(event.target)
 						// and not directly above or below itself
-						&& builder_globals.dragged.previousElementSibling != event.target
-						&& builder_globals.dragged.nextElementSibling != event.target));
+						&& builder_globals.dragged?.previousElementSibling != event.target
+						&& builder_globals.dragged?.nextElementSibling != event.target));
 }
 
 // TODO: get rid of this! yay!
