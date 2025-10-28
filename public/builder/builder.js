@@ -170,6 +170,7 @@ export function trim_dropzones(el)
 // If it is, return false = not ok.
 export function drop_ok(event)
 {
+	/*
 	console.log("DOK?", builder_globals.moving, builder_globals.dragged, event.target);
 	console.log("DOK?",
 		event.dataTransfer.getData("application/hexfield-element"),
@@ -191,6 +192,7 @@ export function drop_ok(event)
 						// and not directly above or below itself
 						&& builder_globals?.dragged.previousElementSibling != event.target
 						&& builder_globals?.dragged.nextElementSibling != event.target)));
+	*/
 	// baseline: return true if dataTransfer object has hexfield data
 	return event.dataTransfer.getData("application/hexfield-element")
 				&&
@@ -235,20 +237,17 @@ export function restoreAutosave()
 	}
 }
 
-export function renderCode(realHTML=false)
+export function renderCode(realHTML=true)
 {
 	const source = document.querySelector("#code");
-	const destCode = document.querySelector("#render-code");
-	
-	localStorage.setItem( 'HEXFIELD-AUTOSAVE', source.innerHTML );
-	
+		
 	var code = '';
 	
 	// this data is annoying repeated here and renderElementCode (below)
 	// IF YOU CHANGE THIS, CHANGE THAT
 	if (source.children)
 	{
-		for (el of source.children)
+		for (const el of source.children)
 		{
 			if (el.getAttribute)
 			{
@@ -286,23 +285,12 @@ export function renderCode(realHTML=false)
 		}
 	}
 	
-	if (realHTML)
-	{
-		builder_globals.cur_file.content = code;
-		save_local_filesets();
-	
-		console.log('gen url', builder_globals.cur_file.name);	
-
-		// create uri for local linking
-		builder_globals.cur_file.url = URL.createObjectURL(new Blob([code], {type: 'text/html'}));
-	
-		return code;
-	}
-	else
-		destCode.innerHTML = code;
+	return code;
 }
 
-export function renderElementCode(source, realHTML=false, level=4, type_override)
+builder_globals.render_code = renderCode;
+
+export function renderElementCode(source, realHTML=true, level=4, type_override)
 {
 	var code = '';
 	
@@ -315,7 +303,7 @@ export function renderElementCode(source, realHTML=false, level=4, type_override
 	// IF YOU CHANGE THIS, CHANGE THAT
 	if (source.children)
 	{
-		for (el of source.children)
+		for (const el of source.children)
 		{
 			if (el.getAttribute)
 			{
@@ -324,7 +312,7 @@ export function renderElementCode(source, realHTML=false, level=4, type_override
 				{
 					code += "\n";
 					code += ' '.repeat(level);
-					if (dtype == '[text]' )
+					if (dtype == '[text]')
 					{
 						const el_con = el.querySelector('textarea');
 						// copy value into HTML element (for autosave)
@@ -345,6 +333,12 @@ export function renderElementCode(source, realHTML=false, level=4, type_override
 					}
 					else
 						code += renderElementCode(el, realHTML, level + 4);
+				}
+				else if (el.tagName == "TEXTAREA")
+				{
+					code += "\n";
+					// copy value into HTML element (for autosave)
+					code += el.value;
 				}
 			}
 		}

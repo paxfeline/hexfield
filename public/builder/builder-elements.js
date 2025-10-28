@@ -32,6 +32,9 @@ export const builder_create_element = type =>
 
   if (builder_globals.no_attributes.includes(type))
     block.dataset.noAttributes = ""; // maybe not needed? maybe for CSS?
+
+  if (builder_globals.empty_elements.includes(type))
+    block.dataset.selfClosing = ""; // maybe not needed? maybe for CSS?
   
   block.className = "el";
 

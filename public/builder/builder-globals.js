@@ -19,8 +19,9 @@ export const builder_globals =
         'link', 'meta', 'param', 'source', 'track',
         'wbr', 'label',  ],
     known_attributes: [
-        'src', 'href', 'width', 'style', 'for', 'type',
-        'id', 'class', 'target', 'lang',  ],
+        'src', 'href', 'width', 'style', 'for',
+        'type', 'id', 'class', 'target', 'lang',
+        'name', 'content',  ],
     known_properties: ['font-size', ],
     empty_elements: ['[custom-empty]', '[text]', '!doctype', '!doctype html', 'area',
         'base', 'br', 'col', 'embed', 'hr',

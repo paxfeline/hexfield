@@ -111,7 +111,7 @@
     </script>
   </div>
   <div tab="Builder" style="height: 100%;">
-  <link rel="stylesheet" href="/builder/builder.css">
+    <link rel="stylesheet" href="/builder/builder.css">
     <div id="code">
       <div
         class="dropzone"
@@ -225,6 +225,25 @@ mcp.regHexEvent(mcp.events.load_code_file_text,
     render.contentWindow.location = `/web/${file}`;
   }
 );
+
+/* Builder mutation observer */
+
+// Select the node that will be observed for mutations
+const targetNode = document.querySelector("#code");
+
+// Options for the observer (which mutations to observe)
+const config = { childList: true, subtree: true };
+
+// Callback function to execute when mutations are observed
+const obs_func = (mutationList, observer) => {
+  console.log("builder blocks changed");
+};
+
+// Create an observer instance linked to the callback function
+const observer = new MutationObserver(obs_func);
+
+// Start observing the target node for configured mutations
+observer.observe(targetNode, config);
 
 /* Project Visibility control */
 
