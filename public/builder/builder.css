@@ -134,6 +134,11 @@ builder-property
 	margin: 0.2em;
 }
 
+.el [contenteditable]:focus
+{
+	outline: 0.2em inset red;
+}
+
 /*
 .el:not([data-self-closing]):before
 {
