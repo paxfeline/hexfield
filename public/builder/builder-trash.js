@@ -1,7 +1,14 @@
+function trash_drop_ok()
+{
+	const thing =
+		builder_globals.dragged ||
+		builder_globals.dragged_attribute ||
+		builder_globals.dragged_property
+	return thing && document.querySelector("#code").contains(thing);
+}
+
 export function drop_trash_handler(ev) {
-	if (builder_globals.dragged
-		|| builder_globals.dragged_attribute
-		|| builder_globals.dragged_property )
+	if (trash_drop_ok())
 	{
 		 ev.preventDefault();
 		 
@@ -38,9 +45,12 @@ export function dragover_trash_handler(ev) {
 //console.log('dot', ev);
  //if (builder_globals.dragged)
  {
-	// The drag enters a valid drop target:
-	// the drop target cancels its dragover event
-	// to indicate that it is a valid drop target
+	 
+	 if (!trash_drop_ok()) return;
+	 
+	 // The drag enters a valid drop target:
+	 // the drop target cancels its dragover event
+	 // to indicate that it is a valid drop target
 	 ev.preventDefault();
 	 // TODO: something else?
 	 ev.dataTransfer.dropEffect = "move";
@@ -55,6 +65,8 @@ builder_globals.trash_in_out_count = 0;
 
 export function onTrashDragLeave(ev)
 {
+	if (!trash_drop_ok()) return;
+	
 	builder_globals.trash_in_out_count--;
 	console.log('trash leave', ev.eventPhase, "(", builder_globals.trash_in_out_count, ev.currentTarget);
 	
@@ -72,6 +84,8 @@ builder_globals.handlers.dragleave_trash = onTrashDragLeave;
 
 export function onTrashDragEnter(ev)
 {
+	if (!trash_drop_ok()) return;
+	
 	builder_globals.trash_in_out_count++;
 	console.log('trash enter', ev.eventPhase, "(", builder_globals.trash_in_out_count, ev.currentTarget);
 	if (builder_globals.dragged || builder_globals.dragged_attribute)
