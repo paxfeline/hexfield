@@ -376,6 +376,17 @@ class BuilderBank extends HTMLElement
     // Create spans
     const root = document.createElement("div");
     root.id = "builder-bank";
+    
+    // capturing doesn't matter here
+    // root.addEventListener("drop", builder_globals.handlers.drop_trash, true);
+    // root.addEventListener("dragover", builder_globals.handlers.dragover_trash, true);
+    // root.addEventListener("dragenter", builder_globals.handlers.dragenter_trash, true);
+    // root.addEventListener("dragleave", builder_globals.handlers.dragleave_trash, true);
+    
+    root.ondrop = builder_globals.handlers.drop_trash;
+    root.ondragover = builder_globals.handlers.dragover_trash;
+    root.ondragenter = builder_globals.handlers.dragenter_trash;
+    root.ondragleave = builder_globals.handlers.dragleave_trash;
 
     if (this.hasAttribute("hidden"))
       root.setAttribute("hidden", "");
