@@ -23,15 +23,15 @@ export function dragstart_handler(ev)
 	{
 		console.log("dsmh");
 		// add any text area values to their elements as attributes
-		const tas = ev.target.querySelectorAll("textarea");
-		tas.forEach(ta => ta.innerHTML = ta.value);
+		// const tas = ev.target.querySelectorAll("textarea");
+		// tas.forEach(ta => ta.innerHTML = ta.value);
 		
 		// for custom elements, copy input too
-		const inp = ev.target.querySelector("input.builder-custom-type");
-		if (inp)
-			inp.setAttribute('value', inp.value);
+		// const inp = ev.target.querySelector("input.builder-custom-type");
+		// if (inp)
+		// 	inp.setAttribute('value', inp.value);
 		
-		console.log('start', ev.target, tas);
+		console.log('start', ev.target);
 
 		const block_n_dz = ev.target.outerHTML + ev.target.nextElementSibling.outerHTML;
 
@@ -261,6 +261,8 @@ export function renderCode(realHTML=true)
 	
 	// this data is annoying repeated here and renderElementCode (below)
 	// IF YOU CHANGE THIS, CHANGE THAT
+	// (it's the same minus the level thing... I think)
+	const level = 0;
 	if (source.children)
 	{
 		for (const el of source.children)
@@ -271,32 +273,33 @@ export function renderCode(realHTML=true)
 				if (dtype)
 				{
 					code += "\n";
-					if (dtype == '[text]' )
+					if (dtype == '[text]')
 					{
-						const el_con = el.querySelector('textarea');
+						const el_inp = el.querySelector("[contenteditable]");
 						// copy value into HTML element (for autosave)
-						el_con.innerHTML = el_con.value;
-						code += el_con.value;
+						//el_con.innerHTML = el_con.value;
+						code += el_inp.innerHTML;
 					}
 					else if (dtype == '[custom]')
 					{
 						const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
-						type_inp.setAttribute('value', type_inp.value);
-						code += renderElementCode(el, realHTML, 4, type_inp.value);
+						//type_inp.setAttribute('value', type_inp.value);
+						code += renderElementCode(el, realHTML, level + 4, type_inp.innerHTML);
+					}
+					else if (dtype == '[custom-empty]')
+					{
+						const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
+						//type_inp.setAttribute('value', type_inp.value);
+						code += renderElementCode(el, realHTML, level + 4, type_inp.innerHTML);
 					}
 					else
-						code += renderElementCode(el, realHTML, 4);
+						code += renderElementCode(el, realHTML, level + 4);
 				}
-				
-				/*
-				if (dtype)
+				else if (el.tagName == "DIV" && el.hasAttribute("contenteditable"))
 				{
-					if (dtype == '[custom]')
-						code += renderElementCode(el, realHTML, level + 4, el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type').value);
-					else if (dtype != '[text]' )
-						code += renderElementCode(el, realHTML) + "\n";
-				
-				*/
+					code += "\n";
+					code += el.innerHTML;
+				}
 			}
 		}
 	}
@@ -330,31 +333,30 @@ export function renderElementCode(source, realHTML=true, level=4, type_override)
 					code += ' '.repeat(level);
 					if (dtype == '[text]')
 					{
-						const el_con = el.querySelector('textarea');
+						const el_inp = el.querySelector("[contenteditable]");
 						// copy value into HTML element (for autosave)
-						el_con.innerHTML = el_con.value;
-						code += el_con.value;
+						//el_con.innerHTML = el_con.value;
+						code += el_inp.innerHTML;
 					}
 					else if (dtype == '[custom]')
 					{
 						const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
-						type_inp.setAttribute('value', type_inp.value);
-						code += renderElementCode(el, realHTML, level + 4, type_inp.value);
+						//type_inp.setAttribute('value', type_inp.value);
+						code += renderElementCode(el, realHTML, level + 4, type_inp.innerHTML);
 					}
 					else if (dtype == '[custom-empty]')
 					{
 						const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
-						type_inp.setAttribute('value', type_inp.value);
-						code += renderElementCode(el, realHTML, level + 4, type_inp.value);
+						//type_inp.setAttribute('value', type_inp.value);
+						code += renderElementCode(el, realHTML, level + 4, type_inp.innerHTML);
 					}
 					else
 						code += renderElementCode(el, realHTML, level + 4);
 				}
-				else if (el.tagName == "TEXTAREA")
+				else if (el.tagName == "DIV" && el.hasAttribute("contenteditable"))
 				{
 					code += "\n";
-					// copy value into HTML element (for autosave)
-					code += el.value;
+					code += el.innerHTML;
 				}
 			}
 		}
@@ -385,13 +387,13 @@ export function renderAttributesCode(source)
 	for (const attr of list)
 	{
 		const attr_name_attr = attr.getAttribute('data-attribute-name');
-		let name = attr_name_attr != '[custom]' ? attr_name_attr : attr.querySelector('.builder-attr-name').value;
+		let name = attr_name_attr != '[custom]' ? attr_name_attr : attr.querySelector('.builder-attr-name').innerHTML;
 		let value;
 	
 		if (name == 'style')
 			value = renderStyleProperties(attr);
 		else
-			value = attr.querySelector('.builder-attr-value').value;
+			value = attr.querySelector('.builder-attr-value').innerHTML;
 		
 		attrs += ` ${name}="${value}"`;
 	}
@@ -408,8 +410,8 @@ export function renderStyleProperties(source)
 	for (const prop of list.children)
 	{
 		const prop_name_attr = prop.getAttribute('data-property-name');
-		let name = prop_name_attr != '[custom]' ? prop_name_attr : prop.querySelector('.builder-property-name').value;
-		const value = prop.querySelector('.builder-property-value').value;
+		let name = prop_name_attr != '[custom]' ? prop_name_attr : prop.querySelector('.builder-property-name').innerHTML;
+		const value = prop.querySelector('.builder-property-value').innerHTML;
 		
 		style += `${name}: ${value};`;
 		
@@ -439,9 +441,9 @@ export function render()
 			const title = head.querySelector("[data-type='title']");
 			if (title)
 			{
-				const inp = title.querySelector("textarea");
+				const inp = title.querySelector("[contenteditable]");
 				if (inp)
-					destTitle.innerHTML = inp.value;
+					destTitle.innerHTML = inp.innerHTML;
 			}
 		}
 	}
