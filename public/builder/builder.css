@@ -109,7 +109,7 @@ builder-property
 .el 
 {
 	border: 1em solid var(--set-color, gray);
-	border-width: 1em 0em 1em 1em;
+	border-width: 1em 0em 1em 2.5em;
 	overflow: hidden;
 	margin: 1em 0.25em;
 	border-radius: 1em;
@@ -126,6 +126,12 @@ builder-property
 	display: block;
 	position: relative;
 	white-space: nowrap;
+}
+
+.el [contenteditable]
+{
+	outline: 0.2em inset grey;
+	margin: 0.2em;
 }
 
 /*
@@ -353,12 +359,14 @@ builder-property
 
 .builder-attr-name
 {
-    width: 5em;
+    min-width: 5em;
+		display: inline-block;
 }
 
 .builder-attr-value
 {
-    width: 5em;
+    min-width: 5em;
+		display: inline-block;
 }
 
 .attr

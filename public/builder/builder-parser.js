@@ -143,7 +143,7 @@ export function load_element(el)
 		ta.innerHTML = txt;
 		// this line is apparently necessary, even though it shouldn't be
 		// TODO: check ^
-		ta.value = ta.innerHTML;
+		//ta.value = ta.innerHTML;
 	}
 	else if (builder_globals.text_elements.includes(type))
 	{
@@ -157,7 +157,7 @@ export function load_element(el)
 		ta.innerHTML = el.innerHTML.trim();
 		// this line might be necessary, even though it shouldn't be
 		// TODO: again, check ^:
-		ta.value = ta.innerHTML;
+		//ta.value = ta.innerHTML;
 	}
 	else if (builder_globals.known_elements.includes(type))
 	{
@@ -247,15 +247,15 @@ export function addAttributes(source, dest)
 						const new_prop = builder_globals.factories.property(prop_name);
 						
 						if (prop_name == '[custom]')
-							new_prop.querySelector('.builder-property-name').defaultValue = name;
+							new_prop.querySelector('.builder-property-name').innerHTML = name;
 						
-						new_prop.querySelector('.builder-property-value').defaultValue = value;
+						new_prop.querySelector('.builder-property-value').innerHTML = value;
 						
 						prop_list.append(new_prop);
 					}
 				}
 				else
-					new_attr.querySelector('.builder-attr-value').defaultValue = attr.value;
+					new_attr.querySelector('.builder-attr-value').innerHTML = attr.value;
 				
 				listContainer.append(new_attr);
 			}
@@ -263,8 +263,8 @@ export function addAttributes(source, dest)
 			{
 				//const new_attr = document.querySelector(`[data-attribute-name='[custom]']`).cloneNode(true);
 				const new_attr = builder_globals.factories.attribute('[custom]');
-				new_attr.querySelector('.builder-attr-name').defaultValue = attr.name;
-				new_attr.querySelector('.builder-attr-value').defaultValue = attr.value;
+				new_attr.querySelector('.builder-attr-name').innerHTML = attr.name;
+				new_attr.querySelector('.builder-attr-value').innerHTML = attr.value;
 				
 				listContainer.append(new_attr);
 			}

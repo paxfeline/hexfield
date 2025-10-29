@@ -9,9 +9,7 @@ export function drop_trash_handler(ev) {
 		 {
 			builder_globals.dragged.remove();
 			builder_globals.dragged = null;
- 
-			trim_dropzones(document.querySelector("#code").firstElementChild);
-		 }
+ 		 }
 		 else if (builder_globals.dragged_attribute)
 		 {
 			builder_globals.dragged_attribute.remove();
@@ -22,12 +20,9 @@ export function drop_trash_handler(ev) {
 			builder_globals.dragged_property.remove();
 			builder_globals.dragged_property = null;
 		 }
-	
-		renderCode();
-		render();
 	 }
  
-	const bank = document.querySelector('#bank');
+	const bank = document.querySelector('#builder-bank');
 	bank.style.background = '';
 	bank.style.borderColor = '';
 	

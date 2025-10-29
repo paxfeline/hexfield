@@ -55,10 +55,15 @@ export const builder_create_element = type =>
   if (type === '[custom]' || type === '[custom-empty]')
       block.innerHTML = `
         <div class="builder-custom-el">
-          Type: <input
+          Type:
+          <span
+            contenteditable
+            spellcheck="false"
+            style="min-width 5em;"
             onfocus="builder_globals.controldrag.killdrag(this)"
             onblur="builder_globals.controldrag.revivedrag(this)"
             class="builder-custom-type">
+          </span>
         </div>
       `;
 
@@ -83,10 +88,17 @@ export const builder_create_element = type =>
       // ...unless they contain a text node
       if (builder_globals.text_elements.includes(type))
         block.innerHTML += `
-          <textarea
+          <div
+            contenteditable
+            spellcheck="false"
             onfocus="builder_globals.controldrag.killdrag(this)"
             onblur="builder_globals.controldrag.revivedrag(this)"
-          ></textarea>
+            style="
+              min-width: 10em;
+              min-height: 5em;
+              white-space: pre;
+            "
+          ></div>
         `;
     }
     else // not empty
@@ -134,23 +146,27 @@ export const builder_create_attribute = (type) =>
   {
     if (type === '[custom]')
       attr.innerHTML = `
-        <input
+        <span
+          contenteditable
+          spellcheck="false"
+          style="min-width 5em;"
           class="builder-attr-name"
           onfocus="builder_globals.controldrag.killdrag(this)"
-          onblur="builder_globals.controldrag.revivedrag(this)"
-          oninput="update_value(event)">
+          onblur="builder_globals.controldrag.revivedrag(this)">
+        </span>
       `;
     else
       attr.innerHTML = type;
 
     attr.innerHTML += `
-      = &quot;
-      <input
+      = &quot;<span
+        contenteditable
+        spellcheck="false"
+        style="min-width 5em;"
         class="builder-attr-value"
         onfocus="builder_globals.controldrag.killdrag(this)"
-        onblur="builder_globals.controldrag.revivedrag(this)"
-        oninput="update_value(event)">
-        &quot;
+        onblur="builder_globals.controldrag.revivedrag(this)">
+      </span>&quot;
     `;
   }
 
@@ -178,22 +194,28 @@ export const builder_create_property = type =>
 
   if (type === '[custom]')
     prop.innerHTML = `
-      <input
+      <span
+        contenteditable
+        spellcheck="false"
+        style="min-width 5em;"
         class="builder-property-name"
         onfocus="builder_globals.controldrag.killdrag(this)"
-        onblur="builder_globals.controldrag.revivedrag(this)"
-        onchange="update_value(event)">
+        onblur="builder_globals.controldrag.revivedrag(this)">
+      </span>
     `;
   else
     prop.innerHTML = type;
 
   prop.innerHTML += `
     :
-    <input
+    <span
+      contenteditable
+      spellcheck="false"
+      style="min-width 5em;"
       class="builder-property-value"
-        onfocus="builder_globals.controldrag.killdrag(this)"
-        onblur="builder_globals.controldrag.revivedrag(this)"
-        onchange="update_value(event)">
+      onfocus="builder_globals.controldrag.killdrag(this)"
+      onblur="builder_globals.controldrag.revivedrag(this)">
+    </span>
   `;
 
   return prop;
@@ -368,7 +390,6 @@ class BuilderBank extends HTMLElement
 <builder-element set="blue" type="html"></builder-element>
 
 <builder-element type="[text]">
-<textarea></textarea>
 </builder-element>
 
 <details open class="builder-element-group">
