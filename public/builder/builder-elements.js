@@ -53,7 +53,14 @@ export const builder_create_element = type =>
   block.dataset.type = type;
 
   if (type === '[custom]' || type === '[custom-empty]')
-      block.innerHTML = '<div class="builder-custom-el">Type: <input class="builder-custom-type"></div>';
+      block.innerHTML = `
+        <div class="builder-custom-el">
+          Type: <input
+            onfocus="builder_globals.controldrag.killdrag(this)"
+            onblur="builder_globals.controldrag.revivedrag(this)"
+            class="builder-custom-type">
+        </div>
+      `;
 
     if (!builder_globals.text_elements.includes(type) && !builder_globals.no_attributes.includes(type))
     {
@@ -76,7 +83,10 @@ export const builder_create_element = type =>
       // ...unless they contain a text node
       if (builder_globals.text_elements.includes(type))
         block.innerHTML += `
-          <textarea></textarea>
+          <textarea
+            onfocus="builder_globals.controldrag.killdrag(this)"
+            onblur="builder_globals.controldrag.revivedrag(this)"
+          ></textarea>
         `;
     }
     else // not empty
@@ -123,11 +133,25 @@ export const builder_create_attribute = (type) =>
   else
   {
     if (type === '[custom]')
-      attr.innerHTML = '<input class="builder-attr-name" oninput="update_value(event)">';
+      attr.innerHTML = `
+        <input
+          class="builder-attr-name"
+          onfocus="builder_globals.controldrag.killdrag(this)"
+          onblur="builder_globals.controldrag.revivedrag(this)"
+          oninput="update_value(event)">
+      `;
     else
       attr.innerHTML = type;
 
-    attr.innerHTML += ' = &quot;<input class="builder-attr-value" oninput="update_value(event)">&quot;';
+    attr.innerHTML += `
+      = &quot;
+      <input
+        class="builder-attr-value"
+        onfocus="builder_globals.controldrag.killdrag(this)"
+        onblur="builder_globals.controldrag.revivedrag(this)"
+        oninput="update_value(event)">
+        &quot;
+    `;
   }
 
   return attr;
@@ -153,11 +177,24 @@ export const builder_create_property = type =>
   prop.dataset.propertyName = type;
 
   if (type === '[custom]')
-    prop.innerHTML = '<input class="builder-property-name" onchange="update_value(event)">';
+    prop.innerHTML = `
+      <input
+        class="builder-property-name"
+        onfocus="builder_globals.controldrag.killdrag(this)"
+        onblur="builder_globals.controldrag.revivedrag(this)"
+        onchange="update_value(event)">
+    `;
   else
     prop.innerHTML = type;
 
-  prop.innerHTML += ' : <input class="builder-property-value" onchange="update_value(event)">';
+  prop.innerHTML += `
+    :
+    <input
+      class="builder-property-value"
+        onfocus="builder_globals.controldrag.killdrag(this)"
+        onblur="builder_globals.controldrag.revivedrag(this)"
+        onchange="update_value(event)">
+  `;
 
   return prop;
 }

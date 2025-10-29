@@ -1,5 +1,21 @@
 // TODO: undo module-ness?
 
+export function set_ancestors_drag(val, start)
+{
+	let cur = start;
+	while (cur)
+	{
+		if (cur.hasAttribute("draggable"))
+			cur.setAttribute("draggable", val);
+		cur = cur.parentElement;
+	}
+}
+
+const killdrag = set_ancestors_drag.bind(null, "false");
+const revivedrag = set_ancestors_drag.bind(null, "true");
+
+builder_globals.controldrag = { killdrag, revivedrag };
+
 export function dragstart_handler(ev)
 {
 	const code = document.querySelector("#code");
