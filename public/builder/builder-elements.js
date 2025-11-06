@@ -407,79 +407,94 @@ class BuilderBank extends HTMLElement
     //<div id="bank" ondragenter="onTrashDragEnter(event)" ondragleave="onTrashDragLeave(event)" ondrop="drop_trash_handler(event)" ondragover="dragover_trash_handler(event)">
     
     root.innerHTML = `
-<builder-element set="blue" type="!DOCTYPE html"></builder-element>
+<hex-tabs>
 
-<br>
+<div tab="Tags">
 
-<builder-element set="blue" type="html"></builder-element>
+<builder-element type="[text]"></builder-element>
 
-<builder-element type="[text]">
-</builder-element>
+<details open class="builder-element-group root-set">
+<summary>Document root</summary>
 
-<details open class="builder-element-group">
+<builder-element type="!DOCTYPE html"></builder-element>
+
+<builder-element type="html"></builder-element>
+
+</details>
+
+<details class="builder-element-group head-set">
 <summary>Document metadata</summary>
 
-<builder-element set="purple" type="head"></builder-element>
+<builder-element type="head"></builder-element>
 
-<builder-element set="purple" type="title">
+<builder-element type="title">
 </builder-element>
 
-<builder-element set="purple" type="link"></builder-element>
+<builder-element type="link"></builder-element>
 
-<builder-element set="purple" type="style">
+<builder-element type="style">
 </builder-element>
 
-<builder-element set="purple" type="script">
+<builder-element type="script">
 </builder-element>
 
 </details>
 
-<details open class="builder-element-group">
+<details class="builder-element-group body-set">
 <summary>Document content</summary>
 
-<builder-element set="green" type="body"></builder-element>
+<builder-element type="body"></builder-element>
 
 <!-- this is here (h1 below) because the clone function needs it empty -->
 <!-- (see builder-parser#addAttributes) -->
 <!-- ...all no longer application -->
 
-<builder-element set="green" type="h1"></builder-element>
+<builder-element type="h1"></builder-element>
 
-<builder-element set="green" type="div"></builder-element>
+<builder-element type="div"></builder-element>
 
-<builder-element set="green" type="span"></builder-element>
+<builder-element type="span"></builder-element>
 
-<builder-element set="green" type="img"></builder-element>
+<builder-element type="img"></builder-element>
 
-<builder-element set="green" type="p"></builder-element>
+<builder-element type="p"></builder-element>
 
-<builder-element set="green" type="nav"></builder-element>
+<builder-element type="nav"></builder-element>
 
 </details>
 
-<details open class="builder-element-group">
+<details class="builder-element-group etc1-set">
 <summary>Other elements</summary>
 
-<builder-element set="gold" type="a"></builder-element>
+<builder-element type="a"></builder-element>
 
-<builder-element set="gold" type="form"></builder-element>
+<builder-element type="form"></builder-element>
 
-<builder-element set="gold" type="input"></builder-element>
+<builder-element type="input"></builder-element>
 
-<builder-element set="gold" type="option">
+<builder-element type="option">
 </builder-element>
 
-<builder-element set="gold" type="br"></builder-element>
+<builder-element type="br"></builder-element>
 
 </details>
 
-<builder-element set="red" type="[custom]">
+<details class="builder-element-group custom-set">
+<summary>Custom elements</summary>
+
+<builder-element type="[custom]">
 </builder-element>
 
-<builder-element set="red" type="[custom-empty]">
+<builder-element type="[custom-empty]">
 </builder-element>
+
+</details>
 
 </div>
+
+</div>
+
+<div tab="Attributes" style="padding: 1rem">
 
 <builder-attribute type="[custom]"></builder-attribute>
 
@@ -491,9 +506,17 @@ class BuilderBank extends HTMLElement
 
 <builder-attribute type="style"></builder-attribute>
 
+</div>
+
+<div tab="CSS" style="padding: 1rem">
+
 <builder-property type="[custom]"></builder-property>
 
 <builder-property type="font-size"></builder-property>
+
+</div>
+
+</hex-tabs>
     `;
 
     // Create some CSS to apply to the shadow dom
