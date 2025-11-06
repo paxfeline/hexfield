@@ -1,3 +1,7 @@
+/*
+TODO: use this file for style
+*/
+
 body
 {
   margin: 0;
@@ -16,10 +20,10 @@ body
 
 }
 
+/* this is inside the Text code tab */
 #body
 {
-  flex: 1;
-  height: 0%;
+  height: 100%;
 }
 
 #footer
