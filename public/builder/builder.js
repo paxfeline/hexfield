@@ -242,6 +242,7 @@ export function check_in_tree(el, check)
 	return false;
 }
 
+// TODO: remove or fix
 export function restoreAutosave()
 {
 	const autosave = localStorage.getItem( 'HEXFIELD-AUTOSAVE' );
@@ -278,19 +279,19 @@ export function renderCode(realHTML=true)
 						const el_inp = el.querySelector("[contenteditable]");
 						// copy value into HTML element (for autosave)
 						//el_con.innerHTML = el_con.value;
-						code += el_inp.innerHTML;
+						code += el_inp.innerText;
 					}
 					else if (dtype == '[custom]')
 					{
 						const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
 						//type_inp.setAttribute('value', type_inp.value);
-						code += renderElementCode(el, realHTML, level + 4, type_inp.innerHTML);
+						code += renderElementCode(el, realHTML, level + 4, type_inp.innerText);
 					}
 					else if (dtype == '[custom-empty]')
 					{
 						const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
 						//type_inp.setAttribute('value', type_inp.value);
-						code += renderElementCode(el, realHTML, level + 4, type_inp.innerHTML);
+						code += renderElementCode(el, realHTML, level + 4, type_inp.innerText);
 					}
 					else
 						code += renderElementCode(el, realHTML, level + 4);
@@ -298,7 +299,7 @@ export function renderCode(realHTML=true)
 				else if (el.tagName == "DIV" && el.hasAttribute("contenteditable"))
 				{
 					code += "\n";
-					code += el.innerHTML;
+					code += el.innerText;
 				}
 			}
 		}
@@ -336,19 +337,19 @@ export function renderElementCode(source, realHTML=true, level=4, type_override)
 						const el_inp = el.querySelector("[contenteditable]");
 						// copy value into HTML element (for autosave)
 						//el_con.innerHTML = el_con.value;
-						code += el_inp.innerHTML;
+						code += el_inp.innerText;
 					}
 					else if (dtype == '[custom]')
 					{
 						const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
 						//type_inp.setAttribute('value', type_inp.value);
-						code += renderElementCode(el, realHTML, level + 4, type_inp.innerHTML);
+						code += renderElementCode(el, realHTML, level + 4, type_inp.innerText);
 					}
 					else if (dtype == '[custom-empty]')
 					{
 						const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
 						//type_inp.setAttribute('value', type_inp.value);
-						code += renderElementCode(el, realHTML, level + 4, type_inp.innerHTML);
+						code += renderElementCode(el, realHTML, level + 4, type_inp.innerText);
 					}
 					else
 						code += renderElementCode(el, realHTML, level + 4);
@@ -356,7 +357,7 @@ export function renderElementCode(source, realHTML=true, level=4, type_override)
 				else if (el.tagName == "DIV" && el.hasAttribute("contenteditable"))
 				{
 					code += "\n";
-					code += el.innerHTML;
+					code += el.innerText;
 				}
 			}
 		}
@@ -387,13 +388,13 @@ export function renderAttributesCode(source)
 	for (const attr of list)
 	{
 		const attr_name_attr = attr.getAttribute('data-attribute-name');
-		let name = attr_name_attr != '[custom]' ? attr_name_attr : attr.querySelector('.builder-attr-name').innerHTML;
+		let name = attr_name_attr != '[custom]' ? attr_name_attr : attr.querySelector('.builder-attr-name').innerText;
 		let value;
 	
 		if (name == 'style')
 			value = renderStyleProperties(attr);
 		else
-			value = attr.querySelector('.builder-attr-value').innerHTML;
+			value = attr.querySelector('.builder-attr-value').innerText;
 		
 		attrs += ` ${name}="${value}"`;
 	}
@@ -410,8 +411,8 @@ export function renderStyleProperties(source)
 	for (const prop of list.children)
 	{
 		const prop_name_attr = prop.getAttribute('data-property-name');
-		let name = prop_name_attr != '[custom]' ? prop_name_attr : prop.querySelector('.builder-property-name').innerHTML;
-		const value = prop.querySelector('.builder-property-value').innerHTML;
+		let name = prop_name_attr != '[custom]' ? prop_name_attr : prop.querySelector('.builder-property-name').innerText;
+		const value = prop.querySelector('.builder-property-value').innerText;
 		
 		style += `${name}: ${value};`;
 		
@@ -443,7 +444,7 @@ export function render()
 			{
 				const inp = title.querySelector("[contenteditable]");
 				if (inp)
-					destTitle.innerHTML = inp.innerHTML;
+					destTitle.innerHTML = inp.innerText;
 			}
 		}
 	}
