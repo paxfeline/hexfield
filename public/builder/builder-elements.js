@@ -57,7 +57,7 @@ export const builder_create_element = type =>
         <div class="builder-custom-el">
           Type:
           <span
-            contenteditable
+            contenteditable="plaintext-only"
             spellcheck="false"
             style="min-width 5em;"
             onfocus="builder_globals.controldrag.killdrag(this)"
@@ -89,7 +89,7 @@ export const builder_create_element = type =>
       if (builder_globals.text_elements.includes(type))
         block.innerHTML += `
           <div
-            contenteditable
+            contenteditable="plaintext-only"
             spellcheck="false"
             onfocus="builder_globals.controldrag.killdrag(this)"
             onblur="builder_globals.controldrag.revivedrag(this)"
@@ -147,7 +147,7 @@ export const builder_create_attribute = (type) =>
     if (type === '[custom]')
       attr.innerHTML = `
         <span
-          contenteditable
+          contenteditable="plaintext-only"
           spellcheck="false"
           style="min-width 5em;"
           class="builder-attr-name"
@@ -160,7 +160,7 @@ export const builder_create_attribute = (type) =>
 
     attr.innerHTML += `
       = &quot;<span
-        contenteditable
+        contenteditable="plaintext-only"
         spellcheck="false"
         style="min-width 5em;"
         class="builder-attr-value"
@@ -195,7 +195,7 @@ export const builder_create_property = type =>
   if (type === '[custom]')
     prop.innerHTML = `
       <span
-        contenteditable
+        contenteditable="plaintext-only"
         spellcheck="false"
         style="min-width 5em;"
         class="builder-property-name"
@@ -209,7 +209,7 @@ export const builder_create_property = type =>
   prop.innerHTML += `
     :
     <span
-      contenteditable
+      contenteditable="plaintext-only"
       spellcheck="false"
       style="min-width 5em;"
       class="builder-property-value"
