@@ -508,7 +508,7 @@ class BuilderBank extends HTMLElement
 
 </div>
 
-<div tab="CSS" style="padding: 1rem">
+<div tab="Style" style="padding: 1rem">
 
 <builder-property type="[custom]"></builder-property>
 
