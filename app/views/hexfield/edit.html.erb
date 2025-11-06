@@ -115,15 +115,6 @@ TODO: move to hexfield.css
         {
           console.log("show code!");
           tabs.selectedIndex = 0;
-          if (builder_globals.blocks_visited)
-          {
-            const code = builder_globals.render_code();
-            // TODO: maybe: move this next line into mcp.update_html_code_editor
-            mcp.file_data[mcp.current_file_name] = code;
-            mcp.update_html_code_editor(code);
-
-            builder_globals.blocks_visited = false;
-          }
         };
     </script>
   </div>
@@ -254,11 +245,24 @@ mcp.regHexEvent(mcp.events.load_code_file_text,
 const targetNode = document.querySelector("#code");
 
 // Options for the observer (which mutations to observe)
-const config = { childList: true, subtree: true };
+const config = { childList: true, subtree: true, characterData: true };
+
+let deb_obs;
 
 // Callback function to execute when mutations are observed
 const obs_func = (mutationList, observer) => {
-  console.log("builder blocks changed");
+  console.log("builder blocks changed", mutationList);
+  if (deb_obs) clearTimeout(deb_obs);
+  deb_obs = setTimeout(
+    () =>
+    {
+      const code = builder_globals.render_code();
+      // TODO: maybe: move this next line into mcp.update_html_code_editor
+      mcp.file_data[mcp.current_file_name] = code;
+      mcp.update_html_code_editor(code);
+    },
+    500
+  )
 };
 
 // Create an observer instance linked to the callback function
