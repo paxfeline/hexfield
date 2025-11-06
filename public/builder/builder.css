@@ -64,7 +64,7 @@ builder-property
 .el[data-type="!doctype html"],
 .el[data-type="html"]
 {
-	--set-color: lightblue;
+	--set-color: var(--blocks-root-set);
 }
 
 .purple-set,
@@ -72,9 +72,10 @@ builder-property
 .el[data-type="title"],
 .el[data-type="link"],
 .el[data-type="style"],
+.el[data-type="meta"],
 .el[data-type="script"]
 {
-	--set-color: mediumpurple;
+	--set-color: var(--blocks-head-set);
 }
 
 .green-set,
@@ -87,7 +88,7 @@ builder-property
 .el[data-type="nav"],
 .el[data-type="br"]
 {
-	--set-color: lightgreen;
+	--set-color: var(--blocks-body-set);
 }
 
 .gold-set,
@@ -96,14 +97,14 @@ builder-property
 .el[data-type="input"],
 .el[data-type="option"]
 {
-	--set-color: gold;
+	--set-color: var(--blocks-etc1-set);
 }
 
 .red-set,
 .el[data-type="[custom]"],
 .el[data-type="[custom-empty]"]
 {
-	--set-color: lightcoral;
+	--set-color: var(--blocks-custom-set);
 }
 
 .el 
@@ -128,13 +129,15 @@ builder-property
 	white-space: nowrap;
 }
 
-.el [contenteditable]
+/*.el [contenteditable="plaintext-only"]*/
+[contenteditable="plaintext-only"]
 {
 	outline: 0.2em inset grey;
 	margin: 0.2em;
+	display: inline-block;
 }
 
-.el [contenteditable]:focus
+[contenteditable="plaintext-only"]:focus
 {
 	outline: 0.2em inset red;
 }
@@ -530,4 +533,5 @@ builder-property
 .builder-custom-type
 {
 	margin-right: 1em;
+	min-width: 5em;
 }

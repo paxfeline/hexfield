@@ -127,6 +127,7 @@ self.addEventListener('install', (event) => {
       './builder/builder-trash.js',
       './builder/builder.css',
       './builder/builder.js',
+      './css/ui.css',
     ])
   );
 });

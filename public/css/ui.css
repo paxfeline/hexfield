@@ -1,0 +1,14 @@
+body,
+:host
+{
+	--property-dropzone-color: lightgray;
+	--attribute-dropzone-color: white;
+
+  --blocks-root-set: lightblue;
+  --blocks-head-set: mediumpurple;
+  --blocks-body-set: lightgreen;
+  --blocks-etc1-set: gold;
+  --blocks-custom-set: lightcoral;
+
+  --ui-border-width: 0.75em;
+}

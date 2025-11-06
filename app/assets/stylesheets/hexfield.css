@@ -1,17 +1,25 @@
 /*
-TODO: use this file for style
+TODO: use this file for style (more)
 */
+
+html
+{
+  height: 100%;
+}
 
 body
 {
   margin: 0;
+  padding: 1em;
+  box-sizing: border-box;
+  height: 100%;
 }
 
 #main
 {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   gap: 1rem;
 }
 

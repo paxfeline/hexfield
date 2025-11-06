@@ -250,9 +250,15 @@ class BuilderElement extends HTMLElement
     const style = document.createElement("link");
     style.href = "/builder/builder.css";
     style.rel = "stylesheet";
+    
+    // Create some CSS to apply to the shadow dom
+    const uistyle = document.createElement("link");
+    uistyle.href = "/css/ui.css";
+    uistyle.rel = "stylesheet";
 
     // Attach the created elements to the shadow dom
     shadow.appendChild(style);
+    shadow.appendChild(uistyle);
     shadow.appendChild(root);
   }
 }
@@ -285,9 +291,15 @@ class BuilderAttribute extends HTMLElement
     const style = document.createElement("link");
     style.href = "/builder/builder.css";
     style.rel = "stylesheet";
+    
+    // Create some CSS to apply to the shadow dom
+    const uistyle = document.createElement("link");
+    uistyle.href = "/css/ui.css";
+    uistyle.rel = "stylesheet";
 
     // Attach the created elements to the shadow dom
     shadow.appendChild(style);
+    shadow.appendChild(uistyle);
     shadow.appendChild(root);
   }
 }
@@ -322,9 +334,15 @@ class BuilderProperty extends HTMLElement
     const style = document.createElement("link");
     style.href = "/builder/builder.css";
     style.rel = "stylesheet";
+    
+    // Create some CSS to apply to the shadow dom
+    const uistyle = document.createElement("link");
+    uistyle.href = "/css/ui.css";
+    uistyle.rel = "stylesheet";
 
     // Attach the created elements to the shadow dom
     shadow.appendChild(style);
+    shadow.appendChild(uistyle);
     shadow.appendChild(root);
 
     
@@ -488,11 +506,17 @@ class BuilderBank extends HTMLElement
     style.href = "/builder/builder.css";
     style.rel = "stylesheet";
     
+    // Create some CSS to apply to the shadow dom
+    const uistyle = document.createElement("link");
+    uistyle.href = "/css/ui.css";
+    uistyle.rel = "stylesheet";
+    
     const style2 = document.createElement("style");
     style2.innerText = ":host { display: block; }";
 
     // Attach the created elements to the shadow dom
     shadow.appendChild(style);
+    shadow.appendChild(uistyle);
     shadow.appendChild(style2);
     shadow.appendChild(root);
 
