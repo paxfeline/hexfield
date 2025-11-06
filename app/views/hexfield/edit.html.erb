@@ -189,7 +189,7 @@ TODO: move to hexfield.css
 <script type="module">
 import * as mcp from "/hex/mcp.js";
 import {minimalSetup} from "codemirror"
-import {EditorView, keymap} from "@codemirror/view"
+import {EditorView, keymap, lineNumbers} from "@codemirror/view"
 import {html} from "@codemirror/lang-html"
 import {indentWithTab} from "@codemirror/commands"
 
@@ -215,6 +215,7 @@ const view = new EditorView({
     minimalSetup,
     keymap.of([indentWithTab]),
     fixedHeightEditor,
+    lineNumbers(),
     html({autoCloseTags: false}),
     EditorView.updateListener.of(
       v =>
