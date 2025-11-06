@@ -59,7 +59,7 @@ export const builder_create_element = type =>
           <span
             contenteditable="plaintext-only"
             spellcheck="false"
-            style="min-width 5em;"
+            style="min-width 5rem;"
             onfocus="builder_globals.controldrag.killdrag(this)"
             onblur="builder_globals.controldrag.revivedrag(this)"
             class="builder-custom-type">
@@ -94,8 +94,8 @@ export const builder_create_element = type =>
             onfocus="builder_globals.controldrag.killdrag(this)"
             onblur="builder_globals.controldrag.revivedrag(this)"
             style="
-              min-width: 10em;
-              min-height: 5em;
+              min-width: 10rem;
+              min-height: 5rem;
               white-space: pre;
             "
           ></div>
@@ -149,7 +149,7 @@ export const builder_create_attribute = (type) =>
         <span
           contenteditable="plaintext-only"
           spellcheck="false"
-          style="min-width 5em;"
+          style="min-width 5rem;"
           class="builder-attr-name"
           onfocus="builder_globals.controldrag.killdrag(this)"
           onblur="builder_globals.controldrag.revivedrag(this)">
@@ -162,7 +162,7 @@ export const builder_create_attribute = (type) =>
       = &quot;<span
         contenteditable="plaintext-only"
         spellcheck="false"
-        style="min-width 5em;"
+        style="min-width 5rem;"
         class="builder-attr-value"
         onfocus="builder_globals.controldrag.killdrag(this)"
         onblur="builder_globals.controldrag.revivedrag(this)">
@@ -197,7 +197,7 @@ export const builder_create_property = type =>
       <span
         contenteditable="plaintext-only"
         spellcheck="false"
-        style="min-width 5em;"
+        style="min-width 5rem;"
         class="builder-property-name"
         onfocus="builder_globals.controldrag.killdrag(this)"
         onblur="builder_globals.controldrag.revivedrag(this)">
@@ -211,7 +211,7 @@ export const builder_create_property = type =>
     <span
       contenteditable="plaintext-only"
       spellcheck="false"
-      style="min-width 5em;"
+      style="min-width 5rem;"
       class="builder-property-value"
       onfocus="builder_globals.controldrag.killdrag(this)"
       onblur="builder_globals.controldrag.revivedrag(this)">

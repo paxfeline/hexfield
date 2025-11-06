@@ -118,35 +118,58 @@ class HexTabs extends HTMLElement
         display: flex;
       }
 
+      /*
       #tab-header::before
       {
         width: 1rem;
         border: 0rem solid black;
-        border-width: 0 0 0.2rem 0;
+        border-width: 0 0 var(--hex-line-width, 0.2rem) 0;
         content: '';
       }
+        */
 
       #tab-header::after
       {
         flex: 1;
         border: 0rem solid black;
-        border-width: 0 0 0.2rem 0;
+        border-width: 0 0 var(--hex-line-width, 0.2rem) 0;
         content: '';
       }
 
       .tab-tab
       {
-        border: 0.2rem outset black;
+        border: var(--hex-line-width, 0.2rem) solid black;
+        border-bottom-width: 0;
         padding: 0.3rem;
-        border-radius: 0.5rem 0.5rem 0 0;
         cursor: pointer;
         background-color: white;
+        position: relative;
+        padding-bottom: calc(0.3rem + var(--hex-line-width, 0.2rem));
+        /*
+        border-radius: 0.5rem 0.5rem 0 0;
+        */
       }
 
-      .tab-tab[selected]
+      .tab-tab:not(:first-child)
       {
-        border-style: inset;
-        border-color: black black transparent;
+        border-left-width: 0;
+      }
+
+      .tab-tab::after
+      {
+        content: '';  
+        border: 0 solid black;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 0;
+        width: 100%;
+        border-bottom-width: var(--hex-line-width, 0.2rem);
+      }
+      
+      .tab-tab[selected]::after
+      {
+        border-bottom-width: 0;
       }
 
       #tab-bodies
@@ -154,7 +177,7 @@ class HexTabs extends HTMLElement
         flex: 1;
         /* min-height: 0%; -> moved to hex-tabs element */
         overflow: auto;
-        border: 0.2rem solid black;
+        border: var(--hex-line-width, 0.2rem) solid black;
         border-top-width: 0;
         height: 100%;
         display: block; /* slot default = contents */
@@ -170,9 +193,15 @@ class HexTabs extends HTMLElement
         display: revert-layer;
       }
     `;
+    
+    // Create some CSS to apply to the shadow dom
+    const uistyle = document.createElement("link");
+    uistyle.href = "/css/ui.css";
+    uistyle.rel = "stylesheet";
 
     // Attach the created elements to the shadow dom
     shadow.appendChild(style);
+    shadow.appendChild(uistyle);
     shadow.appendChild(root);
     
     const tab_bodies = shadow.querySelector("#tab-bodies");

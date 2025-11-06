@@ -10,5 +10,5 @@ body,
   --blocks-etc1-set: gold;
   --blocks-custom-set: lightcoral;
 
-  --ui-border-width: 0.75em;
+  --hex-line-width: 0.333rem;
 }

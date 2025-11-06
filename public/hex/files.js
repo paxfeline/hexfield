@@ -156,8 +156,8 @@ class HexFiles extends HTMLElement
       
       .file-section
       {
-        border: 0.5em solid black;
-        padding: 0.5em;
+        border: var(--hex-line-width, 0.5rem) solid black;
+        padding: 0.5rem;
         flex: 1;
       }
       
@@ -234,8 +234,14 @@ class HexFiles extends HTMLElement
       }
     `;
 
+    // Create some CSS to apply to the shadow dom
+    const uistyle = document.createElement("link");
+    uistyle.href = "/css/ui.css";
+    uistyle.rel = "stylesheet";
+
     // Attach the created elements to the shadow dom
     shadow.appendChild(style);
+    shadow.appendChild(uistyle);
     shadow.appendChild(root);
 
     this.file_display = shadow.querySelector("#file-display");

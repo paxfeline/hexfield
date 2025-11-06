@@ -109,21 +109,21 @@ builder-property
 
 .el 
 {
-	border: 1em solid var(--set-color, gray);
-	border-width: 1em 0em 1em 2.5em;
+	border: 1rem solid var(--set-color, gray);
+	border-width: 1rem 0rem 1rem 2.5rem;
 	overflow: hidden;
-	margin: 1em 0.25em;
-	border-radius: 1em;
+	margin: 1rem 0.25rem;
+	border-radius: 1rem;
 	
 	display: inline-block;
-	min-width: 12em;
+	min-width: 12rem;
 }
 
 .el:before
 {
 	content: attr(data-type);
 	background-color: var(--set-color, gray);
-    padding-right: 1em;
+    padding-right: 1rem;
 	display: block;
 	position: relative;
 	white-space: nowrap;
@@ -132,20 +132,20 @@ builder-property
 /*.el [contenteditable="plaintext-only"]*/
 [contenteditable="plaintext-only"]
 {
-	outline: 0.2em inset grey;
-	margin: 0.2em;
+	outline: 0.2rem inset grey;
+	margin: 0.2rem;
 	display: inline-block;
 }
 
 [contenteditable="plaintext-only"]:focus
 {
-	outline: 0.2em inset red;
+	outline: 0.2rem inset red;
 }
 
 /*
 .el:not([data-self-closing]):before
 {
-    border-radius: 0 0 1em;
+    border-radius: 0 0 1rem;
 }
 
 #code .el
@@ -166,23 +166,23 @@ builder-property
 
 #code .el:not([data-self-closing]) > details
 {
-    border-radius: 0 0 1em;
+    border-radius: 0 0 1rem;
 }
 
 .el .el
 {
-    margin: 0 0.25em;
+    margin: 0 0.25rem;
 }
 
 .el > details
 {
 	background-color: var(--set-color, gray);
-	padding: 0.25em;
+	padding: 0.25rem;
 }
 
 #code .el
 {
-	margin: 0 0.25em;
+	margin: 0 0.25rem;
 }
 
 .hidden
@@ -220,22 +220,22 @@ builder-property
 #builder-trash
 {
 	float: right;
-	width: 3em;
-	height: 3em;
-	margin: 1em;
-	border: 1em solid red;
+	width: 3rem;
+	height: 3rem;
+	margin: 1rem;
+	border: 1rem solid red;
 }
 
 /*
 #bank, #code
 {
-	width: calc(45% - 2em);
-	width: calc(30% - 2em);
+	width: calc(45% - 2rem);
+	width: calc(30% - 2rem);
 	max-height: 75vh;
 	overflow: scroll;
 	display: inline-block;
 	border: 1px solid black;
-	padding: 1em;
+	padding: 1rem;
 	vertical-align: top;
 }
 */
@@ -245,7 +245,7 @@ builder-property
 	width: 100%;
 	height: 100%;
 	/*
-	padding: 1em;
+	padding: 1rem;
 	*/
 	box-sizing: border-box;
 }
@@ -254,9 +254,9 @@ builder-property
 {
 	border: 1px solid black;
 	/*
-	min-height: 2em;
-	margin: 2em;
-	border-radius: 1em;
+	min-height: 2rem;
+	margin: 2rem;
+	border-radius: 1rem;
 	*/
 }
 
@@ -268,20 +268,20 @@ builder-property
 
 #render-title
 {
-	padding: 1em;
-	border-radius: 1em 1em 0 0;
+	padding: 1rem;
+	border-radius: 1rem 1rem 0 0;
 }
 
 #render-code
 {
-	padding: 1em;
-	border-radius: 1em;
+	padding: 1rem;
+	border-radius: 1rem;
 }
 
 #render-body
 {
 	display: block;
-	border-radius: 0 0 1em 1em;
+	border-radius: 0 0 1rem 1rem;
     width: 100%;
     height: 80vh;
     border-width: 0;
@@ -293,13 +293,13 @@ builder-property
 }
 
 .btn {
-	padding: 0.1em;
-	margin: 0.1em;
+	padding: 0.1rem;
+	margin: 0.1rem;
 }
 
 .dropzone
 {
-	height: 3em;
+	height: 3rem;
 }
 
 /* TODO: make sure works for bank and other: */
@@ -316,10 +316,10 @@ builder-property
 
 .builder-element-group
 {
-	border: 0.5em solid blue;
-	border-radius: 1em;
-	padding: 0.5em;
-	margin-bottom: 1em;
+	border: 0.5rem solid blue;
+	border-radius: 1rem;
+	padding: 0.5rem;
+	margin-bottom: 1rem;
 }
 
 /* file bank */
@@ -332,34 +332,34 @@ builder-property
 #file-bank, #media-bank
 {
     display: inline-block;
-    padding: 0.5em;
-    border: 0.25em solid black;
+    padding: 0.5rem;
+    border: 0.25rem solid black;
     width: 40vw;
-    height: calc(20vh - 4em);
-    margin-bottom: 1em;
+    height: calc(20vh - 4rem);
+    margin-bottom: 1rem;
     vertical-align: top;
 }
 
 #file-list, #media-list
 {
-	height: calc(100% - 2em);
+	height: calc(100% - 2rem);
     overflow: auto;
 }
 
 #file-controls, media-controls
 {
-	margin-top: 0.5em;
+	margin-top: 0.5rem;
 }
 
 .file-entry
 {
-	margin: 0.25em;
-	padding: 0.25em;
+	margin: 0.25rem;
+	padding: 0.25rem;
 }
 
 #upload-file-btn
 {
-    width: 10em;
+    width: 10rem;
     color: transparent;
 }
 
@@ -367,45 +367,45 @@ builder-property
 
 .builder-attr-name
 {
-    min-width: 5em;
+    min-width: 5rem;
 		display: inline-block;
 }
 
 .builder-attr-value
 {
-    min-width: 5em;
+    min-width: 5rem;
 		display: inline-block;
 }
 
 .attr
 {
     background-color: white;
-    padding: 0.5em;
+    padding: 0.5rem;
     vertical-align: bottom;
     position: relative;
-    border: .5em solid blue;
-	border-radius: 50%/1em;
+    border: .5rem solid blue;
+	border-radius: 50%/1rem;
 	width: max-content;
-	margin-bottom: 0.25em;
+	margin-bottom: 0.25rem;
 }
 
 .attr-style-label
 {
-    padding-top: 1em;
+    padding-top: 1rem;
     display: inline-block;
 }
 
 .builder-attribute-dropzone
 {
 	background-color: var(--attribute-dropzone-color);
-	border-radius: 50%/1em;
-    padding: 0.5em;
+	border-radius: 50%/1rem;
+    padding: 0.5rem;
     display: inline-block;
     position: relative;
-    height: 3.3em;
+    height: 3.3rem;
 	width: 100%;
 	vertical-align: middle;
-	margin-right: 1em;
+	margin-right: 1rem;
 	box-sizing: border-box;
 }
 
@@ -416,17 +416,17 @@ builder-property
 	width: 100%;
 	box-sizing: border-box;
 	background-color: var(--set-color, gray);
-	padding: 0.5em 1em 0.5em 0;
+	padding: 0.5rem 1rem 0.5rem 0;
 }
 
 #builder-bank > .attr, #builder-bank > .property
 {
-	margin-bottom: 1em;
+	margin-bottom: 1rem;
 }
 
 #builder-bank > .property
 {
-	margin: 1em 2em;
+	margin: 1rem 2rem;
 }
 
 /* properties */
@@ -434,88 +434,88 @@ builder-property
 .property
 {
     background-color: white;
-    padding: 0.5em;
+    padding: 0.5rem;
     vertical-align: bottom;
     position: relative;
-    margin: 0 1em 0.25em;
-    height: 1.5em;
-    border: .5em solid purple;
-	border-width: 0.45em 0;
-	border-radius: 0.25em;
+    margin: 0 1rem 0.25rem;
+    height: 1.5rem;
+    border: .5rem solid purple;
+	border-width: 0.45rem 0;
+	border-radius: 0.25rem;
 	width: max-content;
 }
 
 .property::before {
     position: absolute;
-    left: -1.1em;
+    left: -1.1rem;
     content: "";
-    width: 1.9em;
-    height: 1.9em;
+    width: 1.9rem;
+    height: 1.9rem;
     top: 0;
-	border: .5em solid purple;
+	border: .5rem solid purple;
 	transform: scaleX(0.75) rotate(45deg) ;
-	border-width: 0 0 .5em .5em;
+	border-width: 0 0 .5rem .5rem;
 	background-image: linear-gradient(45deg, white 0 40%, transparent 40% 100%);
-	border-radius: 0.25em;
+	border-radius: 0.25rem;
 }
 
 .property::after {
     position: absolute;
-    right: -1.1em;
+    right: -1.1rem;
     content: "";
-    width: 1.9em;
-    height: 1.9em;
+    width: 1.9rem;
+    height: 1.9rem;
     top: 0;
-	border: .5em solid purple;
+	border: .5rem solid purple;
 	transform: scaleX(0.75) rotate(45deg) ;
-	border-width: .5em .5em 0 0;
+	border-width: .5rem .5rem 0 0;
 	background-image: linear-gradient(45deg, transparent 0 60%, white 60% 100%);
-	border-radius: 0.25em;
+	border-radius: 0.25rem;
 }
 
 .builder-property-name
 {
-	width: 5em;
+	width: 5rem;
 }
 
 .builder-property-value
 {
-	width: 5em;
+	width: 5rem;
 }
 
 .builder-property-dropzone
 {
 	background-color: var(--property-dropzone-color);
-    padding: 0.5em;
+    padding: 0.5rem;
     display: inline-block;
     position: relative;
-    margin: 0.25em 1em;
-    height: 1.5em;
-	width: 5em;
+    margin: 0.25rem 1rem;
+    height: 1.5rem;
+	width: 5rem;
 	vertical-align: middle;
 }
 
 .builder-property-dropzone::before {
     position: absolute;
-    left: -1em;
+    left: -1rem;
     content: "";
     width: 0;
     height: 0;
-    border-top: 1.25em solid transparent;
-    border-right: 1em solid var(--property-dropzone-color);
-    border-bottom: 1.25em solid transparent;
+    border-top: 1.25rem solid transparent;
+    border-right: 1rem solid var(--property-dropzone-color);
+    border-bottom: 1.25rem solid transparent;
     top: 0;
 }
 
 .builder-property-dropzone::after {
     position: absolute;
-    right: -1em;
+    right: -1rem;
     content: "";
     width: 0;
     height: 0;
-    border-top: 1.25em solid transparent;
-    border-left: 1em solid var(--property-dropzone-color);
-    border-bottom: 1.25em solid transparent;
+    border-top: 1.25rem solid transparent;
+    border-left: 1rem solid var(--property-dropzone-color);
+    border-bottom: 1.25rem solid transparent;
     top: 0;
 }
 
@@ -527,11 +527,11 @@ builder-property
 
 #builder-bank input
 {
-	width: 5em;
+	width: 5rem;
 }
 
 .builder-custom-type
 {
-	margin-right: 1em;
-	min-width: 5em;
+	margin-right: 1rem;
+	min-width: 5rem;
 }
