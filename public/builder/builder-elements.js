@@ -62,8 +62,7 @@ export const builder_create_element = type =>
             style="min-width 5rem;"
             onfocus="builder_globals.controldrag.killdrag(this)"
             onblur="builder_globals.controldrag.revivedrag(this)"
-            class="builder-custom-type">
-          </span>
+            class="builder-custom-type"></span>
         </div>
       `;
 
@@ -152,8 +151,7 @@ export const builder_create_attribute = (type) =>
           style="min-width 5rem;"
           class="builder-attr-name"
           onfocus="builder_globals.controldrag.killdrag(this)"
-          onblur="builder_globals.controldrag.revivedrag(this)">
-        </span>
+          onblur="builder_globals.controldrag.revivedrag(this)"></span>
       `;
     else
       attr.innerHTML = type;
@@ -165,8 +163,7 @@ export const builder_create_attribute = (type) =>
         style="min-width 5rem;"
         class="builder-attr-value"
         onfocus="builder_globals.controldrag.killdrag(this)"
-        onblur="builder_globals.controldrag.revivedrag(this)">
-      </span>&quot;
+        onblur="builder_globals.controldrag.revivedrag(this)"></span>&quot;
     `;
   }
 
@@ -200,8 +197,7 @@ export const builder_create_property = type =>
         style="min-width 5rem;"
         class="builder-property-name"
         onfocus="builder_globals.controldrag.killdrag(this)"
-        onblur="builder_globals.controldrag.revivedrag(this)">
-      </span>
+        onblur="builder_globals.controldrag.revivedrag(this)"></span>
     `;
   else
     prop.innerHTML = type;
@@ -214,8 +210,7 @@ export const builder_create_property = type =>
       style="min-width 5rem;"
       class="builder-property-value"
       onfocus="builder_globals.controldrag.killdrag(this)"
-      onblur="builder_globals.controldrag.revivedrag(this)">
-    </span>
+      onblur="builder_globals.controldrag.revivedrag(this)"></span>
   `;
 
   return prop;

@@ -18,8 +18,6 @@
 #code
 {
 	font-family: monospace;
-	--property-dropzone-color: lightgray;
-	--attribute-dropzone-color: white;
 }
 
 
@@ -379,11 +377,11 @@ builder-property
 
 .attr
 {
-    background-color: white;
+	border: .5rem solid var(--attributes-color);
+    background-color: var(--attributes-color);
     padding: 0.5rem;
     vertical-align: bottom;
     position: relative;
-    border: .5rem solid blue;
 	border-radius: 50%/1rem;
 	width: max-content;
 	margin-bottom: 0.25rem;
@@ -433,13 +431,13 @@ builder-property
 
 .property
 {
-    background-color: white;
+	border: .5rem solid var(--properties-color);
+    background-color: var(--properties-color);
     padding: 0.5rem;
     vertical-align: bottom;
     position: relative;
     margin: 0 1rem 0.25rem;
     height: 1.5rem;
-    border: .5rem solid purple;
 	border-width: 0.45rem 0;
 	border-radius: 0.25rem;
 	width: max-content;
@@ -452,10 +450,10 @@ builder-property
     width: 1.9rem;
     height: 1.9rem;
     top: 0;
-	border: .5rem solid purple;
+	border: .5rem solid var(--properties-color);
 	transform: scaleX(0.75) rotate(45deg) ;
 	border-width: 0 0 .5rem .5rem;
-	background-image: linear-gradient(45deg, white 0 40%, transparent 40% 100%);
+	background-image: linear-gradient(45deg, var(--properties-color) 0 40%, transparent 40% 100%);
 	border-radius: 0.25rem;
 }
 
@@ -466,10 +464,10 @@ builder-property
     width: 1.9rem;
     height: 1.9rem;
     top: 0;
-	border: .5rem solid purple;
+	border: .5rem solid var(--properties-color);
 	transform: scaleX(0.75) rotate(45deg) ;
 	border-width: .5rem .5rem 0 0;
-	background-image: linear-gradient(45deg, transparent 0 60%, white 60% 100%);
+	background-image: linear-gradient(45deg, transparent 0 60%, var(--properties-color) 60% 100%);
 	border-radius: 0.25rem;
 }
 

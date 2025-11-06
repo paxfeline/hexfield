@@ -1,14 +1,17 @@
 body,
 :host
 {
-	--property-dropzone-color: lightgray;
-	--attribute-dropzone-color: white;
-
   --blocks-root-set: lightblue;
   --blocks-head-set: mediumpurple;
   --blocks-body-set: lightgreen;
   --blocks-etc1-set: gold;
   --blocks-custom-set: lightcoral;
+  
+  --attributes-color: lightblue;
+  --attribute-dropzone-color: rgba(255, 255, 255, 0.5);
+  
+  --properties-color: lightpink;
+	--property-dropzone-color: rgba(255, 255, 255, 0.5);;
 
   --hex-line-width: 0.333rem;
 }
