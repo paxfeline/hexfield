@@ -161,7 +161,9 @@ TODO: move to hexfield.css
         () =>
         {
           console.log("refresh preview");
-          render.contentWindow.location.reload();
+          //render.contentWindow.location.reload();
+          // above changed to:
+          render.contentWindow?.location.reload();
           tabs.selectedIndex = 0;
         };
     </script>
@@ -235,7 +237,9 @@ mcp.register_html_editor(view);
 mcp.regHexEvent(mcp.events.load_code_file_text,
   file =>
   {
-    render.contentWindow.location = `/web/${file}`;
+    //render.contentWindow.location = `/web/${file}`;
+    // above changed to:
+    render.src = `/web/${file}`;
   }
 );
 
