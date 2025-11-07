@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  before_create :default_role
+  after_initialize :default_role
   
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -8,6 +8,6 @@ class User < ApplicationRecord
   has_many :projects, foreign_key: 'owner'
 
   def default_role
-    self.role = 'teacher'
+    self.role ||= 'teacher'
   end
 end

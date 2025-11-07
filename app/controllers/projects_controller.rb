@@ -85,9 +85,9 @@ class ProjectsController < ApplicationController
   # Turn visibility into a numbers
   def set_visibility_enum
     if params[:project][:visibility] == "1"
-      params[:project][:visibility] = :vis_public
+      params[:project][:visibility] = "1" # :vis_public
     else
-      params[:project][:visibility] = :vis_private
+      params[:project][:visibility] = "0" # :vis_private
     end
   end
 end
