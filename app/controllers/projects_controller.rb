@@ -43,7 +43,7 @@ class ProjectsController < ApplicationController
   # PATCH/PUT /projects/1 or /projects/1.json
   def update
     puts params.inspect
-    @project = Project.find_by(name: params[:id])
+    @project = Project.find_by(name: params[:id], owner: current_user)
     params[:project][:owner_id] = current_user.id
     params[:project][:name] = params[:id]
     set_visibility_enum

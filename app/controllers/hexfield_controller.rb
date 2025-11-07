@@ -109,13 +109,13 @@ class HexfieldController < ApplicationController
 
   def public_get_code_file
     project_name = params[:project]
-    project = Project.find_by(name: project_name)
-
     userid = params[:user]
+    project = Project.find_by(name: project_name, owner_id: userid)
 
     # puts "pgcf: #{current_user&.id} ? #{userid}"
 
-    if !project.visibility == "1" && current_user != project.owner
+    # is this too ugly to stay?
+    if project.nil? || (project.visibility != 1 && (current_user.nil? || current_user != project.owner))
       render plain: "Project is not public", status: :unauthorized and return
     end
 
@@ -142,9 +142,9 @@ class HexfieldController < ApplicationController
 
   def public_get_media_file
     project_name = params[:project]
-    project = Project.find_by(name: project_name)
+    project = Project.find_by(name: project_name, owner_id: userid)
 
-    if !project.visibility == "1" && current_user != project.owner
+    if project.nil? || (project.visibility != 1 && (current_user.nil? || current_user != project.owner))
       render plain: "Project is not public", status: :unauthorized and return
     end
 

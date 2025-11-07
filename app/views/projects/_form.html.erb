@@ -22,7 +22,7 @@
       vis = [{v: 1, n: "public"}, {v: 0, n: "private"}] 
       vis = vis.map { |v| OpenStruct.new(v) }
     %>
-    <%= form.collection_radio_buttons :visibility, vis, :v, :n %>
+    <%= form.collection_radio_buttons :visibility, vis, :v, :n, include_hidden: false %>
     <%#= form.label :visibility, style: "display: block" %>
     <%#= form.number_field :visibility, value: 1 %>
   </div>
