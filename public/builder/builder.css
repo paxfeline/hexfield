@@ -377,16 +377,11 @@ builder-property
 
 /* attributes */
 
-.builder-attr-name
-{
-    min-width: 5rem;
-		display: inline-block;
-}
-
+.builder-attr-name,
 .builder-attr-value
 {
-    min-width: 5rem;
-		display: inline-block;
+	min-width: 5rem;
+	vertical-align: middle;
 }
 
 .attr
@@ -485,14 +480,11 @@ builder-property
 	border-radius: 0.25rem;
 }
 
-.builder-property-name
-{
-	width: 5rem;
-}
-
+.builder-property-name,
 .builder-property-value
 {
-	width: 5rem;
+	min-width: 5rem;
+	vertical-align: middle;
 }
 
 .builder-property-dropzone
