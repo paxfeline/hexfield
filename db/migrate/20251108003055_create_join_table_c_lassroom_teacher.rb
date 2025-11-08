@@ -1,6 +1,6 @@
-class CreateJoinTableCLassroomTeacher < ActiveRecord::Migration[8.0]
+class CreateJoinTableClassroomTeacher < ActiveRecord::Migration[8.0]
   def change
-    create_join_table :classrooms, :teachers do |t|
+    create_join_table :classrooms, :users do |t|
       #t.index [:classroom_id, :teacher_id]
       #t.index [:teacher_id, :classroom_id]
     end

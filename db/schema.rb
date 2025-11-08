@@ -19,9 +19,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_08_003637) do
     t.index ["creator_id"], name: "index_classrooms_on_creator_id"
   end
 
-  create_table "classrooms_teachers", id: false, force: :cascade do |t|
+  create_table "classrooms_users", id: false, force: :cascade do |t|
     t.integer "classroom_id", null: false
-    t.integer "teacher_id", null: false
+    t.integer "user_id", null: false
   end
 
   create_table "projects", force: :cascade do |t|
