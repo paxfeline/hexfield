@@ -1,0 +1,32 @@
+<h1>Dashboards#dashboard</h1>
+<p>Find me in app/views/dashboards/dashboard.html.erb</p>
+
+<h1>Projects</h1>
+
+<div id="projects">
+  <% @projects.each do |project| %>
+    <%= render project %>
+    <p>
+      <%# link_to "Show this project", project %>
+      <%= link_to "Edit this project", edit_path(
+        "project[owner_id]" => project.owner_id,
+        "project[name]" => project.name,
+        "project[visibility]" => project.visibility) %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New project", new_project_path %>
+
+<h1>Classrooms</h1>
+
+<div id="projects">
+  <% @classrooms.each do |classroom| %>
+    <%= render project %>
+    <p>
+      <%= link_to "Show this classroom", classroom %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New classroom", new_classroom_path %>

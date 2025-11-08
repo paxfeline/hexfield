@@ -13,6 +13,7 @@ class ClassroomsController < ApplicationController
   # GET /classrooms/new
   def new
     @classroom = Classroom.new
+    @user = current_user
   end
 
   # GET /classrooms/1/edit

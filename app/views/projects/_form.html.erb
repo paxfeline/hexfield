@@ -1,4 +1,4 @@
-<%= form_with(model: project, method: "get", url: "/edit") do |form| %>
+<%= form_with(model: project, method: "get", url: "/edit", data: {turbo: false}) do |form| %>
   <% if project.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
@@ -27,7 +27,8 @@
     <%#= form.number_field :visibility, value: 1 %>
   </div>
 
-  <%# TODO: remove owner_id field; handled by backend %>
+  <%# TODO: remove owner_id field; handled by backend
+    or leave it... %>
   <%= form.hidden_field :owner_id, value: @user.id %>
 
   <div>
