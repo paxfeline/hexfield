@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_08_003637) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_08_070800) do
   create_table "classrooms", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -19,9 +19,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_08_003637) do
     t.index ["creator_id"], name: "index_classrooms_on_creator_id"
   end
 
+  create_table "classrooms_lessons", id: false, force: :cascade do |t|
+    t.integer "lesson_id", null: false
+    t.integer "classroom_id", null: false
+  end
+
   create_table "classrooms_users", id: false, force: :cascade do |t|
     t.integer "classroom_id", null: false
     t.integer "user_id", null: false
+  end
+
+  create_table "lessons", force: :cascade do |t|
+    t.string "name"
+    t.integer "creator_id", null: false
+    t.integer "project_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["creator_id"], name: "index_lessons_on_creator_id"
+    t.index ["project_id"], name: "index_lessons_on_project_id"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -51,6 +66,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_08_003637) do
   end
 
   add_foreign_key "classrooms", "users", column: "creator_id"
+  add_foreign_key "lessons", "projects"
+  add_foreign_key "lessons", "users", column: "creator_id"
   add_foreign_key "projects", "users", column: "owner_id"
   add_foreign_key "users", "users", column: "creator_id"
 end
