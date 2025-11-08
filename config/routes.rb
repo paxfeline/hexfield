@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "dashboard" => "dashboards#dashboard"
+
   resources :classrooms
   # get "hexfield/index" # don't want/need
   devise_for :users

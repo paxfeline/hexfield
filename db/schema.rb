@@ -42,7 +42,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_08_003637) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.string "role", null: false
+    t.string "role", default: "Teacher", null: false
     t.integer "creator_id"
     t.index ["creator_id"], name: "index_users_on_creator_id"
     t.index ["email"], name: "index_users_on_email", unique: true
