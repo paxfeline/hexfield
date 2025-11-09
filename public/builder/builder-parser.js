@@ -179,6 +179,7 @@ export function load_element(el)
 		//const custom_templ = document.querySelector(`[data-type="${check_empty ? '[custom-empty]' : '[custom]'}"]`);
 		//ne = custom_templ.cloneNode(true);
 		[ne, dz] = builder_globals.factories.element(check_empty ? '[custom-empty]' : '[custom]').children;
+		debugger
 		addAttributes(el, ne);
 		
 		ne.querySelector('.builder-custom-type').innerText = type;

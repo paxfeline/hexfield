@@ -386,7 +386,7 @@ export function renderAttributesCode(source)
 	
 	if (!source.firstElementChild) return '';
 	
-	const list = source.firstElementChild.querySelectorAll('.attr');
+	const list = source.querySelectorAll('.attr');
 	
 	for (const attr of list)
 	{
