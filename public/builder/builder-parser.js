@@ -134,11 +134,9 @@ export function load_element(el)
 		
 		if ( txt === '' ) return null;
 		
-		// TODO change document to the bank div
-		//const txt_templ = document.querySelector(`[data-type='[text]']`);
-		//ne = txt_templ.cloneNode(true);
 		[ne, dz] = builder_globals.factories.element('[text]').children;
 		
+		// This should be OK
 		let ta = ne.firstElementChild;
 		ta.innerHTML = txt;
 		// this line is apparently necessary, even though it shouldn't be
@@ -151,7 +149,7 @@ export function load_element(el)
 		[ne, dz] = builder_globals.factories.element(type).children;
 		addAttributes(el, ne);
 		
-		const ta = ne.firstElementChild;
+		const ta = ne.querySelector("[contenteditable]");
 		// TODO: check this line I commentded out if shit goes south
 		//el.innerHTML = el.innerHTML.trim();
 		ta.innerHTML = el.innerHTML.trim();
@@ -183,7 +181,7 @@ export function load_element(el)
 		[ne, dz] = builder_globals.factories.element(check_empty ? '[custom-empty]' : '[custom]').children;
 		addAttributes(el, ne);
 		
-		ne.querySelector('.builder-custom-type').setAttribute('value', type);
+		ne.querySelector('.builder-custom-type').innerText = type;
 		
 		if (!check_empty)
 		{
@@ -202,18 +200,8 @@ export function load_element(el)
 
 export function addAttributes(source, dest)
 {
-	//console.log("aa", source);
-	//if (!dest.hasAttribute("data-no-attributes"))
-	// chaning to not rely on these attributes
 	if (!builder_globals.no_attributes.includes(dest.dataset.type))
 	{
-		//const templates = document.querySelector('#templates');
-	
-		//const wrapper = templates.querySelector('.builder-attribute-set').cloneNode(true);
-		//dest.prepend(wrapper);
-		
-		//const listContainer = wrapper.firstElementChild; // simpler but more brittle than querySelector('.builder-attribute-container').cloneNode(true);
-
 		const listContainer = dest.querySelector('.builder-attribute-container');
 
 		for (var i = 0; i < source.attributes.length; i++)
@@ -224,8 +212,6 @@ export function addAttributes(source, dest)
 			
 			if (builder_globals.known_attributes.includes(attr.name))
 			{
-				// TODO change document to the bank div (or make templates)
-				//const new_attr = document.querySelector(`[data-attribute-name='${attr.name}']`).cloneNode(true);
 				const new_attr = builder_globals.factories.attribute(attr.name);
 
 				if (attr.name == 'style')

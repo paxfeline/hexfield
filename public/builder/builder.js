@@ -341,13 +341,16 @@ export function renderElementCode(source, realHTML=true, level=4, type_override)
 					}
 					else if (dtype == '[custom]')
 					{
-						const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
+						debugger
+						// const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
+						const type_inp = el.querySelector('.builder-custom-type');
 						//type_inp.setAttribute('value', type_inp.value);
 						code += renderElementCode(el, realHTML, level + 4, type_inp.innerText);
 					}
 					else if (dtype == '[custom-empty]')
 					{
-						const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
+						// const type_inp = el.firstElementChild.nextElementSibling.querySelector('input.builder-custom-type');
+						const type_inp = el.querySelector('.builder-custom-type');
 						//type_inp.setAttribute('value', type_inp.value);
 						code += renderElementCode(el, realHTML, level + 4, type_inp.innerText);
 					}
