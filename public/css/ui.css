@@ -14,4 +14,7 @@ body,
 	--property-dropzone-color: rgba(255, 255, 255, 0.5);;
 
   --hex-line-width: 0.333rem;
+
+  --menubar-main-color: purple;
+  --menubar-share-color: white;
 }
