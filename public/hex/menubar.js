@@ -88,6 +88,7 @@ class HexMenubar extends HTMLElement
 
       .menu-daycare
       {
+        pointer-events: none;
         position: absolute;
         overflow: hidden;
         z-index: 10;
@@ -95,6 +96,7 @@ class HexMenubar extends HTMLElement
       
       .menu-children
       {
+        pointer-events: all;
         transition: transform 0.2s;
         transform: translateY(-100%);
         background-color: var(--menubar-share-color);
