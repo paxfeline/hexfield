@@ -69,8 +69,13 @@ TODO: move to hexfield.css
 
 <div id="main">
 
-<hex-menubar></hex-menubar>
+<hex-menubar>
+ <% if @user_signed_in %>
+    <%= @user.name %>
+  <% end %>
+</hex-menubar>
 
+<!--
 <div id="header">
 
 <h1>Hexfield</h1>
@@ -94,6 +99,7 @@ TODO: move to hexfield.css
 </div>
 
 </div>
+-->
 
 <div id="middle">
 

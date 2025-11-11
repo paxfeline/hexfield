@@ -57,6 +57,7 @@ class HexMenubar extends HTMLElement
         <div class="menu-daycare"><div class="menu-children">
           <div class="menu-child selectable" data-action="file-save">Save</div>
           <div class="menu-child selectable" data-action="file-view">View (new tab)</div>
+          <div class="menu-child selectable" data-action="file-delete">Delete...</div>
         </div></div>
       </div>
       <div class="menu-item" id="share-menu">
@@ -82,11 +83,18 @@ class HexMenubar extends HTMLElement
       <div class="menu-item" id="user-menu">
         <label id="user-menu-item">
             <input type="checkbox"></input>
-            <span id="user-name">...</span>
+            <span id="user-name">
+              <slot></slot>
+            </span>
         </label>
         <div class="menu-daycare"><div class="menu-children">
           <div class="menu-child selectable" data-action="user-dashboard">Dashboard</div>
-          <div class="menu-child selectable" data-action="user-signout">Exit & Sign Out</div>
+            <div class="menu-child selectable" data-action="user-signout">
+              <a data-turbo-method="delete" href="/users/sign_out">
+                Exit & Sign Out
+              </a>
+            </div>
+          </div>
         </div></div>
       </div>
     `;
@@ -99,7 +107,7 @@ class HexMenubar extends HTMLElement
       {
         display: flex;
         align-items: baseline;
-        gap: 1rem;
+        gap: 2rem;
         background-color: var(--menubar-main-color);
         font-family: monospace;
         padding: 1rem;
@@ -204,6 +212,8 @@ class HexMenubar extends HTMLElement
 
     this.fileMenu = shadow.querySelector("#file-menu");
     this.shareMenu = shadow.querySelector("#share-menu");
+    this.shareYes = shadow.querySelector("#share-yes");
+    this.shareNo = shadow.querySelector("#share-no");
 
     this.fileMenu.addEventListener("click",
       e =>
@@ -217,6 +227,10 @@ class HexMenubar extends HTMLElement
         {
           console.log("view")
         }
+        else if (e.target.dataset.action === "file-delete")
+        {
+          console.log("delete")
+        }
       }
     );
     
@@ -227,13 +241,19 @@ class HexMenubar extends HTMLElement
 
         this.fileMenu.querySelector("input[type='checkbox']").checked = false;
 
-        if (e.target.dataset.action === "share-yes")
+        if (e.target.dataset.action === "share-yes" || e.target.dataset.action === "share-no")
         {
-          console.log("share yes")
-        }
-        else if (e.target.dataset.action === "share-no")
-        {
-          console.log("hsare no")
+          const sp = new URLSearchParams(document.location.search);
+          sp.set("project[visibility]", e.target.dataset.action === "share-yes" ? 1 : 0);
+          window.history.replaceState(null, "", `edit?${sp}`);
+          mcp.update_project();
+
+          // update UI
+          // TODO: move and fire event when done
+          const onChoice = e.target.dataset.action === "share-yes" ? this.shareYes : this.shareNo;
+          const offChoice = e.target.dataset.action === "share-yes" ? this.shareNo : this.shareYes;
+          delete offChoice.dataset.selected;
+          onChoice.dataset.selected = "";
         }
         else if (e.target.dataset.action === "share-url")
         {
@@ -241,6 +261,19 @@ class HexMenubar extends HTMLElement
         }
       }
     );
+
+    // share menu setup
+    const params = new URLSearchParams(document.location.search);
+    if (params.get("project[visibility]") === "0")
+    {
+      delete this.shareYes.dataset.selected;
+      this.shareNo.dataset.selected = "";
+    }
+    else if (params.get("project[visibility]") === "1")
+    {
+      delete this.shareNo.dataset.selected;
+      this.shareYes.dataset.selected = "";
+    }
   }
 }
 
