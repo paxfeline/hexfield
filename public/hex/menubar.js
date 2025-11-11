@@ -121,12 +121,16 @@ class HexMenubar extends HTMLElement
       .menu-item
       {
         font-size: 18pt;
+        position: relative;
       }
 
       .menu-item > label
       {
         text-shadow: black 0 0;
         transition: text-shadow var(--hex-anim-speed);
+        cursor: pointer;
+        color: black;
+        transition: color var(--hex-anim-speed);
       }
 
       .menu-daycare
@@ -145,7 +149,6 @@ class HexMenubar extends HTMLElement
         transform: translateY(-100%);
         border: var(--hex-line-width) solid var(--menubar-menu-border-color);
         background-color: var(--menubar-menu-color);
-        padding: 1rem;
       }
 
       .menu-item:has(:checked) > label
@@ -168,6 +171,7 @@ class HexMenubar extends HTMLElement
       {
         font-style: italic;
         background-color: lightblue;
+        cursor: pointer;
       }
 
       #share-yes,

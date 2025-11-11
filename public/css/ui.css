@@ -20,4 +20,6 @@ body,
   --menubar-menu-border-color: black;
 
   --hex-anim-speed: 0.1s;
+
+  cursor: default;
 }
