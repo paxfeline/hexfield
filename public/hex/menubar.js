@@ -138,6 +138,7 @@ class HexMenubar extends HTMLElement
         pointer-events: none;
         position: absolute;
         overflow: hidden;
+        width: max-content;
         z-index: 10;
         margin-left: -1rem;
       }
