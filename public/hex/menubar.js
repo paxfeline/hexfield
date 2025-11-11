@@ -47,27 +47,48 @@ class HexMenubar extends HTMLElement
 
     root.innerHTML = `
       <div id="header">
-        <h1>Hexfield</h1>
+        <h1>Hexfield ⬣</h1>
       </div>
-      <div class="menu-item">
-        <label id="file-btn">
-          <input type="checkbox" style="position: absolute; width: 0; height: 0"></input>
+      <div class="menu-item" id="file-menu">
+        <label id="file-menu-item">
+          <input type="checkbox"></input>
           File
         </label>
+        <div class="menu-daycare"><div class="menu-children">
+          <div class="menu-child selectable" data-action="file-save">Save</div>
+          <div class="menu-child selectable" data-action="file-view">View (new tab)</div>
+        </div></div>
       </div>
-      <div class="menu-item">
-        <label id="share-btn">
-          <input type="checkbox" style="position: absolute; width: 0; height: 0"></input>
+      <div class="menu-item" id="share-menu">
+        <label id="share-menu-item">
+          <input type="checkbox"></input>
           Share
         </label>
-        <div class="menu-daycare">
-          <div class="menu-children">
-            <li>Item 1</li>
-            <li>Item 2</li>
-          </div>
-        </div>
+        <div class="menu-daycare"><div class="menu-children">
+          <div class="menu-child">Shareable?</div>
+          <div class="menu-child selectable" id="share-yes" data-action="share-yes">Yes</div>
+          <div class="menu-child selectable" id="share-no"  data-action="share-no" data-selected>No</div>
+          <div class="menu-child selectable" data-action="share-url">Get URL</div>
+        </div></div>
       </div>
       <div class="spacer"></div>
+      <div id="status-cont">
+        Status:
+        <span id="status">
+          Idle
+        </span>
+      </div>
+      <div class="spacer"></div>
+      <div class="menu-item" id="user-menu">
+        <label id="user-menu-item">
+            <input type="checkbox"></input>
+            <span id="user-name">...</span>
+        </label>
+        <div class="menu-daycare"><div class="menu-children">
+          <div class="menu-child selectable" data-action="user-dashboard">Dashboard</div>
+          <div class="menu-child selectable" data-action="user-signout">Exit & Sign Out</div>
+        </div></div>
+      </div>
     `;
 
     // Create some CSS to apply to the shadow dom
@@ -77,13 +98,27 @@ class HexMenubar extends HTMLElement
       #root
       {
         display: flex;
+        align-items: baseline;
+        gap: 1rem;
         background-color: var(--menubar-main-color);
+        font-family: monospace;
+        padding: 1rem;
+      }
+
+      #header h1
+      {
+        margin: 0;
       }
 
       .menu-item
       {
-        font-size: 48pt;
-        padding: 1rem;
+        font-size: 18pt;
+      }
+
+      .menu-item > label
+      {
+        text-shadow: black 0 0;
+        transition: text-shadow var(--hex-anim-speed);
       }
 
       .menu-daycare
@@ -92,15 +127,22 @@ class HexMenubar extends HTMLElement
         position: absolute;
         overflow: hidden;
         z-index: 10;
+        margin-left: -1rem;
       }
       
       .menu-children
       {
         pointer-events: all;
-        transition: transform 0.2s;
+        transition: transform var(--hex-anim-speed);
         transform: translateY(-100%);
-        background-color: var(--menubar-share-color);
+        border: var(--hex-line-width) solid var(--menubar-menu-border-color);
+        background-color: var(--menubar-menu-color);
         padding: 1rem;
+      }
+
+      .menu-item:has(:checked) > label
+      {
+        text-shadow: black 0.075rem 0.075rem;
       }
       
       label:has(:checked) + .menu-daycare > .menu-children
@@ -108,9 +150,45 @@ class HexMenubar extends HTMLElement
         transform: translateY(0%);
       }
 
-      li
+      .menu-child
       {
-        list-style: none;
+        margin: 0;
+        padding: 0.75rem;
+      }
+
+      .menu-child.selectable:hover
+      {
+        font-style: italic;
+        background-color: lightblue;
+      }
+
+      #share-yes,
+      #share-no
+      {
+        border-left: 0.333rem solid black;
+        margin-left: 0.75rem;
+      }
+
+      #user-menu
+      {
+        direction: rtl;
+      }
+
+      [data-selected]::after
+      {
+        content: " ☜";
+      }
+
+      input[type="checkbox"]
+      {
+        position: absolute;
+        width: 0;
+        height: 0
+      }
+
+      .spacer
+      {
+        flex: 1;
       }
     `;
 
@@ -124,8 +202,45 @@ class HexMenubar extends HTMLElement
     shadow.appendChild(uistyle);
     shadow.appendChild(root);
 
-    this.file_display = shadow.querySelector("#file-display");
-    this.media_file_display = shadow.querySelector("#media-file-display");
+    this.fileMenu = shadow.querySelector("#file-menu");
+    this.shareMenu = shadow.querySelector("#share-menu");
+
+    this.fileMenu.addEventListener("click",
+      e =>
+      {
+        this.shareMenu.querySelector("input[type='checkbox']").checked = false;
+        if (e.target.dataset.action === "file-save")
+        {
+          console.log("save")
+        }
+        else if (e.target.dataset.action === "file-view")
+        {
+          console.log("view")
+        }
+      }
+    );
+    
+    this.shareMenu.addEventListener("click",
+      e =>
+      {
+        console.log(e);
+
+        this.fileMenu.querySelector("input[type='checkbox']").checked = false;
+
+        if (e.target.dataset.action === "share-yes")
+        {
+          console.log("share yes")
+        }
+        else if (e.target.dataset.action === "share-no")
+        {
+          console.log("hsare no")
+        }
+        else if (e.target.dataset.action === "share-url")
+        {
+          console.log("url")
+        }
+      }
+    );
   }
 }
 

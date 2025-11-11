@@ -15,6 +15,9 @@ body,
 
   --hex-line-width: 0.333rem;
 
-  --menubar-main-color: purple;
-  --menubar-share-color: white;
+  --menubar-main-color: pink;
+  --menubar-menu-color: white;
+  --menubar-menu-border-color: black;
+
+  --hex-anim-speed: 0.1s;
 }
