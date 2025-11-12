@@ -122,18 +122,21 @@ class HexMenubar extends HTMLElement
       {
         font-size: 18pt;
         position: relative;
+        background-image: linear-gradient(transparent 50%, black 50%);
+        background-size: 100% 200%;
+        background-position-y: 0%;
+        transition: background-position-y var(--hex-anim-speed);
       }
 
       .menu-item > label
       {
-        text-shadow: black 0 0;
-        transition: text-shadow var(--hex-anim-speed);
         cursor: pointer;
-        color: black;
-        background-image: linear-gradient(transparent 50%, black 50%);
+        color: transparent;
+        background-image: linear-gradient(black 50%, white 50%);
         background-size: 100% 200%;
         background-position-y: 0%;
-        transition: color, background-position-y var(--hex-anim-speed);
+        background-clip: text;
+        transition: background-position-y var(--hex-anim-speed);
       }
 
       .menu-daycare
@@ -155,10 +158,13 @@ class HexMenubar extends HTMLElement
         background-color: var(--menubar-menu-color);
       }
 
+      .menu-item:has(:checked)
+      {
+        background-position-y: 100%;
+      }
+
       .menu-item:has(:checked) > label
       {
-        color: white;
-        text-shadow: white 0.075rem 0.075rem;
         background-position-y: 100%;
       }
       

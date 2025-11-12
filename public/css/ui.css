@@ -19,7 +19,7 @@ body,
   --menubar-menu-color: white;
   --menubar-menu-border-color: black;
 
-  --hex-anim-speed: 0.1s;
+  --hex-anim-speed: 0.2s;
 
   cursor: default;
 }
