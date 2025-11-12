@@ -130,7 +130,10 @@ class HexMenubar extends HTMLElement
         transition: text-shadow var(--hex-anim-speed);
         cursor: pointer;
         color: black;
-        transition: color var(--hex-anim-speed);
+        background-image: linear-gradient(transparent 50%, black 50%);
+        background-size: 100% 200%;
+        background-position-y: 0%;
+        transition: color, background-position-y var(--hex-anim-speed);
       }
 
       .menu-daycare
@@ -154,7 +157,9 @@ class HexMenubar extends HTMLElement
 
       .menu-item:has(:checked) > label
       {
-        text-shadow: black 0.075rem 0.075rem;
+        color: white;
+        text-shadow: white 0.075rem 0.075rem;
+        background-position-y: 100%;
       }
       
       label:has(:checked) + .menu-daycare > .menu-children
