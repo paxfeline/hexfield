@@ -70,4 +70,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_08_070800) do
   add_foreign_key "lessons", "users", column: "creator_id"
   add_foreign_key "projects", "users", column: "owner_id"
   add_foreign_key "users", "users", column: "creator_id"
+  add_foreign_key "users", "users", column: "creator_id"
 end

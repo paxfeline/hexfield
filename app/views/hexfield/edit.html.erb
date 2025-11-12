@@ -285,25 +285,6 @@ const observer = new MutationObserver(obs_func);
 // Start observing the target node for configured mutations
 observer.observe(targetNode, config);
 
-/* Project Visibility control */
-/*
-const vis_sel = document.querySelector("#vis-sel");
-const params = new URLSearchParams(document.location.search);
-vis_sel.selectedIndex = params.get("project[visibility]");
-vis_sel.addEventListener(
-  "change",
-  () =>
-  {
-    const sp = new URLSearchParams(document.location.search);
-    sp.set("project[visibility]", vis_sel.selectedIndex);
-    window.history.replaceState(null, "", `edit?${sp}`);
-    mcp.update_project();
-  }
-);
-const vis_div = document.querySelector("#vis-div");
-vis_div.style.display = "initial";
-*/
-
 /* Main Tabs enabled? */
 
 // update workspace tabs disabled-or-not status
