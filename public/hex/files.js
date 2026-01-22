@@ -3,7 +3,7 @@ import * as mcp from "/hex/mcp.js";
 // Create a class for the element
 class HexFiles extends HTMLElement
 {
-  #selectedIndex = null; // private field
+  #selectedPath = null; // private field
 
   constructor()
   {
@@ -11,22 +11,22 @@ class HexFiles extends HTMLElement
     super();
   }
 
-  get selectedIndex()
+  get selectedPath()
   {
-    return this.#selectedIndex;
+    return this.#selectedPath;
   }
 
   get selectedRow()
   {
-    return this.file_display.children[this.#selectedIndex];
+    return this.file_display.querySelector(`[data-path="${this.#selectedPath}"]`);
   }
 
-  set selectedIndex(i)
+  set selectedPath(path)
   {
-    if (this.#selectedIndex !== null)
+    if (this.#selectedPath !== null)
       this.selectedRow.removeAttribute("selected");
     
-    this.#selectedIndex = i;
+    this.#selectedPath = path;
     
     this.selectedRow.setAttribute("selected", "");
   }
@@ -35,53 +35,68 @@ class HexFiles extends HTMLElement
   {
     mcp.fireEvent(mcp.events.load_code_file_text, file);
   }
-
-  addCodeFile(code_file, ind)
+  
+  makeFolder(folder)
   {
-    const row = this.file_row_template.cloneNode(true);
-    const file_name = code_file.split("/").pop();
-    row.querySelector(".file-row-name").innerHTML = file_name;
-    row.setAttribute("value", code_file);
-    row.setAttribute("name", file_name);
-    row.firstElementChild.addEventListener("click",
-      () =>
-      {
-        this.selectedIndex = ind;
-        this.loadSelectedFile(code_file);
-      }
-    );
-    this.file_display.appendChild(row);
+    return null;
   }
 
-  addMediaFile(media_file, ind)
+  loadFolder(folder, element, path)
   {
-    const row = document.createElement("option");
-    row.innerHTML = media_file.split("/").pop();
-    row.setAttribute("value", media_file);
-    row.addEventListener("dblclick",
-      () =>
+    for (const [key, val] of folder)
+    {
+      const item_path = path + "/" + key;
+      if (typeof val == "object")
       {
-        console.log("dbl clicked media", media_file, this);
+        const folder = this.makeFolder(key);
+        this.loadFolder(val, folder, item_path);
       }
-    )
-    this.media_file_display.appendChild(row);
+      else
+      {
+        this.addFile(key, val, element, item_path);
+      }
+    }
   }
 
-  loadFileList([code_files, media_files])
+  addFile(file_name, type, element, path)
   {
-    console.log("loading...", code_files, media_files);
+    if (file_name !== "")
+    {
+      const row = this.file_row_template.cloneNode(true);
+      // const frontend_path = path_parts.slice(2); // skip user and project name
+      row.querySelector(".file-row-name").innerHTML = file_name;
+      row.dataset.name = file_name;
+      row.dataset.path = path;
+      row.dataset.type = type;
+      row.firstElementChild.addEventListener("click",
+        () =>
+        {
+          this.selectedPath = path;
+          this.loadSelectedFile(code_file);
+        }
+      );
+      element.appendChild(row);
+    }
+    // else // file name == "" means folder
+    // {
+      
+    // }
+  }
+
+  loadFileList(files)
+  {
+    console.log("loading...", files);
 
     this.file_display.innerHTML = "";
-    code_files.forEach(this.addCodeFile.bind(this));
 
-    if (code_files.length > 0)
+    this.loadFolder(Object.entries(files), this.file_display, "/");
+
+    if (files.length > 0)
     {
-      this.loadSelectedFile(this.file_display.firstElementChild.getAttribute("value"));
-      this.selectedIndex = 0;
+      // const path = files[0];
+      // this.loadSelectedFile(path);
+      // this.selectedPath = path; // TODO: move into loadSelectedFile?
     }
-
-    this.media_file_display.innerHTML = "";
-    media_files.forEach(this.addMediaFile.bind(this));
   }
 
   connectedCallback()
@@ -98,6 +113,13 @@ class HexFiles extends HTMLElement
         <div class="file-row">
           <div class="file-row-name"></div>
         </div>
+      </template>
+      
+      <template id="folder-row-template">
+        <details>
+          <summary></summary>
+          <div></div>
+        </details>
       </template>
       
       <div class="file-section">
@@ -127,19 +149,6 @@ class HexFiles extends HTMLElement
               Delete
             </button>
           </div>
-        </div>
-      </div>
-      <div class="file-section">
-        Media files:
-        <div>
-          <select size=4 id="media-file-display"></select>
-        </div>
-        <div>
-          <input
-            type="file"
-            id="media-file-input"
-            multiple="multiple"
-            accept=".png, .jpg, .jpeg, .gif, image/*">
         </div>
       </div>
     `;
@@ -245,9 +254,9 @@ class HexFiles extends HTMLElement
     shadow.appendChild(root);
 
     this.file_display = shadow.querySelector("#file-display");
-    this.media_file_display = shadow.querySelector("#media-file-display");
 
     this.file_row_template = shadow.querySelector("#file-row-template").content.firstElementChild;
+    this.folder_row_template = shadow.querySelector("#folder-row-template").content.firstElementChild;
 
     console.log("FRT", this.file_row_template);
 
@@ -266,35 +275,11 @@ class HexFiles extends HTMLElement
             let code_files = await mcp.store_and_upload_code_files(
               file_input.files
             );
-            code_files.forEach(this.addCodeFile.bind(this));
+            code_files.forEach(this.addFile.bind(this));
             file_input.value = null;
           }
         }
       )
-        
-    let media_file_input = shadow.querySelector("#media-file-input");
-    media_file_input.addEventListener(
-      "change",
-      async () =>
-      {
-        if (media_file_input.files?.length > 0 && confirm("Upload?"))
-          {
-            let media_files = await mcp.store_and_upload_media_files(
-              media_file_input.files
-            );
-            media_files.forEach(this.addMediaFile.bind(this));
-            media_file_input.value = null;
-          }
-        }
-      );
-
-    shadow.querySelector("#media-file-display").addEventListener(
-      "dblclick",
-      async () =>
-      {
-        console.log(this.#selectedIndex);
-      }
-    );
     
     shadow.querySelector("#code-file-new-btn").addEventListener(
       "click",
@@ -310,8 +295,8 @@ class HexFiles extends HTMLElement
           //const name = path.split("/").pop();
           //file_data[name] = last_saved_data[name] = "";
           mcp.fireEvent(mcp.events.file_created);
-          this.addCodeFile(path, this.file_display.children.length);
-          this.selectedIndex = this.file_display.children.length - 1;
+          this.addFile(path);
+          this.selectedPath = path;
           this.loadSelectedFile(path);
         }
       }
@@ -339,7 +324,7 @@ class HexFiles extends HTMLElement
         Array.from(this.file_display.children).forEach(
           file_row =>
           {
-            const file = file_row.getAttribute("name");
+            const file = file_row.dataset.name;
             if (mcp.file_data[file] != mcp.last_saved_data[file])
             {
               file_row.classList.add("changed");

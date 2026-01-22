@@ -25,21 +25,35 @@ class HexfieldController < ApplicationController
     end
   end
 
-  # get "api/get-code-files" => "hexfield#get_code_files"
-  def get_code_files
+  # get "api/get-all-files" => "hexfield#get_all_files"
+  def get_all_files
     puts params.inspect
     bucket = get_bucket
-    files = bucket.files prefix: "#{@user.id}/#{params[:project][:name]}/", delimiter: "/"
-    render json: files.map(&:name)
+    files = bucket.files prefix: "#{@user.id}/#{params[:project][:name]}/"
+    render json: files.map { |f| file_info(f) }
   end
+
+  def file_info(file)
+    # [file.name, file.content_type, file.updated_at]
+    puts file
+    { name: file.name }
+  end
+
+  # get "api/get-code-files" => "hexfield#get_code_files"
+  # def get_code_files
+  #   puts params.inspect
+  #   bucket = get_bucket
+  #   files = bucket.files prefix: "#{@user.id}/#{params[:project][:name]}/", delimiter: "/"
+  #   render json: files.map(&:name)
+  # end
   
   # get "api/get-media-files" => "hexfield#get_media_files"
-  def get_media_files
-    puts params.inspect
-    bucket = get_bucket
-    files = bucket.files prefix: "#{@user.id}/#{params[:project][:name]}/media/", delimiter: "/"
-    render json: files.map(&:name)
-  end
+  # def get_media_files
+  #   puts params.inspect
+  #   bucket = get_bucket
+  #   files = bucket.files prefix: "#{@user.id}/#{params[:project][:name]}/media/", delimiter: "/"
+  #   render json: files.map(&:name)
+  # end
 
   # post "api/upload-code-file" => "hexfield#upload_code_file"
   def upload_code_file
