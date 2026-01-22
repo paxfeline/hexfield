@@ -292,7 +292,7 @@ const update_tabs =
   () =>
   {
     console.log("setting disabled", mcp.files[0]);
-    if (mcp.files[0].length > 0)
+    if (mcp.files === undefined)
       document.querySelector("#workspace").removeAttribute("disabled");
     else
       document.querySelector("#workspace").setAttribute("disabled", "");

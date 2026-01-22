@@ -35,7 +35,7 @@ export const eventClientMap = {};
 
 export function fireEvent(e, data)
 {
-  console.log("hex fire event", ...arguments);
+  //console.log("hex fire event", ...arguments);
   eventClientMap[e]?.forEach(cb => cb(data));
   firedEvents[e] = data;
 }
@@ -44,11 +44,11 @@ export function regHexEvent(e, cb)
 {
   eventClientMap[e] = [...(eventClientMap[e] || []), cb];
 
-  console.log("hex reg event", ...arguments);
+  //console.log("hex reg event", ...arguments); // Safari can't handle converting symbols to strings?
 
   // catch up with previous events
   let fe = firedEvents[e];
-  console.log("firing stored event:", e, fe);
+  //console.log("firing stored event:", e, fe); // ibid
   if (fe)
     cb(fe)
 }
@@ -168,18 +168,18 @@ export const files = await api.get_project();
 // if it exists, load the files into the opfs.
 export const file_data = {};
 export const last_saved_data = {};
-if (files && files[0])
+if (files)
 {
   console.log("mcp, loading files", files);
   
   // files[0] = code files
-  for (const file of files[0])
-  {
-    const name = file.split("/").pop();
-    const data = await api.get_code_file(name);
-    file_data[name] = last_saved_data[name] = data;
-    await opfs.store_code_file_data(name, last_saved_data[name]); // maybe skip await?
-  }
+  // for (const file of files)
+  // {
+  //   const name = file.split("/").pop();
+  //   const data = await api.get_code_file(name);
+  //   file_data[name] = last_saved_data[name] = data;
+  //   await opfs.store_code_file_data(name, last_saved_data[name]); // maybe skip await?
+  // }
   
   fireEvent(events.files_loaded, files);
 }

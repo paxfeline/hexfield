@@ -3,37 +3,10 @@ import * as mcp from "/hex/mcp.js";
 // Create a class for the element
 class HexMenubar extends HTMLElement
 {
-  #selectedIndex = null; // private field
-
   constructor()
   {
     // Always call super first in constructor
     super();
-  }
-
-  get selectedIndex()
-  {
-    return this.#selectedIndex;
-  }
-
-  get selectedRow()
-  {
-    return this.file_display.children[this.#selectedIndex];
-  }
-
-  set selectedIndex(i)
-  {
-    if (this.#selectedIndex !== null)
-      this.selectedRow.removeAttribute("selected");
-    
-    this.#selectedIndex = i;
-    
-    this.selectedRow.setAttribute("selected", "");
-  }
-
-  loadSelectedFile(file)
-  {
-    mcp.fireEvent(mcp.events.load_code_file_text, file);
   }
 
   connectedCallback()
