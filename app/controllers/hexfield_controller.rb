@@ -2,6 +2,8 @@ class HexfieldController < ApplicationController
   before_action :set_user
 
   require "google/cloud/storage"
+  require "google/cloud/storage/control"
+  require "google/cloud/storage/control/v2"
   require 'tempfile'
 
   def index
@@ -29,8 +31,17 @@ class HexfieldController < ApplicationController
   def get_all_files
     puts params.inspect
     bucket = get_bucket
-    files = bucket.files prefix: "#{@user.id}/#{params[:project][:name]}/"
-    render json: files.map { |f| file_info(f) }
+    file_names = get_folder bucket, "#{@user.id}/#{params[:project][:name]}/"
+    render json: file_names
+  end
+  
+  def get_folder(bucket, folder)
+    files = bucket.files prefix: folder, delimiter: "/", include_folders_as_prefixes: true
+    folders = files.prefixes.map do |folder|
+      p folder
+      get_folder bucket, folder
+    end
+    { path: folder, items: files.map { |f| file_info(f) }, folders: folders }
   end
 
   def file_info(file)
@@ -54,6 +65,21 @@ class HexfieldController < ApplicationController
   #   files = bucket.files prefix: "#{@user.id}/#{params[:project][:name]}/media/", delimiter: "/"
   #   render json: files.map(&:name)
   # end
+
+  # post "api/create-folder" => "hexfield#create_folder"
+  def create_folder
+    bucket = get_bucket
+
+    path_prefix = params[:path_prefix]
+    folder_name = params[:folder_name]
+
+    storage_control = Google::Cloud::Storage::Control.storage_control
+    bucket_path = storage_control.bucket_path project: "_", bucket: "hexfield"
+    request = Google::Cloud::Storage::Control::V2::CreateFolderRequest.new parent: bucket_path, folder_id: "3/qwert/f2-test/inner2/"
+    response = storage_control.create_folder request
+    #debugger()
+    
+  end
 
   # post "api/upload-code-file" => "hexfield#upload_code_file"
   def upload_code_file

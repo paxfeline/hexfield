@@ -66,24 +66,40 @@ export async function get_all_files()
     const resp_body = await response.json;
     console.log("GAF body:", response.response.status, resp_body);
     let out = {};
-    for (const item of resp_body)
-    {
-        // get path parts and discard the user id and project name
-        // TODO: check these values and ensure correctness
-        const prefix = item.name.split("/").slice(0, 2); // user id and project
-        Object.defineProperty(out, "prefix", {value: prefix});
-        const parts = item.name.split("/").slice(2); // item.name = path
-        let cur = out;
-        const last = parts.pop();
-        for (let i = 0; i < parts.length; i++)
-        {
-            if (cur[parts[i]] === undefined)
-                cur[parts[i]] = {};
-            cur = cur[parts[i]];
-        }
-        if (last === "") continue;
-        cur[last] = last.includes(".") ? last.split(".").at(-1) : "data file";
-    }
+    // Object.defineProperty(out, "folders", {value: resp_body.folders});
+    // // create folders:
+    // for (const item of resp_body.folders)
+    // {
+    //     const parts = item.path.split("/").slice(2); // item.name = path
+    //     let cur = out;
+    //     const last = parts.pop();
+    //     for (let i = 0; i < parts.length; i++)
+    //     {
+    //         if (cur[parts[i]] === undefined)
+    //             cur[parts[i]] = {};
+    //         cur = cur[parts[i]];
+    //     }
+    //     if (last !== "") console.log("folder error 1 / ", last);
+    // }
+    // // add files:
+    // for (const item of resp_body.items)
+    // {
+    //     // get path parts and discard the user id and project name
+    //     // TODO: check these values and ensure correctness
+    //     const prefix = item.name.split("/").slice(0, 2).join("/"); // user id and project
+    //     Object.defineProperty(out, "prefix", {value: prefix});
+    //     const parts = item.name.split("/").slice(2); // item.name = path
+    //     let cur = out;
+    //     const last = parts.pop();
+    //     for (let i = 0; i < parts.length; i++)
+    //     {
+    //         if (cur[parts[i]] === undefined) console.log("folder error 2")
+    //         cur = cur[parts[i]];
+    //     }
+    //     if (last === "") console.log("folder error 3");
+    //     cur[last] = last.includes(".") ? last.split(".").at(-1) : "data file";
+    // }
+    out = resp_body;
     console.log("GAF output:", out);
     return out;
   }
