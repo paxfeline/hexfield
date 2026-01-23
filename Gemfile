@@ -68,3 +68,4 @@ end
 gem "devise", "~> 4.9"
 
 gem "google-cloud-storage", "~> 1.56"
+gem "google-cloud-storage-control"

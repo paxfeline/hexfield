@@ -38,24 +38,38 @@ class HexFiles extends HTMLElement
   
   makeFolder(folder)
   {
-    return null;
+    const el = this.folder_row_template.cloneNode(true);
+    el.querySelector("summary").innerHTML = folder;
+    return el;
   }
 
-  loadFolder(folder, element, path)
+  loadFolder(folder, element, path = "")
   {
-    for (const [key, val] of folder)
+    for (const subfolder of folder.folders)
     {
-      const item_path = path + "/" + key;
-      if (typeof val == "object")
-      {
-        const folder = this.makeFolder(key);
-        this.loadFolder(val, folder, item_path);
-      }
-      else
-      {
-        this.addFile(key, val, element, item_path);
-      }
+      const el = this.makeFolder(subfolder.path.split("/").at(-2));
+      element.appendChild(el);
+      this.loadFolder(subfolder, el, subfolder.path);
     }
+    for (const file of folder.items)
+    {
+      this.addFile(file.name.split("/").pop(), "file", element, file.name);
+    }
+
+    // for (const [key, val] of Object.entries(folder))
+    // {
+    //   const item_path = path + "/" + key;
+    //   if (typeof val == "object")
+    //   {
+    //     const folder = this.makeFolder(key);
+    //     element.appendChild(folder);
+    //     this.loadFolder(val, folder, item_path);
+    //   }
+    //   else
+    //   {
+    //     this.addFile(key, val, element, item_path);
+    //   }
+    // }
   }
 
   addFile(file_name, type, element, path)
@@ -89,7 +103,7 @@ class HexFiles extends HTMLElement
 
     this.file_display.innerHTML = "";
 
-    this.loadFolder(Object.entries(files), this.file_display, "/");
+    this.loadFolder(files, this.file_display);
 
     if (files.length > 0)
     {
