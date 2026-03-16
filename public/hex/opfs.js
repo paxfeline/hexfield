@@ -30,12 +30,29 @@ export async function get_proj_dir(create = false)
   );
 }
 
-export async function store_code_file_data(name, data)
+export async function delve_folder(folder, path_array)
+{
+  const cur = path_array.shift();
+  if (path_array.length == 0)
+    return [folder, cur];
+  else
+  {
+    const subfolder = await folder.getDirectoryHandle( cur, { create: true } );
+    return delve_folder(subfolder, path_array);
+  }
+}
+
+export async function store_file_data(name, data)
 {
   try
   {
     const projDirectoryHandle = await get_proj_dir(true);
-    const fileHandle = await projDirectoryHandle.getFileHandle(name, { create: true, });
+    const file_path = name.split("/").slice(2);
+    // const [container_folder, file_name] = await delve_folder(projDirectoryHandle, file_path);
+    const stuff = await delve_folder(projDirectoryHandle, file_path);
+    console.log(stuff);
+    const [container_folder, file_name] = stuff;
+    const fileHandle = await container_folder.getFileHandle(file_name, { create: true, });
     const writeable = await fileHandle.createWritable();
     if (data !== null)
       await writeable.write(data);

@@ -132,44 +132,66 @@ class HexfieldController < ApplicationController
   def private_get_code_file
     bucket = get_bucket
 
-    name = params[:file_name]
+    # changed so all that's needed is name (path)
+    file_name = params[:file_name]
+    target_user = params[:project][:owner_id]
     userid = current_user.id
-    project = params[:project][:name]
-    file_name = "#{userid}/#{project}/#{name}"
 
-    file = bucket.file file_name
+    puts "target user #{target_user}"
+    puts "userid #{userid}"
 
-    downloaded = file.download
-    contents = downloaded.read
+    if target_user.to_i != userid
+      render plain: "You do not appear to own this file", status: :unauthorized and return
+    end
 
-    puts "Contents of storage object #{file.name} in bucket #{hexfield_bucket} are: #{contents}"
+    # file_name = "#{userid}/#{project}/#{name}"
+
+    bucket_file = bucket.file file_name
+
+    local_file = bucket_file.download
+    contents = local_file.read
+
+    puts "Contents of storage object #{bucket_file.name} in bucket #{hexfield_bucket} are:\n#{contents}"
 
     render json: { body: contents }
   end
 
-  def public_get_code_file
-    project_name = params[:project]
-    userid = params[:user]
+  # TODO remove other methods; this is it
+  def get_file
+
+    # skip it... not important enough to complicate things
+    # target_user = params[:project][:owner_id]
+    userid = current_user.id
+
+    # render plain: "You do not appear to own this file", status: :unauthorized and return if target_user.to_i != userid
+
+    # TODO: use this instead of the params business
+    m = /\/(?<user>.*?)\/(?<project>.*?)\/?<file>(.*)/.match("/a/b/c/d/e/f")
+
+    project_name = params[:project][:name]
     project = Project.find_by(name: project_name, owner_id: userid)
 
     # puts "pgcf: #{current_user&.id} ? #{userid}"
 
+    render plain: "Project is not public", status: :unauthorized and return if project.nil?
+
     # is this too ugly to stay?
-    if project.nil? || (project.visibility != 1 && (current_user.nil? || current_user != project.owner))
-      render plain: "Project is not public", status: :unauthorized and return
+    if project.visibility != 1 && (current_user.nil? || current_user != project.owner)
+      render plain: "Unauthorized", status: :unauthorized and return
     end
 
     bucket = get_bucket
 
-    file_name = params[:file]
-    frmt = params[:format]
-    file_path = "#{userid}/#{project_name}/#{file_name}#{".#{frmt}" if frmt}"
+    # file_name = params[:file]
+    # frmt = params[:format]
+    #file_path = "#{userid}/#{project_name}/#{file_name}#{".#{frmt}" if frmt}"
+    file_path = params[:file_name]
 
     file = bucket.file file_path
 
     render plain: "File not found", status: :not_found and return unless file.present?
 
-    local_file = Tempfile.new(file_name)
+    local_file = Tempfile.new("temp_bucket_file")
     local_file.close
 
     # download contents to tempfile path

@@ -144,7 +144,7 @@ TODO: move to hexfield.css
           console.log("show blocks!");
           tabs.selectedIndex = 1;
 
-          const code = mcp.file_data[mcp.current_file_name];
+          const code = mcp.file_data[mcp.current_file_url];
           let bout = builder_globals.load_code(code);
           document.querySelector("#code").innerHTML = bout.innerHTML;
 
@@ -230,7 +230,7 @@ const view = new EditorView({
             () =>
             {
                 const code = view.state.doc.toString();
-                mcp.file_data[mcp.current_file_name] = code;
+                mcp.file_data[mcp.current_file_url] = code;
                 mcp.fireEvent(mcp.events.update_file_data);
             },
             500 // delay
@@ -272,7 +272,7 @@ const obs_func = (mutationList, observer) => {
     {
       const code = builder_globals.render_code();
       // TODO: maybe: move this next line into mcp.update_html_code_editor
-      mcp.file_data[mcp.current_file_name] = code;
+      mcp.file_data[mcp.current_file_url] = code;
       mcp.update_html_code_editor(code);
     },
     500
