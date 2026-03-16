@@ -19,11 +19,13 @@ Rails.application.routes.draw do
   get "api/create-folder" => "hexfield#create_folder"
   post "api/upload-code-files" => "hexfield#upload_code_file"
   post "api/upload-media-files" => "hexfield#upload_media_file"
-  post "api/get-code-file" => "hexfield#private_get_code_file"
-  post "api/get-media-file" => "hexfield#private_get_media_file"
+  # post "api/get-code-file" => "hexfield#private_get_code_file"
+  # post "api/get-media-file" => "hexfield#private_get_media_file"
+  post "api/get-file" => "hexfield#get_file"
 
-  get "web/:user/:project/:file" => "hexfield#public_get_code_file"
-  get "web/:user/:project/media/:file" => "hexfield#public_get_media_file"
+  # get "web/:user/:project/:file" => "hexfield#public_get_code_file"
+  # get "web/:user/:project/media/:file" => "hexfield#public_get_media_file"
+  get "web/*file_name" => "hexfield#get_file"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

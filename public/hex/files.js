@@ -43,7 +43,7 @@ class HexFiles extends HTMLElement
     return el;
   }
 
-  loadFolder(folder, element, path = "")
+  loadFolder(folder, element)
   {
     for (const subfolder of folder.folders)
     {
@@ -86,7 +86,8 @@ class HexFiles extends HTMLElement
         () =>
         {
           this.selectedPath = path;
-          this.loadSelectedFile(code_file);
+          console.log(path);
+          this.loadSelectedFile(path);
         }
       );
       element.appendChild(row);
@@ -254,6 +255,17 @@ class HexFiles extends HTMLElement
       {
         width: 100%;
         text-size: 150%;
+      }
+
+      details
+      {
+        margin-left: 2rem;
+      }
+
+      summary
+      {
+        position: relative;
+        left: -2rem;
       }
     `;
 

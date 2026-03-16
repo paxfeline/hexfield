@@ -204,15 +204,15 @@ export async function get_code_file(name)
 {
   const body = util.fd_from_sp();
   body.append("file_name", name)
-  const response = await post('/api/get-code-file', {body});
+  const response = await post('/api/get-file', {body});
   if (response.response.status == 200)
   {
-    const resp_body = await response.json;
-    return resp_body.body;
+    const resp_text = await response.text;
+    return resp_text;
   }
   else
   {
     console.error("GMF error:", response);
-    return;
+    return "<File Load Error>";
   }
 }

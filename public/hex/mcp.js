@@ -11,10 +11,19 @@ import * as opfs from "/hex/opfs.js";
   projects will also be stored in the opfs and will persist.
 */
 
+export const supported_file_types =
+  {
+    code: ["html", "css", "js", "txt", "py"],
+    media: ["png", "jpg", "jpeg", "gif"]
+  };
+
+// file not loaded symbol
+
+export const file_not_loaded = Symbol("file not loaded");
+
 // event types
 
-export const events = {};
-[
+export const events = [
   "files_loaded",             // initial files loaded
   "update_file_data",         // a file has been modified
   "load_code_file_text",      // load code file into code editor
@@ -24,8 +33,10 @@ export const events = {};
   "connection_restored",
   "sw_msg",
   "builder_built",
-]
-.forEach(x => events[x] = Symbol(x));
+].reduce(
+  (obj, val) => {obj[val] = Symbol(val); return obj;},
+  {}
+)
 
 const firedEvents = {};
 
@@ -100,7 +111,6 @@ export function install_sw(sw)
 
 export let html_editor;
 export let current_file_url;
-export let current_file_name;
 export function register_html_editor(editor)
 {
   html_editor = editor;
@@ -109,11 +119,11 @@ export function register_html_editor(editor)
     {
       // store any changes before switching
       const code = html_editor.state.doc.toString();
-      file_data[current_file_name] = code;
+      if (current_file_url)
+        file_data[current_file_url] = code;
       //console.log(data);
       current_file_url = data;
-      current_file_name = data.split("/").pop();
-      update_html_code_editor(file_data[current_file_name]);
+      update_html_code_editor(file_data[current_file_url]);
     });
 }
 
@@ -133,10 +143,10 @@ export function update_html_code_editor(code)
 export async function update_html_code_file()
 {
   const code = html_editor.state.doc.toString();
-  const file = await opfs.store_code_file_data(current_file_name, code);
-  file_data[current_file_name] = code;
+  const file = await opfs.store_code_file_data(current_file_url, code);
+  file_data[current_file_url] = code;
   await api.upload_code_files([file]);
-  last_saved_data[current_file_name] = code;
+  last_saved_data[current_file_url] = code;
   
   fireEvent(events.update_file_data);
 }
@@ -171,6 +181,46 @@ export const last_saved_data = {};
 if (files)
 {
   console.log("mcp, loading files", files);
+
+  const folder_delve = async (folder) =>
+  {
+    folder.items.forEach(
+      file =>
+      {
+        const [all, name, ext] = file.name.match(/(?:[^\/]+\/)+([^\.]*\.?(.*))$/);
+        console.log(all, name, ext);
+        file_data[file.name] = last_saved_data[file.name] = null; //file_not_loaded;
+
+        // aysnc load
+        const load_file = async () =>
+        {
+          console.log("file loaded", file.name);
+          file_data[file.name] = last_saved_data[file.name] = await api.get_code_file(file.name)
+          opfs.store_file_data(file.name, last_saved_data[file.name]); // async
+        };
+        load_file();
+      }
+    );
+    
+    /*
+    for (const file of folder.items)
+    {
+      const [all, name, ext] = file.name.match(/(?:[^\/]+\/)+([^\.]*\.?(.*))$/);
+      console.log(all, name, ext);
+
+      const data = await api.get_code_file(file.name);
+      file_data[file.name] = last_saved_data[file.name] = data;
+      await opfs.store_file_data(file.name, last_saved_data[file.name]); // maybe skip await?
+    }
+      */
+
+    for (const subfolder of folder.folders)
+    {
+      folder_delve(subfolder);
+    }
+  };
+
+  folder_delve(files);
   
   // files[0] = code files
   // for (const file of files)
