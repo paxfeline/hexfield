@@ -7,18 +7,17 @@ const addResourcesToCache = async (resources) => {
 
 const putInCache = async (request, response) => {
   // do not try to cache POST requests
-  if (request.mode === 'POST') return;
+  if (request.mode.toLowerCase() === 'post') return;
   const cache = await caches.open('v1');
   await cache.put(request, response);
 };
 
-const getOPFSDirs = async (userId, projectName) =>
+const getOPFSDir = async (userId, projectName) =>
 {
   const opfsRoot = await navigator.storage.getDirectory();
   const userDirectoryHandle = await opfsRoot.getDirectoryHandle(userId);
   const projectDir = await userDirectoryHandle?.getDirectoryHandle(projectName);
-  const mediaDir = await projectDir?.getDirectoryHandle("media", { create: true });
-  return [projectDir, mediaDir];
+  return projectDir;
 }
 
 const networkFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
@@ -27,6 +26,7 @@ const networkFirst = async ({ request, preloadResponsePromise, fallbackUrl }) =>
   {
     console.log("attemping network fetch", request);
     const responseFromNetwork = await fetch(request, {signal: AbortSignal.timeout(5000)});
+    console.log("response", responseFromNetwork);
     _hexOnLine = true;
     // response may be used only once
     // we need to save clone to put one copy in cache
@@ -42,24 +42,24 @@ const networkFirst = async ({ request, preloadResponsePromise, fallbackUrl }) =>
       _hexOnLine = false;
 
     //let m = request.url.match(/.+\/web\/([^/]+)\/([^/]+)\/([^/]+)(?:\/)?(.*)/);
-    let m = request.url.match(/https?:\/\/(?:[\w\d]+\.)?(?:[\w\d]+\.[\w\d]+)\/web\/([^/]+)\/([^/]+)\/([^/]+)(?:\/)?(.*)/);
+    let m = request.url.match(/https?:\/\/(?:[\w\d]+\.)?(?:[\w\d]+\.[\w\d]+)\/web\/([^/]+)\/([^/]+)\/(.*)/);
     console.log("checking url", m, request.url);
     if (m)
     {
-      const [_, userId, projectName, p1, p2] = m;
-      const [projectDir, mediaDir] = await getOPFSDirs(userId, projectName);
+      const [_, userId, projectName, full_path] = m;
+      path = full_path.split("/");
+      file_name = path.pop();
+
+      let dir = await getOPFSDir(userId, projectName);
+
+      for (const dir_name of path)
+      {
+        dir = dir.getDirectoryHandle(dir_name, { create: true });
+      }
+
       try
       {
-        let fileHandle;
-        if (p2)
-        {
-          console.log("should be 'media':", p1);
-          fileHandle = await mediaDir.getFileHandle(p2, { create: true, });
-        }
-        else
-        {
-          fileHandle = await projectDir.getFileHandle(p1, { create: true, });
-        }
+        let fileHandle = await dir.getFileHandle(file_name, { create: true });
         const file = await fileHandle.getFile();
         const data = await file.arrayBuffer();
         return new Response(data);

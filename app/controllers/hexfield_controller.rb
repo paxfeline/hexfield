@@ -159,21 +159,29 @@ class HexfieldController < ApplicationController
   # TODO remove other methods; this is it
   def get_file
 
-    # skip it... not important enough to complicate things
-    # target_user = params[:project][:owner_id]
+    puts params
+
+    file_path = "#{params[:file_name]}.#{params[:format]}"
+
+    puts "path: " + file_path
+    m = /(?<user>.*?)\/(?<project>.*?)\/.*/.match(file_path)
+
+    puts m
+
+    render plain: "Bad request", status: :bad_request and return if m.nil?
+    
+    pathuser = m.named_captures["user"]
+    
     userid = current_user.id
-
-    # render plain: "You do not appear to own this file", status: :unauthorized and return if target_user.to_i != userid
-
-    # TODO: use this instead of the params business
-    m = /\/(?<user>.*?)\/(?<project>.*?)\/?<file>(.*)/.match("/a/b/c/d/e/f")
-
-    project_name = params[:project][:name]
+    render plain: "Unauthorized", status: :unauthorized and return if pathuser.to_i != userid
+    
+    project_name = m.named_captures["project"]
+    # project_name = params[:project][:name]
     project = Project.find_by(name: project_name, owner_id: userid)
 
     # puts "pgcf: #{current_user&.id} ? #{userid}"
 
-    render plain: "Project is not public", status: :unauthorized and return if project.nil?
+    render plain: "Project not found", status: :unauthorized and return if project.nil?
 
     # is this too ugly to stay?
     if project.visibility != 1 && (current_user.nil? || current_user != project.owner)
@@ -185,7 +193,6 @@ class HexfieldController < ApplicationController
     # file_name = params[:file]
     # frmt = params[:format]
     #file_path = "#{userid}/#{project_name}/#{file_name}#{".#{frmt}" if frmt}"
-    file_path = params[:file_name]
 
     file = bucket.file file_path
 

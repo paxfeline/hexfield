@@ -200,11 +200,13 @@ export async function upload_media_files(files)
 }
 
 // get code file in this project
-export async function get_code_file(name)
+export async function get_code_file(file_name)
 {
-  const body = util.fd_from_sp();
-  body.append("file_name", name)
-  const response = await post('/api/get-file', {body});
+  // don't need search params anymore, just use full file path
+  // const body = util.fd_from_sp();
+  // body.append("file_name", name)
+  console.log("get file", file_name)
+  const response = await post('/api/get-file', {body: {file_name}});
   if (response.response.status == 200)
   {
     const resp_text = await response.text;
