@@ -291,11 +291,11 @@ observer.observe(targetNode, config);
 const update_tabs =
   () =>
   {
-    console.log("setting disabled", mcp.files[0]);
+    console.log("setting disabled", mcp.files);
     if (mcp.files === undefined)
-      document.querySelector("#workspace").removeAttribute("disabled");
-    else
       document.querySelector("#workspace").setAttribute("disabled", "");
+    else
+      document.querySelector("#workspace").removeAttribute("disabled");
   };
 mcp.regHexEvent(mcp.events.files_loaded, update_tabs);
 mcp.regHexEvent(mcp.events.file_created, update_tabs);

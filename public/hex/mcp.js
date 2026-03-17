@@ -118,9 +118,11 @@ export function register_html_editor(editor)
     data =>
     {
       // store any changes before switching
-      const code = html_editor.state.doc.toString();
       if (current_file_url)
+      {
+        const code = html_editor.state.doc.toString();
         file_data[current_file_url] = code;
+      }
       //console.log(data);
       current_file_url = data;
       update_html_code_editor(file_data[current_file_url]);
