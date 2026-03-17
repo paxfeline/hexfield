@@ -159,14 +159,14 @@ class HexfieldController < ApplicationController
   # TODO remove other methods; this is it
   def get_file
 
-    puts params
+    # puts params
 
     file_path = "#{params[:file_name]}.#{params[:format]}"
 
-    puts "path: " + file_path
+    # puts "path: " + file_path
     m = /(?<user>.*?)\/(?<project>.*?)\/.*/.match(file_path)
 
-    puts m
+    # puts m
 
     render plain: "Bad request", status: :bad_request and return if m.nil?
     
