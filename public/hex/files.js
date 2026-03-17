@@ -39,7 +39,7 @@ class HexFiles extends HTMLElement
   makeFolder(folder)
   {
     const el = this.folder_row_template.cloneNode(true);
-    el.querySelector("summary").innerHTML = folder;
+    el.querySelector(".folder-name").innerHTML = folder;
     return el;
   }
 
@@ -49,8 +49,9 @@ class HexFiles extends HTMLElement
     {
       const el = this.makeFolder(subfolder.path.split("/").at(-2));
       element.appendChild(el);
-      this.loadFolder(subfolder, el, subfolder.path);
+      this.loadFolder(subfolder, el.querySelector(".folder-children"), subfolder.path);
     }
+    
     for (const file of folder.items)
     {
       this.addFile(file.name.split("/").pop(), "file", element, file.name);
@@ -106,6 +107,7 @@ class HexFiles extends HTMLElement
 
     this.loadFolder(files, this.file_display);
 
+    // after loading files, select one
     if (files.length > 0)
     {
       // const path = files[0];
@@ -131,10 +133,10 @@ class HexFiles extends HTMLElement
       </template>
       
       <template id="folder-row-template">
-        <details>
-          <summary></summary>
-          <div></div>
-        </details>
+        <div class="folder-container">
+          <div class="folder-name"></div>
+          <div class="folder-children"></div>
+        </div>
       </template>
       
       <div class="file-section">
@@ -146,12 +148,14 @@ class HexFiles extends HTMLElement
             New
           </button>
           <div class="file-code-upload-controls">
-            Upload: 
-            <input
-              type="file"
-              id="file-input"
-              multiple="multiple"
-              accept=".html, .css, .js">
+            <label>Upload
+              <input
+                type="file"
+                id="file-input"
+                style="opacity: 0; position: absolute;"
+                multiple="multiple"
+                accept=".html, .css, .js">
+            </label>
           </div>
           <div class="file-code-other-controls">
             <button id="code-file-save-btn">
@@ -174,22 +178,25 @@ class HexFiles extends HTMLElement
     style.textContent = `
       #root
       {
-        display: flex;
-        gap: 1rem;
+        display: flex; /* needed? */
+        gap: 1rem; /* not used? */
+        height: 100%;
       }
       
       .file-section
       {
         border: var(--hex-line-width, 0.5rem) solid black;
         padding: 0.5rem;
-        flex: 1;
+        flex: 1; /* flex parent needed? */
+        display: flex;
+        flex-direction: column;
       }
       
       #file-display
       {
-        height: 5rem;
         overflow: auto;
         border: 1px solid black;
+        flex: 1;
       }
 
       .file-row
@@ -239,6 +246,7 @@ class HexFiles extends HTMLElement
       .file-code-controls
       {
         display: flex;
+        flex-direction: column;
       }
 
       .file-code-upload-controls
@@ -257,12 +265,12 @@ class HexFiles extends HTMLElement
         text-size: 150%;
       }
 
-      details
+      .folder-container
       {
         margin-left: 2rem;
       }
 
-      summary
+      .folder-name
       {
         position: relative;
         left: -2rem;
