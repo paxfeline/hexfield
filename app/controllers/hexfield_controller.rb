@@ -36,8 +36,14 @@ class HexfieldController < ApplicationController
     project_folder = bucket.file project_path
     if project_folder.nil?
       lesson_template = Lesson.find(params[:project][:lesson_template])
-      project_path = "#{lesson_template.creator.id}/#{lesson_template.project.name}/"
-      p project_path
+      template_project_path = "#{lesson_template.creator.id}/#{lesson_template.project.name}/"
+      template_files = bucket.files prefix: template_project_path
+      template_files.all do |t_file|
+        p t_file.name
+        m = /.*?\/.*?\/(?<file_path>.*)/.match(t_file.name)
+        p m
+        t_file.copy "#{project_path}#{m.named_captures["file_path"]}"
+      end
     end
     file_names = get_folder bucket, project_path
     render json: file_names

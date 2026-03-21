@@ -145,7 +145,7 @@ export function update_html_code_editor(code)
 export async function update_html_code_file()
 {
   const code = html_editor.state.doc.toString();
-  const file = await opfs.store_code_file_data(current_file_url, code);
+  const file = await opfs.store_file_data(current_file_url, code);
   file_data[current_file_url] = code;
   await api.upload_code_files([file]);
   last_saved_data[current_file_url] = code;
