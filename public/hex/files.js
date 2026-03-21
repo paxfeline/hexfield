@@ -39,7 +39,14 @@ class HexFiles extends HTMLElement
   makeFolder(folder)
   {
     const el = this.folder_row_template.cloneNode(true);
-    el.querySelector(".folder-name").innerHTML = folder;
+    el.querySelector(".file-row-name").innerHTML = folder;
+    el.querySelector(".file-row-name").addEventListener("click",
+      () =>
+      {
+        this.selectedPath = path;
+        console.log(path);
+      }
+    );
     return el;
   }
 
@@ -83,7 +90,7 @@ class HexFiles extends HTMLElement
       row.dataset.name = file_name;
       row.dataset.path = path;
       row.dataset.type = type;
-      row.firstElementChild.addEventListener("click",
+      row.addEventListener("click",
         () =>
         {
           this.selectedPath = path;
@@ -134,7 +141,7 @@ class HexFiles extends HTMLElement
       
       <template id="folder-row-template">
         <div class="folder-container">
-          <div class="folder-name"></div>
+          <div class="file-row-name"></div>
           <div class="folder-children"></div>
         </div>
       </template>
@@ -267,13 +274,13 @@ class HexFiles extends HTMLElement
 
       .folder-container
       {
-        margin-left: 2rem;
+        margin-left: 1rem;
       }
 
-      .folder-name
+      .folder-container > .file-row-name
       {
         position: relative;
-        left: -2rem;
+        left: -1rem;
       }
     `;
 

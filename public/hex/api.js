@@ -8,24 +8,31 @@ export async function get_project()
   const response = await post('/api/get-project', {body});
   if (!response)
     return null;
+
+  
   if (response.response.status == 404)
   {
     console.log("GP: creating")
     await create_project();
-    return [[], []];
+    //return [[], []];
   }
-  else if (response.response.status == 200)
+    
+  //else if (response.response.status == 200)
+
   {
-    const resp_body = await response.json;
-    console.log("GP body:", resp_body);
+    // const resp_body = await response.json;
+    // console.log("GP body:", resp_body);
+    
     // could go outside else, but new projs will be empty
     return await get_files();
   }
+  /*
   else
   {
     console.error("GP error:", body);
     return;
   }
+    */
 }
 
 // create this project if neededs

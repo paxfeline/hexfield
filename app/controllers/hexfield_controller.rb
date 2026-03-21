@@ -29,9 +29,17 @@ class HexfieldController < ApplicationController
 
   # get "api/get-all-files" => "hexfield#get_all_files"
   def get_all_files
+    puts "get all files"
     puts params.inspect
     bucket = get_bucket
-    file_names = get_folder bucket, "#{@user.id}/#{params[:project][:name]}/"
+    project_path = "#{@user.id}/#{params[:project][:name]}/"
+    project_folder = bucket.file project_path
+    if project_folder.nil?
+      lesson_template = Lesson.find(params[:project][:lesson_template])
+      project_path = "#{lesson_template.creator.id}/#{lesson_template.project.name}/"
+      p project_path
+    end
+    file_names = get_folder bucket, project_path
     render json: file_names
   end
   
@@ -161,7 +169,11 @@ class HexfieldController < ApplicationController
 
     puts params
 
-    file_path = "#{params[:file_name]}.#{params[:format]}"
+    if params.has_key?(:format)
+      file_path = "#{params[:file_name]}.#{params[:format]}"
+    else
+      file_path = params[:file_name]
+    end
 
     puts "path: " + file_path
     m = /(?<user>.*?)\/(?<project>.*?)\/.*/.match(file_path)
@@ -173,19 +185,22 @@ class HexfieldController < ApplicationController
     pathuser = m.named_captures["user"]
     
     userid = current_user.id
-    render plain: "Unauthorized", status: :unauthorized and return if pathuser.to_i != userid
+    # render plain: "Unauthorized", status: :unauthorized and return if pathuser.to_i != userid
     
     project_name = m.named_captures["project"]
     # project_name = params[:project][:name]
-    project = Project.find_by(name: project_name, owner_id: userid)
-
+    project = Project.find_by(name: project_name, owner_id: pathuser)
+    
     # puts "pgcf: #{current_user&.id} ? #{userid}"
-
+    
     render plain: "Project not found", status: :unauthorized and return if project.nil?
+
+    lessons = Lesson.where(project: project)
+    teacher_override = lessons.any? { |lesson| lesson.creator.email == "teacher@hex.field" }
 
     # is this too ugly to stay?
     if project.visibility != 1 && (current_user.nil? || current_user != project.owner)
-      render plain: "Unauthorized", status: :unauthorized and return
+      render plain: "Unauthorized", status: :unauthorized and return unless teacher_override
     end
 
     bucket = get_bucket

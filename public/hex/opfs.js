@@ -59,7 +59,7 @@ export async function store_file_data(name, data)
     await writeable.close();
     return await fileHandle.getFile();
   } catch (err) {
-    console.error(err.name, err.message, err);
+    console.error(err.name, err.message, err, name);
   }
 }
 

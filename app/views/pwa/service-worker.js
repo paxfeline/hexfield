@@ -7,7 +7,7 @@ const addResourcesToCache = async (resources) => {
 
 const putInCache = async (request, response) => {
   // do not try to cache POST requests
-  if (request.mode.toLowerCase() === 'post') return;
+  if (request.method.toLowerCase() === 'post') return;
   const cache = await caches.open('v1');
   await cache.put(request, response);
 };
