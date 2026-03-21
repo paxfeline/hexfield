@@ -9,6 +9,8 @@ export async function get_project()
   if (!response)
     return null;
 
+  // TODO: better error handling
+  if (![200, 404].includes(response.response.status)) return {items: [], folders: []};
   
   if (response.response.status == 404)
   {

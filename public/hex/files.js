@@ -36,11 +36,12 @@ class HexFiles extends HTMLElement
     mcp.fireEvent(mcp.events.load_code_file_text, file);
   }
   
-  makeFolder(folder)
+  makeFolder(folder, path)
   {
     const el = this.folder_row_template.cloneNode(true);
     el.querySelector(".file-row-name").innerHTML = folder;
-    el.querySelector(".file-row-name").addEventListener("click",
+    el.querySelector(".file-row").dataset.path = path;
+    el.querySelector(".file-row").addEventListener("click",
       () =>
       {
         this.selectedPath = path;
@@ -54,7 +55,7 @@ class HexFiles extends HTMLElement
   {
     for (const subfolder of folder.folders)
     {
-      const el = this.makeFolder(subfolder.path.split("/").at(-2));
+      const el = this.makeFolder(subfolder.path.split("/").at(-2), subfolder.path);
       element.appendChild(el);
       this.loadFolder(subfolder, el.querySelector(".folder-children"), subfolder.path);
     }
@@ -137,11 +138,13 @@ class HexFiles extends HTMLElement
         <div class="file-row">
           <div class="file-row-name"></div>
         </div>
-      </template>
-      
-      <template id="folder-row-template">
+        </template>
+        
+        <template id="folder-row-template">
         <div class="folder-container">
-          <div class="file-row-name"></div>
+          <div class="file-row">
+            <div class="file-row-name"></div>
+          </div>
           <div class="folder-children"></div>
         </div>
       </template>
@@ -272,7 +275,7 @@ class HexFiles extends HTMLElement
         text-size: 150%;
       }
 
-      .folder-container
+      .folder-children
       {
         margin-left: 1rem;
       }
@@ -362,20 +365,29 @@ class HexFiles extends HTMLElement
     mcp.regHexEvent(mcp.events.update_file_data,
       () =>
       {
-        Array.from(this.file_display.children).forEach(
-          file_row =>
-          {
-            const file = file_row.dataset.name;
-            if (mcp.file_data[file] != mcp.last_saved_data[file])
+        const folder_recurse = folder =>
+        {
+          Array.from(folder.children).forEach(
+            file_row =>
             {
-              file_row.classList.add("changed");
+              if (file_row.classList.contains("folder-container"))
+                folder_recurse(file_row.querySelector(".folder-children"))
+              else
+              {
+                const file = file_row.dataset.path;
+                if (mcp.file_data[file] != mcp.last_saved_data[file])
+                {
+                  file_row.classList.add("changed");
+                }
+                else
+                {
+                  file_row.classList.remove("changed");
+                }
+              }
             }
-            else
-            {
-              file_row.classList.remove("changed");
-            }
-          }
-        )
+          )
+        };
+        folder_recurse(this.file_display);
       }
     )
   }
