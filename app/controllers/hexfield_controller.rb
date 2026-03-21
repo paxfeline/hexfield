@@ -27,7 +27,7 @@ class HexfieldController < ApplicationController
     end
   end
 
-  # get "api/get-all-files" => "hexfield#get_all_files"
+  # get "api/get-all-files" => "hexfield#get_all_files" 
   def get_all_files
     puts "get all files"
     puts @user
