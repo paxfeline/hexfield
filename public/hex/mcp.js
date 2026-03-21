@@ -191,6 +191,7 @@ if (files)
       {
         const [all, name, ext] = file.name.match(/(?:[^\/]+\/)+([^\.]*\.?(.*))$/);
         console.log(all, name, ext);
+        if (name === "") return; else console.log(name === "", name, "");
         file_data[file.name] = last_saved_data[file.name] = null; //file_not_loaded;
 
         // aysnc load
