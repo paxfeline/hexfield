@@ -37,7 +37,9 @@ class HexfieldController < ApplicationController
     p project_folder
     if project_folder.nil?
       lesson_template = Lesson.find(params[:project][:lesson_template])
+      p lesson_template
       template_project_path = "#{lesson_template.creator.id}/#{lesson_template.project.name}/"
+      p template_project_path
       template_files = bucket.files prefix: template_project_path
       template_files.all do |t_file|
         p t_file.name
