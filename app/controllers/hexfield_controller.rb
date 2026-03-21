@@ -30,7 +30,7 @@ class HexfieldController < ApplicationController
   # get "api/get-all-files" => "hexfield#get_all_files"
   def get_all_files
     puts "get all files"
-    puts params.inspect
+    puts @user
     bucket = get_bucket
     project_path = "#{@user.id}/#{params[:project][:name]}/"
     project_folder = bucket.file project_path
