@@ -1,5 +1,6 @@
 import * as mcp from "/hex/mcp.js";
 import { base_project_path } from "/hex/util.js";
+import { opfs_folder_by_path } from "/hex/opfs.js";
 
 // Create a class for the element
 class HexFiles extends HTMLElement
@@ -21,7 +22,8 @@ class HexFiles extends HTMLElement
 
   get selectedRow()
   {
-    return this.file_display.querySelector(`[data-path="${this.#selectedPath}"]`);
+    const folder_el = this.file_display.querySelector(`[data-path="${this.#selectedPath}"]`);
+    return folder_el ? folder_el : this.file_display;
   }
 
   set selectedPath(path)
@@ -288,6 +290,8 @@ class HexFiles extends HTMLElement
 
     this.file_display = shadow.querySelector("#file-display");
 
+    this.folder_items_by_path[base_project_path()] = this.file_display;
+
     this.file_row_template = shadow.querySelector("#file-row-template").content.firstElementChild;
     this.folder_row_template = shadow.querySelector("#folder-row-template").content.firstElementChild;
 
@@ -326,13 +330,19 @@ class HexFiles extends HTMLElement
           console.log("adding new file to files", path, mcp.files[0]);
           debugger;
           this.selectedRow.querySelector(".folder-children");
-          mcp.files[0].push(path);
+          // skipping this step
+          // mcp.files may be unneeded?
+          // mcp.files[0].push(path);
+
           // not needed because file_data[name] will initially be null...
           // and then any changes will be flagged?:
           //const name = path.split("/").pop();
           //file_data[name] = last_saved_data[name] = "";
-          mcp.fireEvent(mcp.events.file_created);
-          this.addFile(path);
+          mcp.fireEvent(mcp.events.file_created, path);
+          const last_slash = path.lastIndexOf("/") + 1;
+          const subpath = path.substring(0, last_slash);
+          const folder_el = this.folder_items_by_path[subpath];
+          this.addFile(path.split("/").pop(), "file", folder_el, path);
           this.selectedPath = path;
           this.loadSelectedFile(path);
         }

@@ -159,7 +159,7 @@ export async function create_code_file(dir_path)
   
   if (name)
   {
-    let file = await opfs.create_code_file(dir_path + name);
+    let file = await opfs.create_code_file(dir_path, name);
     let [path] = await api.upload_code_files([file]);
     return path;
   }
@@ -204,18 +204,6 @@ if (files)
         load_file();
       }
     );
-    
-    /*
-    for (const file of folder.items)
-    {
-      const [all, name, ext] = file.name.match(/(?:[^\/]+\/)+([^\.]*\.?(.*))$/);
-      console.log(all, name, ext);
-
-      const data = await api.get_code_file(file.name);
-      file_data[file.name] = last_saved_data[file.name] = data;
-      await opfs.store_file_data(file.name, last_saved_data[file.name]); // maybe skip await?
-    }
-      */
 
     for (const subfolder of folder.folders)
     {
@@ -224,15 +212,6 @@ if (files)
   };
 
   folder_delve(files);
-  
-  // files[0] = code files
-  // for (const file of files)
-  // {
-  //   const name = file.split("/").pop();
-  //   const data = await api.get_code_file(name);
-  //   file_data[name] = last_saved_data[name] = data;
-  //   await opfs.store_code_file_data(name, last_saved_data[name]); // maybe skip await?
-  // }
   
   fireEvent(events.files_loaded, files);
 }

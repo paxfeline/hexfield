@@ -30,25 +30,38 @@ export async function get_proj_dir(create = false)
   );
 }
 
-export async function delve_folder(folder, path_array)
+export const opfs_folder_by_path = {};
+
+export async function delve_folder(folder, path, index=0)
 {
-  const cur = path_array.shift();
-  if (path_array.length == 0)
+  const new_index = path.indexOf("/", index); //path_array.shift();
+  if (new_index === -1) //(path_array.length == 0)
+  {
+    const cur = path.substring(index);
     return [folder, cur];
+  }
   else
   {
-    const subfolder = await folder.getDirectoryHandle( cur, { create: true } );
-    
-    return delve_folder(subfolder, path_array);
+    const cur = path.substring(index, new_index);
+    const subpath = path.substring(0, new_index + 1);
+    let subfolder;
+    if (opfs_folder_by_path[subpath])
+      subfolder = opfs_folder_by_path[subpath];
+    else
+    {
+      subfolder = await folder.getDirectoryHandle( cur, { create: true } );
+      opfs_folder_by_path[subpath] = subfolder;
+    }
+    return delve_folder(subfolder, path, new_index + 1);
   }
 }
 
-export async function store_file_data(name, data)
+export async function store_file_data(file_path, data)
 {
   try
   {
     const projDirectoryHandle = await get_proj_dir(true);
-    const file_path = name.split("/").slice(2);
+    //const file_path = name.split("/").slice(2);
     // const [container_folder, file_name] = await delve_folder(projDirectoryHandle, file_path);
     const stuff = await delve_folder(projDirectoryHandle, file_path);
     console.log(stuff);
@@ -60,7 +73,7 @@ export async function store_file_data(name, data)
     await writeable.close();
     return await fileHandle.getFile();
   } catch (err) {
-    console.error(err.name, err.message, err, name);
+    console.error(err.name, err.message, err, file_path);
   }
 }
 
