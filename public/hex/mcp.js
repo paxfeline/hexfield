@@ -153,13 +153,13 @@ export async function update_html_code_file()
   fireEvent(events.update_file_data);
 }
 
-export async function create_code_file()
+export async function create_code_file(dir_path)
 {
   let name = prompt("Enter a file name:\nWarning: Entering an existing file name will overwrite it with a blank file.")
   
   if (name)
   {
-    let file = await opfs.create_code_file(name);
+    let file = await opfs.create_code_file(dir_path + name);
     let [path] = await api.upload_code_files([file]);
     return path;
   }

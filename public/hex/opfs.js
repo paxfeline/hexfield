@@ -38,6 +38,7 @@ export async function delve_folder(folder, path_array)
   else
   {
     const subfolder = await folder.getDirectoryHandle( cur, { create: true } );
+    
     return delve_folder(subfolder, path_array);
   }
 }
@@ -76,10 +77,10 @@ export async function store_media_file_data(name, data)
 
 export async function get_code_file_data(name)
 {
-  // not needed yet
+  // TODO: remove, unneeded?
 }
 
-export async function create_code_file(name)
+export async function create_code_file(dir_path, name)
 {
-  return store_code_file_data(name, null);
+  return store_file_data(dir_path + name, null);
 }

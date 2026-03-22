@@ -12,3 +12,9 @@ export function fd_from_sp()
     fd.append(key, value);
   return fd;
 }
+
+export function base_project_path()
+{
+  const sp = search_params();
+  return `${sp.get("project[owner_id]")}/${sp.get("project[name]")}/`
+}

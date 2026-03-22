@@ -1,4 +1,5 @@
 import * as mcp from "/hex/mcp.js";
+import { base_project_path } from "/hex/util.js";
 
 // Create a class for the element
 class HexFiles extends HTMLElement
@@ -9,6 +10,8 @@ class HexFiles extends HTMLElement
   {
     // Always call super first in constructor
     super();
+
+    this.folder_items_by_path = {};
   }
 
   get selectedPath()
@@ -48,6 +51,7 @@ class HexFiles extends HTMLElement
         console.log(path);
       }
     );
+    this.folder_items_by_path[path] = el.querySelector(".folder-children");
     return el;
   }
 
@@ -64,21 +68,6 @@ class HexFiles extends HTMLElement
     {
       this.addFile(file.name.split("/").pop(), "file", element, file.name);
     }
-
-    // for (const [key, val] of Object.entries(folder))
-    // {
-    //   const item_path = path + "/" + key;
-    //   if (typeof val == "object")
-    //   {
-    //     const folder = this.makeFolder(key);
-    //     element.appendChild(folder);
-    //     this.loadFolder(val, folder, item_path);
-    //   }
-    //   else
-    //   {
-    //     this.addFile(key, val, element, item_path);
-    //   }
-    // }
   }
 
   addFile(file_name, type, element, path)
@@ -329,10 +318,14 @@ class HexFiles extends HTMLElement
       "click",
       async () =>
       {
-        let path = await mcp.create_code_file();
+        let dir_path = this.selectedPath ?? base_project_path();
+        alert(dir_path);
+        let path = await mcp.create_code_file(dir_path);
         if (path)
         {
           console.log("adding new file to files", path, mcp.files[0]);
+          debugger;
+          this.selectedRow.querySelector(".folder-children");
           mcp.files[0].push(path);
           // not needed because file_data[name] will initially be null...
           // and then any changes will be flagged?:

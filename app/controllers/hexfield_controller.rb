@@ -35,6 +35,9 @@ class HexfieldController < ApplicationController
     project_path = "#{@user.id}/#{params[:project][:name]}/"
     project_folder = bucket.file project_path
     p project_folder
+
+    # if the project isn't yet saved in the bucket
+    # find the lesson template and copy over the files
     if project_folder.nil?
       lesson_template = Lesson.find(params[:project][:lesson_template])
       p lesson_template
