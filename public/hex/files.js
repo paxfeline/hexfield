@@ -17,7 +17,25 @@ class HexFiles extends HTMLElement
 
   get selectedPath()
   {
-    return this.#selectedPath;
+    return this.#selectedPath ? this.#selectedPath : base_project_path();
+  }
+  
+  get selected_dir_and_file()
+  {
+    const full_path = this.selectedPath;
+    let m = full_path.match(/((?:[^/]+\/)+)(.*)/);
+    const [_, path, name] = m;
+    return [path, name];
+  }
+
+  get selected_dir_path()
+  {
+    return this.selected_dir_and_file[0];
+  }
+
+  get selected_file_name()
+  {
+    return this.selected_dir_and_file[1];
   }
 
   get selectedRow()
@@ -68,12 +86,13 @@ class HexFiles extends HTMLElement
     
     for (const file of folder.items)
     {
-      this.addFile(file.name.split("/").pop(), "file", element, file.name);
+      this.addFile(file.name, "file", element);
     }
   }
 
-  addFile(file_name, type, element, path)
+  addFile(path, type, element)
   {
+    const file_name = path.split("/").pop();
     if (file_name !== "")
     {
       const row = this.file_row_template.cloneNode(true);
@@ -309,10 +328,12 @@ class HexFiles extends HTMLElement
       {
         if (file_input.files?.length > 0 && confirm("Upload?"))
           {
-            let code_files = await mcp.store_and_upload_code_files(
+            let code_files = await mcp.store_and_upload_files(
+              this.selected_dir_path,
               file_input.files
             );
-            code_files.forEach(this.addFile.bind(this));
+            const el = this.folder_items_by_path[this.selected_dir_path];
+            code_files.forEach(file_path => this.addFile(file_path, "file", el));
             file_input.value = null;
           }
         }
@@ -322,9 +343,8 @@ class HexFiles extends HTMLElement
       "click",
       async () =>
       {
-        let dir_path = this.selectedPath ?? base_project_path();
-        alert(dir_path);
-        let path = await mcp.create_code_file(dir_path);
+        alert(this.selectedPath);
+        let path = await mcp.create_code_file(this.selectedPath);
         if (path)
         {
           console.log("adding new file to files", path, mcp.files[0]);
@@ -353,7 +373,7 @@ class HexFiles extends HTMLElement
       "click",
       () =>
       {
-        mcp.update_html_code_file();
+        mcp.update_html_code_file(this.selectedPath);
       }
     )
 

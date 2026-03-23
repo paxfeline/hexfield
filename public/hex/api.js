@@ -75,10 +75,11 @@ export async function update_project()
   }
 }
 
-export async function upload_code_files(files)
+export async function upload_files(dir_path, files)
 {
   const body = util.fd_from_sp();
   Array.from(files).forEach(file => body.append("code_file[]", file));
+  body.append("dir_path", dir_path);
   const response = await post('/api/upload-code-files', {body});
   if (response.response.status == 200)
   {

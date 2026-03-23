@@ -20,9 +20,9 @@ class HexfieldController < ApplicationController
       render plain: "Project not found", status: :not_found and return
     else
       if project.owner == current_user
-        render json: { project: project, user: current_user.id }
+        render json: { project: project, user: current_user.id } and return
       else
-        render plain: "Not authorized as owner of project", status: :forbidden
+        render plain: "Not authorized as owner of project", status: :forbidden and return
       end
     end
   end
@@ -103,6 +103,13 @@ class HexfieldController < ApplicationController
 
   # post "api/upload-code-file" => "hexfield#upload_code_file"
   def upload_code_file
+    dir_path = params[:dir_path]
+    m = /(?<user_id>.*?)\/.*/.match(dir_path)
+    p m
+    dir_path_user_id = m.named_captures["user_id"].to_i
+
+    render plain: "Upload user mismatch", status: :forbidden and return unless dir_path_user_id == @user.id
+
     bucket = get_bucket
 
     upfiles = params[:code_file]
@@ -111,9 +118,10 @@ class HexfieldController < ApplicationController
 
     upfiles.each do |upfile|
       name = upfile.original_filename
-      userid = current_user.id
-      project = params[:project][:name]
-      file_name = "#{userid}/#{project}/#{name}"
+      # userid = current_user.id
+      # project = params[:project][:name]
+      #file_name = "#{userid}/#{project}/#{name}"
+      file_name = "#{dir_path}#{name}"
 
       ret.push file_name
 
@@ -125,29 +133,29 @@ class HexfieldController < ApplicationController
     render json: { uploaded: ret }
   end
   
-  # post "api/upload-media-file" => "hexfield#upload_media_file"
-  def upload_media_file
-    bucket = get_bucket
+  # # post "api/upload-media-file" => "hexfield#upload_media_file"
+  # def upload_media_file
+  #   bucket = get_bucket
     
-    upfiles = params[:media_file]
+  #   upfiles = params[:media_file]
     
-    ret = Array.new
+  #   ret = Array.new
     
-    upfiles.each do |upfile|
-      name = upfile.original_filename
-      userid = current_user.id
-      project = params[:project][:name]
-      file_name = "#{userid}/#{project}/media/#{name}"
+  #   upfiles.each do |upfile|
+  #     name = upfile.original_filename
+  #     userid = current_user.id
+  #     project = params[:project][:name]
+  #     file_name = "#{userid}/#{project}/media/#{name}"
       
-      ret.push file_name
+  #     ret.push file_name
       
-      file = bucket.create_file upfile.path, file_name
+  #     file = bucket.create_file upfile.path, file_name
       
-      puts "Uploaded #{upfile.path} as #{file.name} in bucket hexfield"
-    end
+  #     puts "Uploaded #{upfile.path} as #{file.name} in bucket hexfield"
+  #   end
     
-    render json: { uploaded: ret }
-  end
+  #   render json: { uploaded: ret }
+  # end
 
   def private_get_code_file
     bucket = get_bucket

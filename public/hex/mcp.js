@@ -73,24 +73,22 @@ export function remHexEvent(e, cb)
 
 // coordinate OPFS and Google Cloud storage
 
-export async function store_and_upload_code_files(files)
+export async function store_and_upload_files(dir_path, files)
 {
   Array.from(files).forEach(
     async file =>
     {
-      let data = await opfs.store_code_file(file);
+      let data = await opfs.store_file(dir_path, file);
       let text = new TextDecoder().decode(data);
-      file_data[file.name] = text;
+      file_data[dir_path + file.name] = text;
     });
-  const resp = await api.upload_code_files(files);
-  // this could be done more efficiently,
-  // but it's broken up to enable better error handling
-  Array.from(files).forEach(
+  const upfiles = await api.upload_files(dir_path, files);
+  upfiles.forEach(
     async file =>
     {
-      last_saved_data[file.name] = file_data[file.name];
+      last_saved_data[file] = file_data[file];
     });
-  return resp;
+  return upfiles;
 }
 
 export async function store_and_upload_media_files(files)
@@ -147,7 +145,7 @@ export async function update_html_code_file()
   const code = html_editor.state.doc.toString();
   const file = await opfs.store_file_data(current_file_url, code);
   file_data[current_file_url] = code;
-  await api.upload_code_files([file]);
+  await api.upload_files(current_file_url, [file]);
   last_saved_data[current_file_url] = code;
   
   fireEvent(events.update_file_data);
