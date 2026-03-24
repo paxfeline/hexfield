@@ -109,6 +109,7 @@ export function install_sw(sw)
 
 export let html_editor;
 export let current_file_url;
+export let current_dir_path;
 export function register_html_editor(editor)
 {
   html_editor = editor;
@@ -124,6 +125,12 @@ export function register_html_editor(editor)
       //console.log(data);
       current_file_url = data;
       update_html_code_editor(file_data[current_file_url]);
+
+      // TODO: create event for switching selected dir
+      // extract path up to file name as working dir
+      let m = current_file_url.match(/((?:[^/]+\/)+).*/);
+      const [_, path] = m;
+      cur_dir_path = path;
     });
 }
 
@@ -144,8 +151,9 @@ export async function update_html_code_file()
 {
   const code = html_editor.state.doc.toString();
   const file = await opfs.store_file_data(current_file_url, code);
+  // TODO: maybe: class for URLs that will give directory path and name together or seprately
   file_data[current_file_url] = code;
-  await api.upload_files(current_file_url, [file]);
+  await api.upload_files(current_dir_path, [file]);
   last_saved_data[current_file_url] = code;
   
   fireEvent(events.update_file_data);
@@ -158,7 +166,7 @@ export async function create_code_file(dir_path)
   if (name)
   {
     let file = await opfs.create_code_file(dir_path, name);
-    let [path] = await api.upload_code_files([file]);
+    let [path] = await api.upload_files([file]);
     return path;
   }
 }
