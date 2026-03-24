@@ -130,7 +130,7 @@ export function register_html_editor(editor)
       // extract path up to file name as working dir
       let m = current_file_url.match(/((?:[^/]+\/)+).*/);
       const [_, path] = m;
-      cur_dir_path = path;
+      current_dir_path = path;
     });
 }
 
