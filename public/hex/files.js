@@ -86,7 +86,7 @@ class HexFiles extends HTMLElement
     
     for (const file of folder.items)
     {
-      this.addFile(file.name, "file", element);
+      this.addFile(file.name, file.type, element);
     }
   }
 
@@ -174,7 +174,7 @@ class HexFiles extends HTMLElement
                 id="file-input"
                 style="opacity: 0; position: absolute;"
                 multiple="multiple"
-                accept=".html, .css, .js">
+                accept="*">
             </label>
           </div>
           <div class="file-code-other-controls">
@@ -333,7 +333,7 @@ class HexFiles extends HTMLElement
               file_input.files
             );
             const el = this.folder_items_by_path[this.selected_dir_path];
-            code_files.forEach(file_path => this.addFile(file_path, "file", el));
+            code_files.forEach(({path, type}) => this.addFile(path, type, el));
             file_input.value = null;
           }
         }
@@ -362,7 +362,8 @@ class HexFiles extends HTMLElement
           const last_slash = path.lastIndexOf("/") + 1;
           const subpath = path.substring(0, last_slash);
           const folder_el = this.folder_items_by_path[subpath];
-          this.addFile(path.split("/").pop(), "file", folder_el, path);
+          // TODO: guess type from extension instead of assume html
+          this.addFile(path.split("/").pop(), "text/html", folder_el, path);
           this.selectedPath = path;
           this.loadSelectedFile(path);
         }

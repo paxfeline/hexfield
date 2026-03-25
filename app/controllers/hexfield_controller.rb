@@ -64,10 +64,11 @@ class HexfieldController < ApplicationController
     { path: folder, items: files.map { |f| file_info(f) }, folders: folders }
   end
 
+  # TODO: use content type info on frontend
   def file_info(file)
     # [file.name, file.content_type, file.updated_at]
     puts file
-    { name: file.name }
+    { name: file.name, type: file.content_type }
   end
 
   # get "api/get-code-files" => "hexfield#get_code_files"
@@ -123,7 +124,8 @@ class HexfieldController < ApplicationController
       #file_name = "#{userid}/#{project}/#{name}"
       file_name = "#{dir_path}#{name}"
 
-      ret.push file_name
+      # return list of paths and types of uploaded files
+      ret.push({ path: file_name, type: upfile.content_type })
 
       file = bucket.create_file upfile.path, file_name
 

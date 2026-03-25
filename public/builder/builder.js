@@ -382,11 +382,11 @@ export function renderAttributesCode(source)
 {
 	var attrs = '';
 	
-	//console.log('atts', source);
+	console.log('atts', source);
 	
 	if (!source.firstElementChild) return '';
 	
-	const list = source.querySelectorAll('.attr');
+	const list = source.querySelectorAll(':scope > .builder-attribute-set > .builder-attribute-container > .attr');
 	
 	for (const attr of list)
 	{
