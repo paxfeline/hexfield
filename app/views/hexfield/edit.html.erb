@@ -146,6 +146,9 @@ TODO: move to hexfield.css
           console.log("show blocks!");
           tabs.selectedIndex = 1;
 
+          // TODO: make more fine-grained
+          if (!mcp.current_file_is_text()) return;
+
           const code = mcp.file_data[mcp.current_file_url];
           let bout = builder_globals.load_code(code);
           document.querySelector("#code").innerHTML = bout.innerHTML;
