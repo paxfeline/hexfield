@@ -13,7 +13,7 @@ import * as opfs from "/hex/opfs.js";
 
 export const supported_file_types =
   {
-    code: ["html", "css", "js", "txt", "py"],
+    code: ["text/html", "css", "js", "txt", "py"],
     media: ["png", "jpg", "jpeg", "gif"]
   };
 
@@ -26,7 +26,7 @@ export const file_not_loaded = Symbol("file not loaded");
 export const events = [
   "files_loaded",             // initial files loaded
   "update_file_data",         // a file has been modified
-  "load_code_file_text",      // load code file into code editor
+  "file_selected",            // file selected
   "file_created",             // a file has been created
   "file_deleted",
   "connection_lost",
@@ -109,28 +109,40 @@ export function install_sw(sw)
 
 export let html_editor;
 export let current_file_url;
+export let current_file_type;
 export let current_dir_path;
+
+export function current_file_is_text()
+{
+  return supported_file_types.code.includes(current_file_type);
+}
+
 export function register_html_editor(editor)
 {
   html_editor = editor;
-  regHexEvent(events.load_code_file_text,
-    data =>
+  regHexEvent(events.file_selected,
+    ({path, type}) =>
     {
+      console.log("selected file", path, type);
       // store any changes before switching
-      if (current_file_url)
+      if (current_file_url && current_file_is_text())
       {
         const code = html_editor.state.doc.toString();
         file_data[current_file_url] = code;
       }
-      //console.log(data);
-      current_file_url = data;
-      update_html_code_editor(file_data[current_file_url]);
+      //console.log(path);
+      current_file_url = path;
+      current_file_type = type;
+      if (current_file_is_text())
+        update_html_code_editor(file_data[current_file_url]);
+      else
+        update_html_code_editor("<not a recognized text format>");
 
       // TODO: create event for switching selected dir
       // extract path up to file name as working dir
       let m = current_file_url.match(/((?:[^/]+\/)+).*/);
-      const [_, path] = m;
-      current_dir_path = path;
+      const [_, dir_path] = m;
+      current_dir_path = dir_path;
     });
 }
 

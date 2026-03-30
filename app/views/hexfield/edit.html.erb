@@ -221,10 +221,12 @@ const view = new EditorView({
     EditorView.updateListener.of(
       v =>
       {
-        if (v.docChanged)
+        if (mcp.current_file_is_text() && v.docChanged)
         {
           if (deb_upd) clearTimeout(deb_upd);
           deb_upd = setTimeout(
+            // debounced function to update internal file data
+            // if file is text and there's a change in the editor
             () =>
             {
                 const code = view.state.doc.toString();
@@ -245,12 +247,12 @@ window.cm = view; // TODO: remove after debugging
 
 mcp.register_html_editor(view);
 
-mcp.regHexEvent(mcp.events.load_code_file_text,
-  file =>
+mcp.regHexEvent(mcp.events.file_selected,
+  ({path}) =>
   {
     //render.contentWindow.location = `/web/${file}`;
     // above changed to:
-    render.src = `/web/${file}`;
+    render.src = `/web/${path}`;
   }
 );
 

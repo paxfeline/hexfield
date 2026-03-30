@@ -54,9 +54,9 @@ class HexFiles extends HTMLElement
     this.selectedRow.setAttribute("selected", "");
   }
 
-  loadSelectedFile(file)
+  loadSelectedFile(path, type)
   {
-    mcp.fireEvent(mcp.events.load_code_file_text, file);
+    mcp.fireEvent(mcp.events.file_selected, {path, type});
   }
   
   makeFolder(folder, path)
@@ -106,7 +106,7 @@ class HexFiles extends HTMLElement
         {
           this.selectedPath = path;
           console.log(path);
-          this.loadSelectedFile(path);
+          this.loadSelectedFile(path, type);
         }
       );
       element.appendChild(row);
@@ -365,7 +365,7 @@ class HexFiles extends HTMLElement
           // TODO: guess type from extension instead of assume html
           this.addFile(path.split("/").pop(), "text/html", folder_el, path);
           this.selectedPath = path;
-          this.loadSelectedFile(path);
+          this.loadSelectedFile(path, "text/html");
         }
       }
     )
