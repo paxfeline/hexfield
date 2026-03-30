@@ -172,7 +172,7 @@ class HexFiles extends HTMLElement
               <input
                 type="file"
                 id="file-input"
-                style="opacity: 0; position: absolute;"
+                style="opacity: 0; position: absolute; pointer-events: none;"
                 multiple="multiple"
                 accept="*">
             </label>
