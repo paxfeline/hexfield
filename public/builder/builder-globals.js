@@ -23,7 +23,9 @@ export const builder_globals =
         'type', 'id', 'class', 'target', 'lang',
         'name', 'content',  ],
     known_properties: ['font-size', ],
-    empty_elements: ['[custom-empty]', '[text]', '!doctype', '!doctype html', 'area',
+    empty_elements: [
+        '[custom-empty]', '[text]', 
+        '!doctype', '!doctype html', 'area',
         'base', 'br', 'col', 'embed', 'hr',
         'img', 'input', 'keygen', 'link', 'meta',
         'param', 'source', 'track', 'wbr', ],
