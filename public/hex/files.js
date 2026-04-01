@@ -123,7 +123,13 @@ class HexFiles extends HTMLElement
 
     this.file_display.innerHTML = "";
 
-    this.loadFolder(files, this.file_display);
+    const base_path = base_project_path();
+
+    const el = this.makeFolder(base_path.split("/")[1], base_path);
+
+    this.file_display.appendChild(el);
+
+    this.loadFolder(files, el.querySelector(".folder-children"));
 
     // after loading files, select one
     if (files.length > 0)
@@ -160,7 +166,6 @@ class HexFiles extends HTMLElement
       </template>
       
       <div class="file-section">
-        Code files:
         <div id="file-display">
         </div>
         <div class="file-code-controls">
@@ -206,7 +211,6 @@ class HexFiles extends HTMLElement
       .file-section
       {
         border: var(--hex-line-width, 0.5rem) solid black;
-        padding: 0.5rem;
         flex: 1; /* flex parent needed? */
         display: flex;
         flex-direction: column;
@@ -214,8 +218,7 @@ class HexFiles extends HTMLElement
       
       #file-display
       {
-        overflow: auto;
-        border: 1px solid black;
+        overflow-y: scroll;
         flex: 1;
       }
 
@@ -308,8 +311,6 @@ class HexFiles extends HTMLElement
     shadow.appendChild(root);
 
     this.file_display = shadow.querySelector("#file-display");
-
-    this.folder_items_by_path[base_project_path()] = this.file_display;
 
     this.file_row_template = shadow.querySelector("#file-row-template").content.firstElementChild;
     this.folder_row_template = shadow.querySelector("#folder-row-template").content.firstElementChild;
